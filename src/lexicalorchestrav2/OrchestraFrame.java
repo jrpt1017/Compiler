@@ -6,10 +6,20 @@
 package lexicalorchestrav2;
 import java.util.List;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.BadLocationException;
@@ -59,6 +69,11 @@ public class OrchestraFrame extends javax.swing.JFrame {
         Lexical = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        btnRun = new javax.swing.JButton();
+        lbl = new javax.swing.JLabel();
+        btnChoose = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        lblFileName = new javax.swing.JLabel();
         lblRowCol = new javax.swing.JLabel();
         tabMainTables = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
@@ -103,8 +118,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
         jPanel9 = new javax.swing.JPanel();
         jScrollPane7 = new javax.swing.JScrollPane();
         tblErrorSemantic = new javax.swing.JTable();
-        jLabel2 = new javax.swing.JLabel();
         btnSemantic = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
@@ -144,7 +159,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(txtareaCompiler);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 780, 530));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 830, 530));
 
         btnRemove.setBackground(new java.awt.Color(255, 153, 0));
         btnRemove.setFont(new java.awt.Font("Segoe Script", 2, 24)); // NOI18N
@@ -165,7 +180,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 btnRemoveActionPerformed(evt);
             }
         });
-        jPanel1.add(btnRemove, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 240, 150, 40));
+        jPanel1.add(btnRemove, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 240, 120, 40));
 
         Lexical.setBackground(new java.awt.Color(253, 189, 57));
         Lexical.setFont(new java.awt.Font("Segoe Script", 2, 24)); // NOI18N
@@ -183,13 +198,57 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 LexicalActionPerformed(evt);
             }
         });
-        jPanel1.add(Lexical, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 240, 150, 40));
+        jPanel1.add(Lexical, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 240, 130, 40));
 
         jPanel2.setBackground(new java.awt.Color(0, 0, 0));
 
         jLabel1.setFont(new java.awt.Font("Pristina", 3, 40)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(204, 204, 204));
         jLabel1.setText("Orchestra Lexical Analyser");
+
+        btnRun.setBackground(new java.awt.Color(253, 189, 57));
+        btnRun.setFont(new java.awt.Font("Lucida Sans Unicode", 1, 18)); // NOI18N
+        btnRun.setText("Run Program");
+        btnRun.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnRunMousePressed(evt);
+            }
+        });
+
+        lbl.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lbl.setForeground(new java.awt.Color(255, 255, 255));
+        lbl.setText("FILE NAME: ");
+
+        btnChoose.setBackground(new java.awt.Color(253, 189, 57));
+        btnChoose.setFont(new java.awt.Font("Lucida Sans Unicode", 1, 18)); // NOI18N
+        btnChoose.setText("Choose File");
+        btnChoose.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnChooseMousePressed(evt);
+            }
+        });
+        btnChoose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChooseActionPerformed(evt);
+            }
+        });
+
+        btnSave.setBackground(new java.awt.Color(253, 189, 57));
+        btnSave.setFont(new java.awt.Font("Lucida Sans Unicode", 1, 18)); // NOI18N
+        btnSave.setText("Save File");
+        btnSave.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnSaveMousePressed(evt);
+            }
+        });
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+
+        lblFileName.setFont(new java.awt.Font("SimSun-ExtB", 1, 18)); // NOI18N
+        lblFileName.setForeground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -198,13 +257,32 @@ public class OrchestraFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(67, 67, 67)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(1065, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(btnRun)
+                .addGap(32, 32, 32)
+                .addComponent(btnChoose, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(84, 84, 84)
+                .addComponent(lbl)
+                .addGap(18, 18, 18)
+                .addComponent(lblFileName)
+                .addContainerGap(327, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnRun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnChoose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl)
+                            .addComponent(lblFileName))
+                        .addContainerGap())))
         );
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, 1660, 70));
@@ -470,7 +548,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 btnSyntaxActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSyntax, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 240, 140, 40));
+        jPanel1.add(btnSyntax, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 240, 130, 40));
 
         tblError.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         tblError.setModel(new javax.swing.table.DefaultTableModel(
@@ -548,29 +626,29 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
         jPanel1.add(tabErrorTables, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 810, 1600, 190));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lexicalorchestrav2/orchestra1.jpg"))); // NOI18N
-        jLabel2.setText("jLabel2");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 1660, 780));
-
+        btnSemantic.setBackground(new java.awt.Color(253, 189, 57));
+        btnSemantic.setFont(new java.awt.Font("Segoe Script", 2, 24)); // NOI18N
         btnSemantic.setText("Semantic");
         btnSemantic.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 btnSemanticMousePressed(evt);
             }
         });
-        jPanel1.add(btnSemantic, new org.netbeans.lib.awtextra.AbsoluteConstraints(1400, 50, -1, 50));
+        jPanel1.add(btnSemantic, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 240, 160, 40));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lexicalorchestrav2/orchestra1.jpg"))); // NOI18N
+        jLabel2.setText("jLabel2");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 1660, 780));
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lexicalorchestrav2/top.png"))); // NOI18N
         jLabel3.setText("jLabel3");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1660, 160));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -160, 1660, 492));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 4, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -600,11 +678,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
     public char b =(char)a;
     private void LexicalMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LexicalMousePressed
         // TODO add your handling code here:
-        
-//        if(evt.getKeyCode()==KeyEvent.VK_ENTER)
-//        {
-//            
-//        }
         setTable();
         idcount = 1;
         String sourcecodelexic = txtareaCompiler.getText(); //Gets the code from the TextArea
@@ -616,6 +689,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         
         model.setRowCount(0);
         error.setRowCount(0);
+        
 
         int check = 0;
         int i = 0;
@@ -5289,10 +5363,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
     private void btnRemoveMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRemoveMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnRemoveMousePressed
-
-    private void btnRemoveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRemoveMouseClicked
-        // TODO add your handling code here:
+        
         DefaultTableModel model = (DefaultTableModel) tblLexeme.getModel(); //Table for Lexeme
         DefaultTableModel modelSyntax = (DefaultTableModel) tblSyntax.getModel(); //Table for Syntax
         DefaultTableModel modelConstantDec = (DefaultTableModel) tblConstantDeclaration.getModel(); //Table for Semantic
@@ -5331,6 +5402,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
         hasError = false;
         is2darray = false;
         errNo = "";
+    }//GEN-LAST:event_btnRemoveMousePressed
+
+    private void btnRemoveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRemoveMouseClicked
+        // TODO add your handling code here:
     }//GEN-LAST:event_btnRemoveMouseClicked
 
     private void txtareaCompilerCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtareaCompilerCaretUpdate
@@ -10409,7 +10484,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
             if(checker1(PLUS))
             {
                 addToSyntaxTable("<size>","<mathexpr>");
-                //addToSyntaxTable("<mathexpr>","INT_LIT");
                 production_nextmathexpr();
             }
             else
@@ -10952,6 +11026,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         semantic_2dArray();
                         semantic_worldtour_nextVariable();
                     }
+                break;
                 
             case SEMICOLON:
                 checker(SEMICOLON);
@@ -11507,11 +11582,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
     private void btnSyntaxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSyntaxMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSyntaxMouseClicked
-
+    
     private void LexicalMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LexicalMouseReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_LexicalMouseReleased
-
+    String code="#include <iostream>\n #include <cstdlib>\n  #include <exception>\n #include <iomanip>\n using namespace std; int main ( ) { std::cout << std::setprecision(6) << std::fixed; cout<< \"HELLO HELLO\" ; system(\"pause\");\n" +
+" return 0;}";
     private void btnSyntaxMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSyntaxMousePressed
         // TODO add your handling code here:
         DefaultTableModel modelSyntax = (DefaultTableModel) tblSyntax.getModel(); //Table for Syntax
@@ -11524,7 +11600,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
         
         for(int ctr1 = rowErrorSyntax-1; ctr1>=0; ctr1--)
             errorSyntax.removeRow(ctr1);
-        
+        code = "";  //Storage for Translating
+        code = "#include <iostream>\n #include <cstdlib>\n  #include <exception>\n #include <iomanip>\n using namespace std; int main ( ) { std::cout << std::setprecision(6) << std::fixed; cout<< \"HELLO WORLD\" ; system(\"pause\");\n" +
+" return 0;";
         hasError = false;
         tokenPos = 0;
         removeNotNeed();
@@ -11544,7 +11622,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSyntaxMousePressed
 
     private void LexicalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LexicalActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code hcoere:
     }//GEN-LAST:event_LexicalActionPerformed
 
     private void btnSemanticMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSemanticMousePressed
@@ -11584,9 +11662,129 @@ public class OrchestraFrame extends javax.swing.JFrame {
         else
         { 
             JOptionPane.showMessageDialog(null, "SEMANTIC Error Detected!");
-        }
-        
+        } 
     }//GEN-LAST:event_btnSemanticMousePressed
+
+    private void btnSaveMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMousePressed
+        // TODO add your handling code here:
+        String FileName = JOptionPane.showInputDialog(null, "File Name: ");
+        FileWriter fstream;
+        try 
+        {
+            File f = new File(new File(".").getAbsolutePath()+"\\Files\\"+FileName+".txt");
+            if(f.exists()) 
+            { 
+                JOptionPane.showMessageDialog(null, "File Already Exists");
+            }
+            else if(FileName.equals("") == false)
+            {
+                fstream = new FileWriter(new File(".").getAbsolutePath()+"//Files//"+FileName+".txt",true);
+                BufferedWriter out = new BufferedWriter(fstream);
+                out.write(txtareaCompiler.getText());
+                out.newLine();
+                out.close();
+                JOptionPane.showMessageDialog(null, "Saved Successfully!");
+                lblFileName.setText("FILE NAME: "+FileName);
+            }
+        }
+        catch (IOException ex) 
+        {
+            Logger.getLogger(OrchestraFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }//GEN-LAST:event_btnSaveMousePressed
+
+    private void btnChooseMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnChooseMousePressed
+        // TODO add your handling code here:
+        JFileChooser jfc = new JFileChooser(new File(".").getAbsolutePath()+"\\Files");
+        int returnValue = jfc.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) 
+        {
+            File selectedFile = jfc.getSelectedFile();
+            String content;
+            try 
+            {
+                content = new Scanner(new File(selectedFile.getAbsolutePath())).useDelimiter("\\Z").next();
+                String filename[] = selectedFile.getName().split("\\.");
+                lblFileName.setText(filename[0]);
+                txtareaCompiler.setText(content);
+            } 
+            catch (FileNotFoundException ex) 
+            {
+                Logger.getLogger(OrchestraFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnChooseMousePressed
+
+    private void btnRunMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRunMousePressed
+        // TODO add your handling code here:
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String FileName = lblFileName.getText();
+                File f = new File(new File(".").getAbsolutePath()+"\\Files\\"+FileName+".cpp");
+
+                if(FileName == null )
+                {        
+                }
+                else if(FileName.trim().equals(""))
+                {
+                    JOptionPane.showMessageDialog(null, "Enter a Valid File Name!");
+                }
+                else
+                {
+                    File file = new File(new File(".").getAbsolutePath()+"\\programs\\"+FileName+".cpp");
+                    FileWriter out = null;
+                    try
+                    {
+                        out = new FileWriter(file);
+                        out.write(code);
+                        out.close();
+                    }
+                    catch (IOException ex) 
+                    {
+                        Logger.getLogger(OrchestraFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    String[] command =
+                    {
+                        "cmd",
+                    };
+                    Process p;
+                    try
+                    {
+                        p = Runtime.getRuntime().exec(command);
+                        PrintWriter stdin = new PrintWriter(p.getOutputStream());
+                        stdin.println("cd "+new File(".").getAbsolutePath()+"\\programs\"");
+                        stdin.println("g++ -o "+FileName+" "+FileName+".cpp && del "+FileName+".cpp && start "+FileName+".exe");
+                        stdin.close();
+
+                        String line = "";
+
+                        BufferedReader errorReader = new BufferedReader(
+                                new InputStreamReader(p.getErrorStream()));
+                        while ((line = errorReader.readLine()) != null) 
+                        {
+                            System.out.println(line);
+                        }
+                        errorReader.close();
+                        p.waitFor();
+                    } 
+                    catch (Exception e) 
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+        System.out.println("SUCCESS RUN");
+    }//GEN-LAST:event_btnRunMousePressed
+
+    private void btnChooseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnChooseActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSaveActionPerformed
     public int colNum;
     /**
      * @param args the command line arguments
@@ -11625,7 +11823,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Lexical;
+    private javax.swing.JButton btnChoose;
     private javax.swing.JButton btnRemove;
+    private javax.swing.JButton btnRun;
+    private javax.swing.JButton btnSave;
     private javax.swing.JButton btnSemantic;
     private javax.swing.JButton btnSyntax;
     private javax.swing.JLabel jLabel1;
@@ -11665,6 +11866,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTabbedPane jTabbedPane3;
+    private javax.swing.JLabel lbl;
+    private javax.swing.JLabel lblFileName;
     private javax.swing.JLabel lblRowCol;
     private javax.swing.JTabbedPane tabErrorTables;
     private javax.swing.JTabbedPane tabMainTables;
