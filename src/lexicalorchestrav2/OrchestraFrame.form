@@ -86,7 +86,7 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="10" y="280" width="830" height="530"/>
+              <AbsoluteConstraints x="10" y="280" width="890" height="530"/>
             </Constraint>
           </Constraints>
 
@@ -124,7 +124,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="710" y="240" width="120" height="40"/>
+              <AbsoluteConstraints x="780" y="240" width="120" height="40"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -145,7 +145,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="260" y="240" width="130" height="40"/>
+              <AbsoluteConstraints x="330" y="240" width="130" height="40"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -299,7 +299,7 @@
         <Container class="javax.swing.JTabbedPane" name="tabMainTables">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="850" y="250" width="740" height="560"/>
+              <AbsoluteConstraints x="910" y="240" width="740" height="570"/>
             </Constraint>
           </Constraints>
 
@@ -322,7 +322,7 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane1" alignment="0" pref="526" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" alignment="0" pref="536" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -403,7 +403,7 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane4" alignment="0" pref="526" max="32767" attributes="0"/>
+                      <Component id="jScrollPane4" alignment="0" pref="536" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -492,7 +492,7 @@
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jScrollPane3" alignment="0" pref="492" max="32767" attributes="0"/>
+                              <Component id="jScrollPane3" alignment="0" pref="502" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -560,7 +560,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jScrollPane8" pref="460" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane8" pref="470" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -628,7 +628,7 @@
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jScrollPane9" alignment="0" pref="492" max="32767" attributes="0"/>
+                              <Component id="jScrollPane9" alignment="0" pref="502" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -694,7 +694,7 @@
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jScrollPane10" alignment="0" pref="492" max="32767" attributes="0"/>
+                              <Component id="jScrollPane10" alignment="0" pref="502" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -786,7 +786,7 @@
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jScrollPane11" alignment="0" pref="458" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane11" alignment="0" pref="468" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
@@ -858,7 +858,7 @@
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jScrollPane12" alignment="0" pref="458" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane12" alignment="0" pref="468" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
@@ -930,7 +930,7 @@
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jScrollPane13" alignment="0" pref="458" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane13" alignment="0" pref="468" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
@@ -1007,7 +1007,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="400" y="240" width="130" height="40"/>
+              <AbsoluteConstraints x="470" y="240" width="130" height="40"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -1241,7 +1241,7 @@
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="540" y="240" width="160" height="40"/>
+              <AbsoluteConstraints x="610" y="240" width="160" height="40"/>
             </Constraint>
           </Constraints>
         </Component>

@@ -160,7 +160,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(txtareaCompiler);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 830, 530));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 890, 530));
 
         btnRemove.setBackground(new java.awt.Color(255, 153, 0));
         btnRemove.setFont(new java.awt.Font("Segoe Script", 2, 24)); // NOI18N
@@ -181,7 +181,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 btnRemoveActionPerformed(evt);
             }
         });
-        jPanel1.add(btnRemove, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 240, 120, 40));
+        jPanel1.add(btnRemove, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 240, 120, 40));
 
         Lexical.setBackground(new java.awt.Color(253, 189, 57));
         Lexical.setFont(new java.awt.Font("Segoe Script", 2, 24)); // NOI18N
@@ -199,7 +199,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 LexicalActionPerformed(evt);
             }
         });
-        jPanel1.add(Lexical, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 240, 130, 40));
+        jPanel1.add(Lexical, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 240, 130, 40));
 
         jPanel2.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -311,7 +311,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
         );
 
         tabMainTables.addTab("Lexical", jPanel3);
@@ -335,7 +335,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
         );
 
         tabMainTables.addTab("Syntax", jPanel4);
@@ -358,7 +358,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Constant Declaration", jPanel5);
@@ -383,7 +383,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -407,7 +407,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+            .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Local Declaration", jPanel12);
@@ -430,7 +430,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel14Layout.setVerticalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+            .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Identifier", jPanel14);
@@ -453,7 +453,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
+            .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
         );
 
         jTabbedPane2.addTab("Parameters", jPanel16);
@@ -476,7 +476,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
+            .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
         );
 
         jTabbedPane2.addTab("Declaration", jPanel17);
@@ -499,7 +499,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel18Layout.setVerticalGroup(
             jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 458, Short.MAX_VALUE)
+            .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
         );
 
         jTabbedPane2.addTab("Return", jPanel18);
@@ -530,7 +530,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
         tabMainTables.addTab("Semantics", jPanel11);
 
-        jPanel1.add(tabMainTables, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 250, 740, 560));
+        jPanel1.add(tabMainTables, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 240, 740, 570));
 
         btnSyntax.setBackground(new java.awt.Color(253, 189, 57));
         btnSyntax.setFont(new java.awt.Font("Segoe Script", 2, 24)); // NOI18N
@@ -549,7 +549,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 btnSyntaxActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSyntax, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 240, 130, 40));
+        jPanel1.add(btnSyntax, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 240, 130, 40));
 
         tblError.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         tblError.setModel(new javax.swing.table.DefaultTableModel(
@@ -635,7 +635,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 btnSemanticMousePressed(evt);
             }
         });
-        jPanel1.add(btnSemantic, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 240, 160, 40));
+        jPanel1.add(btnSemantic, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 240, 160, 40));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lexicalorchestrav2/orchestra1.jpg"))); // NOI18N
         jLabel2.setText("jLabel2");
@@ -6228,6 +6228,32 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
     void production_functiondef()
     {
+        
+//        if(checker1(INT)||checker1(FLOAT)||checker1(CHAR)||checker1(STRING)||checker1(BOOL) && hasError == false) //check if pupunta kay production vardec1 // localdec
+//        {
+//            addToSyntaxTable("<program>","<localdec>");
+//                production_vardec1();
+//            addToSyntaxTable("<program>","<statements>");
+//                production_statements();
+//            if(checker(CLOSECURLYBRACE))
+//            {
+//                addToSyntaxTable("<program>","}"); 
+//                if(checker(ENCORE))
+//                {
+//                    addToSyntaxTable("<program>","ENCORE");
+//                }
+//                else
+//                {
+//                    addToSyntaxErrorTable("<program>", "Expecting ENCORE");
+//                }
+//            }   
+//            else if(hasError == false)
+//            {
+//                addToSyntaxErrorTable("<program>", "Expecting }, Identifier, ++, --, IF, ELSEIF, ELSE, CHORDS, LOOP, DO, OUTRO, INTRO");
+//                hasError = true;
+//            }
+//        }
+        
         if(checker(MUTE))
         {
             addToSyntaxTable("<functiondef>", "MUTE");
@@ -6244,22 +6270,46 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         addToSyntaxTable("<functiondef>",")");
                         if(checker(OPENCURLYBRACE))
                         {
-                            addToSyntaxTable("<functiondef>","{");
-                            addToSyntaxTable("<functiondef>","<statements>");
-                                production_statements();
-                            if(checker(PRODUCE))
+                            if(checker1(INT)||checker1(FLOAT)||checker1(CHAR)||checker1(STRING)||checker1(BOOL) && hasError == false) //check if pupunta kay production vardec1 // localdec
                             {
-                                addToSyntaxErrorTable("<functiondef>","Unexpected Produce");
-                                hasError = true;
+                                addToSyntaxTable("<program>","<localdec>");
+                                    production_vardec1();
+                                addToSyntaxTable("<program>","<statements>");
+                                    production_statements();
+                                if(checker(PRODUCE))
+                                {
+                                    addToSyntaxErrorTable("<functiondef>","Unexpected Produce");
+                                    hasError = true;
+                                }
+                                if(checker(CLOSECURLYBRACE))
+                                {
+                                    addToSyntaxTable("<functiondef>","}");
+                                }
+                                else if(hasError == false)
+                                {
+                                    addToSyntaxErrorTable("<functiondef>","Expecting }");
+                                    hasError = true;
+                                }
                             }
-                            if(checker(CLOSECURLYBRACE))
+                            else
                             {
-                                addToSyntaxTable("<functiondef>","}");
-                            }
-                            else if(hasError == false)
-                            {
-                                addToSyntaxErrorTable("<functiondef>","Expecting }");
-                                hasError = true;
+                                addToSyntaxTable("<functiondef>","{");
+                                addToSyntaxTable("<functiondef>","<statements>");
+                                    production_statements();
+                                if(checker(PRODUCE))
+                                {
+                                    addToSyntaxErrorTable("<functiondef>","Unexpected Produce");
+                                    hasError = true;
+                                }
+                                if(checker(CLOSECURLYBRACE))
+                                {
+                                    addToSyntaxTable("<functiondef>","}");
+                                }
+                                else if(hasError == false)
+                                {
+                                    addToSyntaxErrorTable("<functiondef>","Expecting }");
+                                    hasError = true;
+                                }
                             }
                         }
                         else if(hasError == false)
@@ -11794,8 +11844,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
             @Override
             public void run() {
                 String FileName = lblFileName.getText();
-                File f = new File(new File(".").getAbsolutePath()+"\\Files\\"+FileName+".cpp");
-
                 if(FileName == null )
                 {        
                 }
