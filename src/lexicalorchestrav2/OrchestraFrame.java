@@ -48,6 +48,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         
         initComponents();
         btnSyntax.setEnabled(false); 
+        btnSemantic.setEnabled(false);
     }
 
     /**
@@ -689,7 +690,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
         
         model.setRowCount(0);
         error.setRowCount(0);
-        
 
         int check = 0;
         int i = 0;
@@ -5345,7 +5345,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         else
         {
             btnSyntax.setEnabled(false);    
-            btnRemove.setEnabled(false);    
+            btnRemove.setEnabled(true);    
             tabMainTables.setSelectedIndex(0); 
             tabErrorTables.setSelectedIndex(0);  
             //playSound("318_harry_potter_hedwigs_theme_song_music_mp3_ringtone_ringtone_mp3.wav");
@@ -5379,6 +5379,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         
         txtareaCompiler.setText("");
         btnSyntax.setEnabled(false);
+        btnSemantic.setEnabled(false);
        
         //Clearing
         
@@ -5689,7 +5690,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                 }   
                                 else if(hasError == false)
                                 {
-                                    addToSyntaxErrorTable("<program>", "Expecting },INT, FLOAT, CHAR, STRING, BOOL, Identifier, ++, --, IF, ELSEIF, ELSE, CHORDS, LOOP, DO, OUTRO, INTRO");
+                                    addToSyntaxErrorTable("<program>", "Expecting }, Identifier, ++, --, IF, ELSEIF, ELSE, CHORDS, LOOP, DO, OUTRO, INTRO");
                                     hasError = true;
                                 }
                             }
@@ -10797,7 +10798,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     {
                         if(checker(OPENCURLYBRACE))
                         {
-                            semantic_declaration();
+                            semantic_declaration(); //statements
+                            semantic_nextDeclaration(); //next set of statements
                             if(checker(CLOSECURLYBRACE))
                             {
                                 if(checker(ENCORE))
@@ -10809,6 +10811,17 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     }
                 }
             }
+        }
+    }
+    
+    void semantic_nextDeclaration()
+    {
+        switch(token)
+        {
+            case INT: case FLOAT: case CHAR: case STRING: case BOOL: case OUTRO: case INTRO:
+                semantic_declaration();
+                semantic_nextDeclaration();
+                break;
         }
     }
     
@@ -11200,6 +11213,63 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 {
                 }
                 break;
+                
+            case INTRO:
+                checker(INTRO);
+                if(checker(IDENTIFIER))
+                {
+                    if(scope == "concert")
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        concert_checkIfDefined(text);
+                    }
+                    else if(scope == "function")
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        interlude_checkIfDefined(text);
+                    }
+                    else
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        checkAlreadyDefined(text);
+                    }
+                    semantic_nextInput();
+                    if(checker(SEMICOLON))
+                    {
+                    }
+                }
+        }
+    }
+    
+    void semantic_nextInput()
+    {
+        if(checker(COMMA))
+        {
+            if(checker(IDENTIFIER))
+            {
+                if(scope == "concert")
+                {
+                    String text = getItem();
+                    identifier = text;
+                    concert_checkIfDefined(text);
+                }
+                else if(scope == "function")
+                {
+                    String text = getItem();
+                    identifier = text;
+                    interlude_checkIfDefined(text);
+                }
+                else
+                {
+                    String text = getItem();
+                    identifier = text;
+                    checkAlreadyDefined(text);
+                }
+                semantic_nextInput();
+            }
         }
     }
 
@@ -11586,7 +11656,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     private void LexicalMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LexicalMouseReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_LexicalMouseReleased
-    String code="#include <iostream>\n #include <cstdlib>\n  #include <exception>\n #include <iomanip>\n using namespace std; int main ( ) { std::cout << std::setprecision(6) << std::fixed; cout<< \"HELLO HELLO\" ; system(\"pause\");\n" +
+    String code="#include <iostream>\n #include <cstdlib>\n  #include <exception>\n #include <iomanip>\n using namespace std; int main ( ) { std::cout << std::setprecision(6) << std::fixed; cout<< \"HI JRPT\" ; system(\"pause\");\n" +
 " return 0;}";
     private void btnSyntaxMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSyntaxMousePressed
         // TODO add your handling code here:
@@ -11600,23 +11670,29 @@ public class OrchestraFrame extends javax.swing.JFrame {
         
         for(int ctr1 = rowErrorSyntax-1; ctr1>=0; ctr1--)
             errorSyntax.removeRow(ctr1);
-        code = "";  //Storage for Translating
-        code = "#include <iostream>\n #include <cstdlib>\n  #include <exception>\n #include <iomanip>\n using namespace std; int main ( ) { std::cout << std::setprecision(6) << std::fixed; cout<< \"HELLO WORLD\" ; system(\"pause\");\n" +
-" return 0;";
+        code = "";  //translate to c++
         hasError = false;
         tokenPos = 0;
         removeNotNeed();
         token = getToken();
         production_program();
             
-        tabErrorTables.setSelectedIndex(1);
-        tabMainTables.setSelectedIndex(1);
-        if(tblErrorSyntax.getRowCount() == 0) //check the error table of Lexical Error Table and THERE IS NO ERROR
+        if(tblErrorSyntax.getRowCount() == 0) //check the error table of Syntax Error Table and THERE IS NO ERROR
         {
+            btnSemantic.setEnabled(true);  // Enables the Syntax Button
+            tabMainTables.setSelectedIndex(1);
+            tabErrorTables.setSelectedIndex(1);
             JOptionPane.showMessageDialog(null, "No Syntax Error Detected!");
+            //playSound("Justin Bieber - Baby.wav");
+
         }
         else
-        { 
+        {
+            btnSemantic.setEnabled(false);    
+            btnRemove.setEnabled(true);    
+            tabMainTables.setSelectedIndex(1); 
+            tabErrorTables.setSelectedIndex(1);  
+            //playSound("318_harry_potter_hedwigs_theme_song_music_mp3_ringtone_ringtone_mp3.wav");
             JOptionPane.showMessageDialog(null, "Syntax Error Detected!");
         }
     }//GEN-LAST:event_btnSyntaxMousePressed
@@ -11652,17 +11728,14 @@ public class OrchestraFrame extends javax.swing.JFrame {
         removeNotNeed();
         token = getToken();
         semantic_program();
-            
+        
         tabErrorTables.setSelectedIndex(2);
         tabMainTables.setSelectedIndex(2);
-        if(tblErrorSemantic.getRowCount() == 0) //check the error table of Semantic Error Table and THERE IS NO ERROR
-        {
-            JOptionPane.showMessageDialog(null, "No SEMANTIC Error Detected!");
-        }
+        
+        if(tblErrorSemantic.getRowCount() == 0) //check the error table of Syntax Error Table and THERE IS NO ERROR
+            JOptionPane.showMessageDialog(null, "No Semantic Error Detected!");
         else
-        { 
-            JOptionPane.showMessageDialog(null, "SEMANTIC Error Detected!");
-        } 
+            JOptionPane.showMessageDialog(null, "Semantic Error Detected!");
     }//GEN-LAST:event_btnSemanticMousePressed
 
     private void btnSaveMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMousePressed
@@ -11674,7 +11747,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             File f = new File(new File(".").getAbsolutePath()+"\\Files\\"+FileName+".txt");
             if(f.exists()) 
             { 
-                JOptionPane.showMessageDialog(null, "File Already Exists");
+                JOptionPane.showMessageDialog(null, "File Already Exists. Try a Different Filename.");
             }
             else if(FileName.equals("") == false)
             {
@@ -11683,7 +11756,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 out.write(txtareaCompiler.getText());
                 out.newLine();
                 out.close();
-                JOptionPane.showMessageDialog(null, "Saved Successfully!");
+                JOptionPane.showMessageDialog(null, FileName+" Was Saved Successfully!");
                 lblFileName.setText("FILE NAME: "+FileName);
             }
         }
