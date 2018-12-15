@@ -108,6 +108,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
         jPanel18 = new javax.swing.JPanel();
         jScrollPane13 = new javax.swing.JScrollPane();
         tblFunctionReturn = new javax.swing.JTable();
+        jPanel19 = new javax.swing.JPanel();
+        jScrollPane14 = new javax.swing.JScrollPane();
+        tblArray = new javax.swing.JTable();
         btnSyntax = new javax.swing.JButton();
         tabErrorTables = new javax.swing.JTabbedPane();
         jPanel6 = new javax.swing.JPanel();
@@ -516,6 +519,29 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
 
         jTabbedPane1.addTab("Function", jPanel15);
+
+        tblArray.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Identifier", "1D Size", "2D Size", "Value", "Type"
+            }
+        ));
+        jScrollPane14.setViewportView(tblArray);
+
+        javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
+        jPanel19.setLayout(jPanel19Layout);
+        jPanel19Layout.setHorizontalGroup(
+            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
+        );
+        jPanel19Layout.setVerticalGroup(
+            jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Array", jPanel19);
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -5373,6 +5399,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         DefaultTableModel modelFunctionParameters = (DefaultTableModel) tblFunctionParemeters.getModel(); //Table for Semantic
         DefaultTableModel modelFunctionDeclaration = (DefaultTableModel) tblFunctionDeclaration.getModel(); //Table for Semantic
         DefaultTableModel modelFunctionReturn = (DefaultTableModel) tblFunctionReturn.getModel(); //Table for Semantic
+        DefaultTableModel modelArray = (DefaultTableModel) tblArray.getModel(); //Table for Semantic
         DefaultTableModel error = (DefaultTableModel) tblError.getModel();
         DefaultTableModel errorSyntax = (DefaultTableModel) tblErrorSyntax.getModel();
         DefaultTableModel errorSemantic = (DefaultTableModel) tblErrorSemantic.getModel();
@@ -5388,6 +5415,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         modelConstantDec.setRowCount(0);
         modelGlobalDec.setRowCount(0);
         modelLocalDec.setRowCount(0);
+        modelArray.setRowCount(0);
         modelIdentifier.setRowCount(0);
         error.setRowCount(0);
         errorSyntax.setRowCount(0);
@@ -10773,6 +10801,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     String array1D = null;
     String array2d = null;
     String arraySize = null;
+    String Default = "";
     int errorCode;
     
     String getItem()
@@ -10808,6 +10837,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
         
         model.addRow(new Object[] {identifier, value, parentDataType});
     }
+    
+    void addToArrayTable()
+    {
+        DefaultTableModel model = (DefaultTableModel)tblIdentifier.getModel();
+        
+        model.addRow(new Object[] {identifier, value, parentDataType});
+    }
         
     void addToSemanticErrorTable(int errorCode)
     {
@@ -10835,6 +10871,42 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Variable "+tblLexeme.getModel().getValueAt(tokenPos-2, 0)+
             " can't be altered.", "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)}); 
+        }
+        else if(errorCode == 6)
+        {
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Array Index Out of Bounds "+array1D+ " >= "+countArray1D, "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)}); 
+        }
+        else if(errorCode == 7)
+        {
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "2D Array Index Out of Bounds "+array2d+ " >= "+countArray2D2, "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)}); 
+        }
+    }
+    
+    void checkNotInitialized()
+    {
+        if(parentDataType.equals("INT"))
+        {
+            Default = "0";
+        }
+        else if(parentDataType.equals("FLOAT"))
+        {
+            Default = "0.00";
+        }
+        else if(parentDataType.equals("CHAR"))
+        {
+            Default = "";
+        }
+        else if(parentDataType.equals("STRING"))
+        {
+            Default = "";
+        }
+        else if(parentDataType.equals("BOOL"))
+        {
+            Default = "false";
+        }
+        else
+        {
+            Default = "0";
         }
     }
     
@@ -11407,7 +11479,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             }
         }
     }
-
+    ArrayList<String> ArrayValues = new ArrayList<>();
     void semantic_valueInitialize()
     {
         if(checker(EQUAL))
@@ -11440,12 +11512,27 @@ public class OrchestraFrame extends javax.swing.JFrame {
             semantic_nextOutput();
         }
     }
-    
+    int countArray1D = 0;
     void semantic_2dArray()
     {
         switch(token)
         {
             case EQUAL: //array values
+                checker(EQUAL);
+                if(checker(OPENCURLYBRACE))
+                {
+                    semantic_value2();
+                    ArrayValues.add(value);
+                    countArray1D = countArray1D + 1;
+                    check1DSize();
+                    semantic_nextValue();
+                    countArray1D = 0;
+                    countArray2D2 = 0;
+                    if(checker(CLOSECURLYBRACE))
+                    {
+                        store1DValues();
+                    }
+                }
                 break;
                 
             case OPENBRACKET: //2darray
@@ -11456,6 +11543,106 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 {
                     semantic_2dArrayValue();
                 }
+        }
+    }
+    
+    void store1DValues()
+    {
+        DefaultTableModel identifier1 = (DefaultTableModel)tblIdentifier.getModel();
+        DefaultTableModel array = (DefaultTableModel)tblArray.getModel();
+        int ctr=0;
+        checkNotInitialized();
+        for(ctr = 0; ctr< Integer.parseInt(array1D); ctr++)
+        {
+            if(ctr >= ArrayValues.size())
+            {
+                identifier1.addRow(new Object[] {identifier+"["+ctr+"]", Default, parentDataType});
+                array.addRow(new Object[] {identifier, ctr, "null", Default, parentDataType});
+            }
+            else{
+                identifier1.addRow(new Object[] {identifier+"["+ctr+"]", ArrayValues.get(ctr), parentDataType});
+                array.addRow(new Object[] {identifier, ctr, "null",ArrayValues.get(ctr), parentDataType});
+            }
+        }
+        ArrayValues.clear();
+        value = "Array";
+    }
+    
+    void semantic_nextValue()
+    {
+        if(checker(COMMA))
+        {
+            semantic_value3();
+            ArrayValues.add(value);
+            if(countArray2D2 == 0)
+            {
+                countArray1D++;
+                check1DSize();
+            }
+            if(countArray2D2 > 0)
+            {
+                countArray2D2++;
+                check2D2Size();
+            }
+            semantic_nextValue();
+            
+        }
+    }
+    String IDArray = "";
+    int countArray2D2 = 0;
+    void semantic_value3()
+    {
+        switch(token)
+        {
+            case IDENTIFIER:
+                if(checker(IDENTIFIER))
+                {
+                    if(scope == "concert")
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        concert_checkIfDefined(text);
+                    }
+                    else if(scope == "function")
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        interlude_checkIfDefined(text);
+                    }
+                    else
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        checkAlreadyDefined(text);
+                    }
+                    IDArray = getItem();
+                    semantic_extension();
+                }
+                break;
+            
+            case INTEGERLITERAL: case FLOATLITERAL: case CHARLITERAL: case STRINGLITERAL: case BOOLLITERAL:
+                semantic_value();
+                break;
+                
+        }
+    }
+    //int array2D = 0;
+    void check2D2Size()
+    {
+      if(countArray2D2 > Integer.parseInt(array2d))
+        {
+            errorCode = 7;
+            addToSemanticErrorTable(errorCode);
+        }  
+    }
+    
+    void check1DSize()
+    {
+        int errorCode=0;
+        if(countArray1D > Integer.parseInt(array1D))
+        {
+            errorCode = 6;
+            addToSemanticErrorTable(errorCode);
         }
     }
     
@@ -11488,25 +11675,25 @@ public class OrchestraFrame extends javax.swing.JFrame {
         switch(token)
         {
             case IDENTIFIER:
-                checker(IDENTIFIER);
-                if(scope == "concert")
-                {
-                    String text = getItem();
-                    identifier = text;
-                    concert_checkAlreadyDefined(text);
-                }
-                else if(scope == "function")
-                {
-                    String text = getItem();
-                    identifier = text;
-                    interlude_checkAlreadyDefined(text);
-                }
-                else
-                {
-                    String text = getItem();
-                    identifier = text;
-                    checkAlreadyDefined(text);
-                }
+                    if(scope == "concert")
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        System.out.println("text: "+text);
+                        concert_checkIfDefined(text);
+                    }
+                    else if(scope == "function")
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        interlude_checkIfDefined(text);
+                    }
+                    else
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        checkIfDefined(text);
+                    }
                 break;
             
             case INTEGERLITERAL:
@@ -11881,6 +12068,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         DefaultTableModel modelFunctionParameters = (DefaultTableModel) tblFunctionParemeters.getModel(); //Table for Semantic
         DefaultTableModel modelFunctionDeclaration = (DefaultTableModel) tblFunctionDeclaration.getModel(); //Table for Semantic
         DefaultTableModel modelFunctionReturn = (DefaultTableModel) tblFunctionReturn.getModel(); //Table for Semantic
+        DefaultTableModel modelArray = (DefaultTableModel) tblArray.getModel(); //Table for Semantic
         DefaultTableModel errorSemantic = (DefaultTableModel) tblErrorSemantic.getModel();
        
         //Clearing
@@ -11892,6 +12080,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         modelFunctionParameters.setRowCount(0);
         modelFunctionDeclaration.setRowCount(0);
         modelFunctionReturn.setRowCount(0);
+        modelArray.setRowCount(0);
         //
 
         tokenPos = 0;
@@ -12083,6 +12272,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel18;
+    private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -12096,6 +12286,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane12;
     private javax.swing.JScrollPane jScrollPane13;
+    private javax.swing.JScrollPane jScrollPane14;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -12112,6 +12303,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lblRowCol;
     private javax.swing.JTabbedPane tabErrorTables;
     private javax.swing.JTabbedPane tabMainTables;
+    private javax.swing.JTable tblArray;
     private javax.swing.JTable tblConstantDeclaration;
     private javax.swing.JTable tblError;
     private javax.swing.JTable tblErrorSemantic;
