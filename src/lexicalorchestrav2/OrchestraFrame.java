@@ -10819,7 +10819,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         else if(errorCode == 2)
         {
-            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Array size must be >= 1 but <= 10000", "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)});
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Array size must be >= 1 but <= 1000", "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)});
         }
         else if(errorCode == 3)
         {
@@ -10830,6 +10830,11 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Variable "+tblLexeme.getModel().getValueAt(tokenPos-2, 0)+
             " is Not Defined", "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)}); 
+        }
+        else if(errorCode == 5)
+        {
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Variable "+tblLexeme.getModel().getValueAt(tokenPos-2, 0)+
+            " can't be altered.", "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)}); 
         }
     }
     
@@ -10938,9 +10943,14 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     {
                         if(checker(OPENCURLYBRACE))
                         {
-                            if(checker(CLOSECURLYBRACE))
+                            semantic_declaration();
+                            semantic_nextDeclaration();
+                            if(checker(SEMICOLON))
                             {
-                                
+                                if(checker(CLOSECURLYBRACE))
+                                {
+
+                                }
                             }
                         }
                     }
@@ -11018,8 +11028,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 }
                 else if(scope == "concert")
                 {
+                    System.out.println("check");
                     String text = getItem();
                     identifier = text;
+                    System.out.println("ID: "+text);
                     concert_checkIfDefined(text);
                 }
                 else
@@ -11243,7 +11255,20 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     {
                         String text = getItem();
                         identifier = text;
+                        //System.out.println("text: "+text);
                         concert_checkAlreadyDefined(text);
+                    }
+                    else if(scope == "function")
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        interlude_checkAlreadyDefined(text);
+                    }
+                    else
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        checkAlreadyDefined(text);
                     }
                     semantic_valueInitialize();
                     semantic_nextVariable();
@@ -11257,6 +11282,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case OUTRO:
                 checker(OUTRO);
+                System.out.println("ops.");
                 semantic_value2();
                 semantic_nextOutput();
                 if(checker(SEMICOLON))
@@ -11284,16 +11310,75 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     {
                         String text = getItem();
                         identifier = text;
-                        checkAlreadyDefined(text);
+                        checkIfDefined(text);
                     }
+                    
+//                    if(datatype.equals("CONVO"))
+//                    {
+//                        check_change_cin_to_getline();
+//                    }
+                    
                     semantic_nextInput();
                     if(checker(SEMICOLON))
                     {
                     }
                 }
+                break;
+                
+            case IDENTIFIER:
+                checker(IDENTIFIER);
+                if(scope == "concert")
+                {
+                    String text = getItem();
+                    identifier = text;
+                    concert_checkIfDefined(text);
+                }
+                else if(scope == "function")
+                {
+                    String text = getItem();
+                    identifier = text;
+                    interlude_checkIfDefined(text);
+                }
+                else
+                {
+                    String text = getItem();
+                    identifier = text;
+                    checkIfDefined(text);
+                }
+                
+//                datatypeCatcher = datatype;
+                semantic_checkIfConstant(identifier);
+                semantic_extension();
+                semantic_assignmentOperator();
+                
+                if(checker(SEMICOLON)){}
+                break;
         }
     }
     
+    void semantic_assignmentOperator()
+    {
+        switch(token)
+        {
+            case EQUAL:
+                checker(EQUAL);
+                semantic_operand();
+                break;
+            
+        }
+    }
+    
+    void semantic_operand()
+    {
+        switch(token)
+        {
+            case IDENTIFIER: case INTEGERLITERAL: case FLOATLITERAL:
+            case CHARLITERAL: case STRINGLITERAL: case BOOLLITERAL:
+                semantic_value2();
+                break;
+        }
+    }
+
     void semantic_nextInput()
     {
         if(checker(COMMA))
@@ -11511,18 +11596,53 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
     }
    
+    void semantic_checkIfConstant(String identifier)
+    {
+        ///DefaultTableModel semanticerror = (DefaultTableModel)tblSemanticError.getModel();
+        boolean isConstantDeclared = false, isLocallyDeclared = false; 
+        
+        int identifierrow = tblConstantDeclaration.getRowCount();
+        for(int i = 0; i < identifierrow; i++)
+        {
+            if(identifier.equals(tblConstantDeclaration.getValueAt(i, 0).toString()))
+            {
+//                errorCode = 5;
+//                addToSemanticErrorTable(errorCode);
+                isConstantDeclared = true;
+            }
+        }
+        
+        int identifierrow1 = tblLocalDeclaration.getRowCount();
+        for(int i = 0; i < identifierrow1; i++)
+        {
+            if(identifier.equals(tblLocalDeclaration.getValueAt(i, 0).toString()))
+            {
+//                errorCode = 5;
+//                addToSemanticErrorTable(errorCode);
+                isLocallyDeclared = true;
+            }
+        }
+        
+        if (!(isConstantDeclared && isLocallyDeclared))
+        {
+            errorCode = 5;
+            addToSemanticErrorTable(errorCode);
+        }
+        
+    }
+    
     void concert_checkAlreadyDefined(String identifier)
     {
        // System.out.println("ID: "+identifier);
-        int identifierrow = tblIdentifier.getRowCount();
-        for(int i = 0; i < identifierrow; i++)
-        {
-            if(identifier.equals(tblIdentifier.getValueAt(i, 0).toString()))
-            {
-                errorCode = 1;
-                addToSemanticErrorTable(errorCode);
-            }
-        }
+//        int identifierrow = tblIdentifier.getRowCount();
+//        for(int i = 0; i < identifierrow; i++)
+//        {
+//            if(identifier.equals(tblIdentifier.getValueAt(i, 0).toString()))
+//            {
+//                errorCode = 1;
+//                addToSemanticErrorTable(errorCode);
+//            }
+//        }
         
         int identifierrow1 = tblLocalDeclaration.getRowCount();
         for(int i = 0; i < identifierrow1; i++)
@@ -11580,9 +11700,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
             literalType = datatype;
             //System.out.println("local dec hoy");
         }
-        System.out.println("data_type: "+datatype);
-        System.out.println("value: "+value);
-        System.out.println("literal_type: "+literalType);
+//        System.out.println("data_type: "+datatype);
+//        System.out.println("value: "+value);
+//        System.out.println("literal_type: "+literalType);
             
      }
     
