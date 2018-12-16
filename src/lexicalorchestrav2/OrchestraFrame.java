@@ -10880,6 +10880,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "2D Array Index Out of Bounds "+array2d+ " >= "+countArray2D2, "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)}); 
         }
+        else if(errorCode == 8)
+        {
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Array 1D Index Out of Bounds: "+array1D+" >= "+countArray2D1, tblLexeme.getModel().getValueAt(tokenPos-2, 2)});
+        }
     }
     
     void checkNotInitialized()
@@ -11543,6 +11547,78 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 {
                     semantic_2dArrayValue();
                 }
+                break;
+                
+            default: store1DValues();
+            
+        }       
+    }
+    int countArray2D1 = 0;
+    int countArraySeparator = 0;
+    void semantic_2dArrayValue()
+    {
+        switch(token)
+        {
+            case EQUAL:
+                checker(EQUAL);
+                if(checker(OPENCURLYBRACE))
+                {
+                    if(checker(OPENCURLYBRACE))
+                    {
+                        semantic_value2();
+                        ArrayValues.add(value);
+                        countArray2D2 = countArray2D2 + 1;
+                        check2D2Size();
+                        semantic_nextValue();
+                        ArrayValues.add("@");
+                        countArraySeparator++;
+                        countArray2D1 = countArray2D1 + 1;
+                        check2D1Size();
+                        countArray2D2 = 0;
+                        if(checker(CLOSECURLYBRACE))
+                        {
+                            semantic_nextElement();
+                            countArray1D = 0;
+                            countArray2D1 = 0;
+                            countArray2D2 = 0;
+                            if(checker(CLOSECURLYBRACE))
+                            {
+                                store2DValues();
+                            }
+                        }
+                    }
+                }
+                break;
+                
+            default: store2DValues(); 
+        }
+    }
+    
+    void semantic_nextElement()
+    {
+        switch(token)
+        {
+            case COMMA:
+                checker(COMMA);
+                if(checker(OPENCURLYBRACE))
+                {
+                    semantic_value2();
+                    ArrayValues.add(value);
+                    countArray2D2 = countArray2D2 + 1;
+                    check2D2Size();
+                    semantic_nextValue();
+                    ArrayValues.add("@");
+                    countArraySeparator++;
+                    countArray2D1 = countArray2D1 + 1;
+                    check2D1Size();
+                    countArray2D2 = 0;
+                    if(checker(CLOSECURLYBRACE))
+                    {
+                        semantic_nextElement();
+                    }
+                }
+                
+                break;
         }
     }
     
@@ -11559,13 +11635,66 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 identifier1.addRow(new Object[] {identifier+"["+ctr+"]", Default, parentDataType});
                 array.addRow(new Object[] {identifier, ctr, "null", Default, parentDataType});
             }
-            else{
+            else
+            {
                 identifier1.addRow(new Object[] {identifier+"["+ctr+"]", ArrayValues.get(ctr), parentDataType});
                 array.addRow(new Object[] {identifier, ctr, "null",ArrayValues.get(ctr), parentDataType});
             }
         }
         ArrayValues.clear();
         value = "Array";
+    }
+    
+    void store2DValues()
+    {
+        DefaultTableModel identifier1 = (DefaultTableModel)tblIdentifier.getModel();
+        DefaultTableModel array = (DefaultTableModel)tblArray.getModel();
+        int ctr=0,ctr1=0,count=0;
+        System.out.println("arr: "+ArrayValues.size());
+        System.out.println("Array: "+ArrayValues);
+        System.out.println("Count: "+countArraySeparator);
+        System.out.println("Array 2D: "+array2d);
+        checkNotInitialized();
+        for(ctr = 0; ctr<Integer.parseInt(array1D); ctr++)
+        {
+            if(count<(ArrayValues.size()-countArraySeparator))
+            {
+                do
+                {
+                    System.out.println("im here");
+                    identifier1.addRow(new Object[] {identifier+"["+ctr+"]"+"["+ctr1+"]", ArrayValues.get(count), parentDataType});
+                    array.addRow(new Object[] {identifier, ctr, ctr1, ArrayValues.get(count), parentDataType});
+                    ctr1++;
+                    count++;
+                }while(!ArrayValues.get(count).equals("@"));
+                count++;
+                
+                if(ctr1<=Integer.parseInt(array2d))
+                {
+                    do
+                    {
+                        System.out.println("Im here1");
+                        identifier1.addRow(new Object[] {identifier+"["+ctr+"]"+"["+ctr1+"]", Default, parentDataType});     
+                        array.addRow(new Object[] {identifier, ctr, ctr1-Integer.parseInt(array2d), Default, parentDataType});
+                        ctr1++;
+                    }while(ctr1 < (Integer.parseInt(array2d)));
+                }
+            }
+            else
+            {
+                do
+                {
+                    System.out.println("Im here2");
+                    identifier1.addRow(new Object[] {identifier+"["+ctr+"]"+"["+ctr1+"]", Default, parentDataType});     
+                    array.addRow(new Object[] {identifier, ctr, ctr1-Integer.parseInt(array2d), Default, parentDataType});
+                    ctr1++;
+                }while(ctr1 < (Integer.parseInt(array2d)));
+                ctr1=0;
+            }
+        }
+        ArrayValues.clear();
+        value = "Array";
+        array2d = null;
     }
     
     void semantic_nextValue()
@@ -11586,6 +11715,35 @@ public class OrchestraFrame extends javax.swing.JFrame {
             }
             semantic_nextValue();
             
+        }
+    }
+        //int array2D = 0;
+    void check2D2Size()
+    {
+      if(countArray2D2 > Integer.parseInt(array2d))
+        {
+            errorCode = 7;
+            addToSemanticErrorTable(errorCode);
+        }  
+    }
+    
+    void check1DSize()
+    {
+        int errorCode=0;
+        if(countArray1D > Integer.parseInt(array1D))
+        {
+            errorCode = 6;
+            addToSemanticErrorTable(errorCode);
+        }
+    }
+    
+    void check2D1Size()
+    {
+        int errorCode = 0;
+        if(countArray2D1 > Integer.parseInt(array1D))
+        {
+            errorCode = 8;
+            addToSemanticErrorTable(errorCode);
         }
     }
     String IDArray = "";
@@ -11624,36 +11782,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 semantic_value();
                 break;
                 
-        }
-    }
-    //int array2D = 0;
-    void check2D2Size()
-    {
-      if(countArray2D2 > Integer.parseInt(array2d))
-        {
-            errorCode = 7;
-            addToSemanticErrorTable(errorCode);
-        }  
-    }
-    
-    void check1DSize()
-    {
-        int errorCode=0;
-        if(countArray1D > Integer.parseInt(array1D))
-        {
-            errorCode = 6;
-            addToSemanticErrorTable(errorCode);
-        }
-    }
-    
-    void semantic_2dArrayValue()
-    {
-        switch(token)
-        {
-            case EQUAL:
-                break;
-                
-            default: 
         }
     }
     
