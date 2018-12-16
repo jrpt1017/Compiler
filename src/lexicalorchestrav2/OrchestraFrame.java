@@ -10884,6 +10884,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Array 1D Index Out of Bounds: "+array1D+" >= "+countArray2D1, tblLexeme.getModel().getValueAt(tokenPos-2, 2)});
         }
+        else if(errorCode == 9)
+        {
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Variable "+tblLexeme.getModel().getValueAt(tokenPos-2, 0)+" is NOT Defined", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
+        }
     }
     
     void checkNotInitialized()
@@ -11168,16 +11172,16 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 semantic_worldtour_nextVariable();
                 break;
                 
-            case OPENBRACKET:
-                checker(OPENBRACKET);
-                semantic_arraySize();
-                array1D = arraySize;
-                    if(checker(CLOSEBRACKET))
-                    {
-                        semantic_2dArray();
-                        semantic_worldtour_nextVariable();
-                    }
-                break;
+//            case OPENBRACKET:
+//                checker(OPENBRACKET);
+//                semantic_arraySize();
+//                array1D = arraySize;
+//                if(checker(CLOSEBRACKET))
+//                {
+//                    semantic_2dArray();
+//                    semantic_worldtour_nextVariable();
+//                }
+//                break;
                 
             case SEMICOLON:
                 checker(SEMICOLON);
@@ -11185,6 +11189,16 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 addToIdentifierTable();
                 break;
                 
+            case OPENBRACKET:
+                checker(OPENBRACKET);
+                semantic_const_arraySize();
+                array1D = arraySize;
+                if(checker(CLOSEBRACKET))
+                {
+                    semantic_2dArray();
+                    semantic_worldtour_nextVariable();
+                }
+                break;
         }
     }
     
@@ -11280,7 +11294,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     semantic_const_valueInitialize();
                     addToConstantDeclarationTable();
                     addToIdentifierTable();
-
                     semantic_const_nextVariable();
                 }
             break;
@@ -11295,6 +11308,44 @@ public class OrchestraFrame extends javax.swing.JFrame {
                checker(EQUAL);
                semantic_value();
                break;
+        }
+    }
+    
+    void semantic_const_arraySize()
+    {
+        switch(token)
+        {
+            case IDENTIFIER:
+                checker(IDENTIFIER);
+                if(scope == "concert")
+                {
+                    String text = getItem();
+                    identifier = text;
+                    //System.out.println("text: "+text);
+                    concert_checkInt(text);
+                }
+                else if(scope == "function")
+                {
+                    String text = getItem();
+                    identifier = text;
+                    interlude_checkInt(text);
+                }
+                else
+                {
+                    String text = getItem();
+                    identifier = text;
+                    checkInt(text);
+                }
+                break;
+            
+            case INTEGERLITERAL:
+                checker(INTEGERLITERAL);
+//                value = getItem();
+//                datatype = "INT";
+//                literalType = "INT Literal";
+                arraySize = getItem();
+                checkArraySize(Integer.parseInt(arraySize));
+                break;
         }
     }
     
@@ -12127,6 +12178,111 @@ public class OrchestraFrame extends javax.swing.JFrame {
             value = tblIdentifier.getValueAt(i, 1).toString();
             literalType = datatype;
         }
+    }
+    
+    void concert_checkInt(String identifier)
+    {
+        DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
+        int identifierrow = tblLocalDeclaration.getRowCount();
+        int i;
+        for(i = 0; i < identifierrow; i++)
+        {
+            if(identifier.equals(tblLocalDeclaration.getValueAt(i, 0).toString()))
+            {
+                break;
+            }
+        }
+        
+        
+        int identifierrow1 = tblIdentifier.getRowCount();
+        int k;
+        for(k = 0; k < identifierrow1; k++)
+        {
+            if(identifier.equals(tblIdentifier.getValueAt(k, 0).toString()))
+            {
+                break;
+            }
+        }
+        int errorCode = 0;
+        if(i == (identifierrow) && k == identifierrow1)
+        {
+            errorCode = 9;
+            addToSemanticErrorTable(errorCode);
+        }
+        else if(i < identifierrow && !tblLocalDeclaration.getValueAt(i, 2).toString().equals("INT"))
+        {
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+tblLocalDeclaration.getValueAt(i, 2).toString()+" Cannot be converted to HASHTAG", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
+        }
+        else if(k < identifierrow1 && !tblIdentifier.getValueAt(k, 2).toString().equals("INT"))
+        {
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+tblIdentifier.getValueAt(k, 2).toString()+" Cannot be converted to INT", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
+        }
+    }
+    
+    void checkInt(String identifier)
+    {
+        DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
+        int identifierrow = tblIdentifier.getRowCount();
+        int i;
+        for(i = 0; i < identifierrow; i++)
+        {
+            if(identifier.equals(tblIdentifier.getValueAt(i, 0).toString()))
+            {
+                break;
+            }
+        }
+        
+        if(i == (identifierrow))
+        {
+            addToSemanticErrorTable(9);
+            //semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Variable "+tblLexeme.getModel().getValueAt(tokenPos-2, 0)+" is NOT Defined", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
+        }
+        else
+        {
+            if(!tblIdentifier.getValueAt(i, 2).toString().equals("INT"))
+            {
+                semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+tblIdentifier.getValueAt(i, 2).toString()+" Cannot be converted to INT", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
+            }
+            else
+            {
+                arraySize = tblIdentifier.getValueAt(i, 1).toString();               
+            }
+        }
+    }
+    
+    void interlude_checkInt(String identifier)
+    {
+//        DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
+//        int identifierrow = tblFunctionDeclaration.getRowCount();
+//        int i;
+//        for(i = 0; i < identifierrow; i++)
+//        {
+//            if(function_name.equals(tblFunctionDeclaration.getValueAt(i, 0).toString()) && 
+//                    identifier.equals(tblFunctionDeclaration.getValueAt(i, 1).toString()))
+//            {
+//                break;
+//            }
+//        }
+//        
+//        
+//        int identifierrow1 = tblIdentifier.getRowCount();
+//        int k;
+//        for(k = 0; k < identifierrow1; k++)
+//        {
+//            if(identifier.equals(tblIdentifier.getValueAt(k, 0).toString()))
+//            {
+//                break;
+//            }
+//        }
+//        
+//        if(i == (identifierrow) && k == identifierrow1)
+//        {     
+//            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenpost-2, 0), "Variable "+tblLexeme.getModel().getValueAt(tokenpost-2, 0)+" is NOT Defined", tblLexeme.getModel().getValueAt(tokenpost-2, 2)}); 
+//        }else if(i < identifierrow && !tblFunctionDeclaration.getValueAt(i, 3).toString().equals("HASHTAG")){
+//             semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenpost-2, 0),"Incompatible Types: "+tblFunctionDeclaration.getValueAt(i, 3).toString()+" Cannot be converted to HASHTAG", tblLexeme.getModel().getValueAt(tokenpost-2, 2)}); 
+//        }else if(k < identifierrow1 && !tblIdentifier.getValueAt(k, 2).toString().equals("HASHTAG")){
+//             semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenpost-2, 0),"Incompatible Types: "+tblIdentifier.getValueAt(k, 2).toString()+" Cannot be converted to HASHTAG", tblLexeme.getModel().getValueAt(tokenpost-2, 2)}); 
+//        }
     }
 
    
