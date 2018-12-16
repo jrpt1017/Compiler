@@ -11068,6 +11068,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 identifier = text;
                 checkAlreadyDefined(text);
             }
+            System.out.println("Identifier @worldtour:"+identifier);
             semantic_worldtour_extension();
             semantic_worldtour_nextVariable();
         }
@@ -11084,6 +11085,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 {
                     
                 }
+                addToGlobalDeclarationTable();
+                addToIdentifierTable();
                 break;
             
             case SEMICOLON:
@@ -11111,7 +11114,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     System.out.println("check");
                     String text = getItem();
                     identifier = text;
-                    System.out.println("ID: "+text);
+                    //System.out.println("ID: "+text);
                     concert_checkIfDefined(text);
                 }
                 else
@@ -11283,7 +11286,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     }
                     else if(scope == "function")
                     {
-
+                        String text = getItem();
+                        identifier = text;
+                        interlude_checkAlreadyDefined(text);
                     }
                     else
                     {
@@ -11320,29 +11325,30 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 if(scope == "concert")
                 {
                     String text = getItem();
-                    identifier = text;
+                    //identifier = text;
                     //System.out.println("text: "+text);
                     concert_checkInt(text);
                 }
                 else if(scope == "function")
                 {
                     String text = getItem();
-                    identifier = text;
+                    //identifier = text;
                     interlude_checkInt(text);
                 }
                 else
                 {
                     String text = getItem();
-                    identifier = text;
+                    //identifier = text;
                     checkInt(text);
                 }
+                System.out.println("id pagdating sa const_arraySize: "+identifier);
                 break;
             
             case INTEGERLITERAL:
                 checker(INTEGERLITERAL);
-//                value = getItem();
-//                datatype = "INT";
-//                literalType = "INT Literal";
+                value = getItem();
+                datatype = "INT";
+                literalType = "INT Literal";
                 arraySize = getItem();
                 checkArraySize(Integer.parseInt(arraySize));
                 break;
@@ -11397,6 +11403,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         identifier = text;
                         checkAlreadyDefined(text);
                     }
+                    //System.out.println("identifier: "+identifier);
                     semantic_valueInitialize();
                     semantic_nextVariable();
                     
@@ -11544,8 +11551,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         else if(checker(OPENBRACKET))
         {
-            semantic_arraySize();
+            semantic_const_arraySize();
             array1D = arraySize;
+            System.out.println("array1D: "+array1D);
             if(checker(CLOSEBRACKET))
             {
                 semantic_2dArray();
@@ -11592,7 +11600,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case OPENBRACKET: //2darray
                 checker(OPENBRACKET);
-                semantic_arraySize();
+                semantic_const_arraySize();
                 array2d = arraySize;
                 if(checker(CLOSEBRACKET))
                 {
@@ -11668,7 +11676,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         semantic_nextElement();
                     }
                 }
-                
                 break;
         }
     }
@@ -11701,10 +11708,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
         DefaultTableModel identifier1 = (DefaultTableModel)tblIdentifier.getModel();
         DefaultTableModel array = (DefaultTableModel)tblArray.getModel();
         int ctr=0,ctr1=0,count=0;
-        System.out.println("arr: "+ArrayValues.size());
-        System.out.println("Array: "+ArrayValues);
-        System.out.println("Count: "+countArraySeparator);
-        System.out.println("Array 2D: "+array2d);
+//        System.out.println("arr: "+ArrayValues.size());
+//        System.out.println("Array: "+ArrayValues);
+//        System.out.println("Count: "+countArraySeparator);
+//        System.out.println("Array 2D: "+array2d);
         checkNotInitialized();
         for(ctr = 0; ctr<Integer.parseInt(array1D); ctr++)
         {
@@ -11765,7 +11772,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 check2D2Size();
             }
             semantic_nextValue();
-            
         }
     }
         //int array2D = 0;
@@ -11854,25 +11860,26 @@ public class OrchestraFrame extends javax.swing.JFrame {
         switch(token)
         {
             case IDENTIFIER:
-                    if(scope == "concert")
-                    {
-                        String text = getItem();
-                        identifier = text;
-                        System.out.println("text: "+text);
-                        concert_checkIfDefined(text);
-                    }
-                    else if(scope == "function")
-                    {
-                        String text = getItem();
-                        identifier = text;
-                        interlude_checkIfDefined(text);
-                    }
-                    else
-                    {
-                        String text = getItem();
-                        identifier = text;
-                        checkIfDefined(text);
-                    }
+                checker(IDENTIFIER);
+                if(scope == "concert")
+                {
+                    String text = getItem();
+                    identifier = text;
+                    System.out.println("text: "+text);
+                    concert_checkIfDefined(text);
+                }
+                else if(scope == "function")
+                {
+                    String text = getItem();
+                    identifier = text;
+                    interlude_checkIfDefined(text);
+                }
+                else
+                {
+                    String text = getItem();
+                    identifier = text;
+                    checkIfDefined(text);
+                }
                 break;
             
             case INTEGERLITERAL:
@@ -12063,12 +12070,14 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             datatype = tblLocalDeclaration.getValueAt(i,2).toString();
             value = tblLocalDeclaration.getValueAt(i,1).toString();
+            
             literalType = datatype;
             //System.out.println("local dec hoy");
         }
-//        System.out.println("data_type: "+datatype);
-//        System.out.println("value: "+value);
-//        System.out.println("literal_type: "+literalType);
+        arraySize = value;
+        System.out.println("data_type: "+datatype);
+        System.out.println("value: "+value);
+        System.out.println("literal_type: "+literalType);
             
      }
     
@@ -12184,11 +12193,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
         int identifierrow = tblLocalDeclaration.getRowCount();
-        int i;
+        int i; boolean flagLocal = false, flagIdentifier = false;
         for(i = 0; i < identifierrow; i++)
         {
             if(identifier.equals(tblLocalDeclaration.getValueAt(i, 0).toString()))
             {
+                flagLocal=true;
                 break;
             }
         }
@@ -12200,22 +12210,62 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             if(identifier.equals(tblIdentifier.getValueAt(k, 0).toString()))
             {
+                flagIdentifier=true;
                 break;
             }
         }
+        System.out.println("flagLocal: "+flagLocal);
+        System.out.println("flagIdentifier: "+flagIdentifier);
+        System.out.println("i: "+i);
+        System.out.println("k: "+k);
         int errorCode = 0;
-        if(i == (identifierrow) && k == identifierrow1)
+        if(i == (identifierrow) && k == identifierrow1) //undeclared variable
         {
+            System.out.println("AA");
             errorCode = 9;
             addToSemanticErrorTable(errorCode);
         }
-        else if(i < identifierrow && !tblLocalDeclaration.getValueAt(i, 2).toString().equals("INT"))
+        else if(i < identifierrow && !tblLocalDeclaration.getValueAt(i, 2).toString().equals("INT") && flagIdentifier == false) //variable is declared in LOCAL but different data type 
         {
-            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+tblLocalDeclaration.getValueAt(i, 2).toString()+" Cannot be converted to HASHTAG", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
+            System.out.println("AA1");
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+tblLocalDeclaration.getValueAt(i, 2).toString()+" Cannot be converted to INT", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
         }
-        else if(k < identifierrow1 && !tblIdentifier.getValueAt(k, 2).toString().equals("INT"))
+        else if(k < identifierrow1 && !tblIdentifier.getValueAt(k, 2).toString().equals("INT") && flagLocal == false) //variable is declared in CONST or GLOBAL but different data type
         {
+            System.out.println("AA2");
             semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+tblIdentifier.getValueAt(k, 2).toString()+" Cannot be converted to INT", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
+        }
+        else if((flagLocal == false) && (flagIdentifier == true))
+        {
+            System.out.println("BB");
+            arraySize = tblIdentifier.getValueAt(k, 1).toString();    
+            System.out.println("asdasd: "+arraySize);
+        }
+        else
+        {
+            System.out.println("AA3");
+            if(!tblLocalDeclaration.getValueAt(i, 2).toString().equals("INT"))
+            {
+                semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+tblLocalDeclaration.getValueAt(i, 2).toString()+" Cannot be converted to INT", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
+            }
+            else
+            {
+               System.out.println("AA4");
+               if(!tblLocalDeclaration.getValueAt(i, 2).toString().equals("INT"))
+               {
+                    semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+tblLocalDeclaration.getValueAt(i, 2).toString()+" Cannot be converted to INT", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
+               }
+               else if(flagLocal==true && flagIdentifier==true)
+               {
+                   arraySize = tblLocalDeclaration.getValueAt(i, 1).toString();
+               }
+               else if(flagLocal==true && flagIdentifier==false)
+               {
+                    System.out.println("BB1");
+                    arraySize = tblLocalDeclaration.getValueAt(i, 1).toString();    
+                    System.out.println("poopo: "+arraySize);
+               }
+            }
         }
     }
     
