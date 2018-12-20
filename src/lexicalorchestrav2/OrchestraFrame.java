@@ -189,6 +189,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         Lexical.setBackground(new java.awt.Color(253, 189, 57));
         Lexical.setFont(new java.awt.Font("Segoe Script", 2, 24)); // NOI18N
         Lexical.setText("Lexical");
+        Lexical.setToolTipText("");
         Lexical.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 LexicalMousePressed(evt);
@@ -295,6 +296,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         lblRowCol.setForeground(new java.awt.Color(255, 255, 255));
         jPanel1.add(lblRowCol, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, -1, -1));
 
+        tblLexeme.setBackground(new java.awt.Color(153, 255, 51));
         tblLexeme.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         tblLexeme.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -304,6 +306,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 "LEXEME", "TOKEN", "LINE", "COLUMN", "DESCRIPTION"
             }
         ));
+        tblLexeme.setToolTipText("Lexical");
         jScrollPane1.setViewportView(tblLexeme);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -561,6 +564,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         btnSyntax.setBackground(new java.awt.Color(253, 189, 57));
         btnSyntax.setFont(new java.awt.Font("Segoe Script", 2, 24)); // NOI18N
         btnSyntax.setText("Syntax");
+        btnSyntax.setToolTipText("<html>\n<font face=\"Verdana\" color=\"blue\" size=\"14\">Run Lexical First</font>\n</html>");
         btnSyntax.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         btnSyntax.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -5682,21 +5686,27 @@ public class OrchestraFrame extends javax.swing.JFrame {
         
         if(checker(PRELUDE))
         {
+            
             addToSyntaxTable("<program>","PRELUDE");
             addToSyntaxTable("<program>", "<global>");
                 production_global();
             if(checker(CONCERT))
             {
+                code = code.concat("int main");
                 isConcert = true;
                 addToSyntaxTable("<program>","CONCERT");
                 if(checker(OPENPARENTHESIS))
                 {
+                    code = code.concat("(");
                     addToSyntaxTable("<program>","(");
                     if(checker(CLOSEPARENTHESIS))
                     {
+                        code = code.concat(")");
                         addToSyntaxTable("<program>",")");
                         if(checker(OPENCURLYBRACE))
                         {
+                            code = code.concat("{");
+                            code = code.concat(" std::cout << std::setprecision(6) << std::fixed;");
                             addToSyntaxTable("<program>","{");
                             if(checker1(INT)||checker1(FLOAT)||checker1(CHAR)||checker1(STRING)||checker1(BOOL) && hasError == false) //check if pupunta kay production vardec1 // localdec
                             {
@@ -5706,6 +5716,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                     production_statements();
                                 if(checker(CLOSECURLYBRACE))
                                 {
+                                    code = code.concat(" system(\"pause\");\n return 0;\n");
+                                    code = code.concat("\n }");
                                     addToSyntaxTable("<program>","}"); 
                                     if(checker(ENCORE))
                                     {
@@ -5728,6 +5740,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                     production_statements();
                                 if(checker(CLOSECURLYBRACE))
                                 {
+                                    code = code.concat(" system(\"pause\");\n return 0;\n");
+                                    code = code.concat("\n }");
                                     addToSyntaxTable("<program>","}"); 
                                     if(checker(ENCORE))
                                     {
@@ -5811,14 +5825,17 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case INT : 
                 checker(INT);
+                code = code.concat("\n int");
                 addToSyntaxTable("<const>","<intconst>");
                 addToSyntaxTable("<intconst>", "CONST"); 
                 addToSyntaxTable("<intconst>","INT");
                 if(checker(IDENTIFIER))
                 {
+                    code = code.concat(" "+getItem());
                     addToSyntaxTable("<intconst>","Identifier");
                     if(checker(EQUAL))
                     {
+                        code = code.concat(" =");
                         addToSyntaxTable("<intconst>","=");
                         addToSyntaxTable("<intconst>","<intval>");
                             production_intval();
@@ -5826,6 +5843,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             production_nextint();
                         if(checker(SEMICOLON))
                         {
+                            code = code.concat(";");
                             addToSyntaxTable("<intconst>", ";");
                         }
                         else if(hasError == false)
@@ -5848,14 +5866,17 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break;
             case FLOAT:
                 checker(FLOAT);
+                code = code.concat("\n float");
                 addToSyntaxTable("<const>","<floatconst>");
                 addToSyntaxTable("<floatconst>", "CONST"); 
                 addToSyntaxTable("<floatconst>","FLOAT");
                 if(checker(IDENTIFIER))
                 {
+                    code = code.concat(" "+getItem());
                     addToSyntaxTable("<floatconst>","Identifier");
                     if(checker(EQUAL))
                     {
+                        code = code.concat(" =");
                         addToSyntaxTable("<floatconst>","=");
                         addToSyntaxTable("<floatconst>","<floatval>");
                             production_floatval();
@@ -5863,6 +5884,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             production_nextfloat();
                         if(checker(SEMICOLON))
                         {
+                            code = code.concat(";");
                             addToSyntaxTable("<floatconst>", ";");
                         }
                         else if(hasError == false)
@@ -5886,14 +5908,17 @@ public class OrchestraFrame extends javax.swing.JFrame {
             
             case CHAR:
                 checker(CHAR);
+                code = code.concat("\n char");
                 addToSyntaxTable("<const>","<charconst>");
                 addToSyntaxTable("<charconst>", "CONST"); 
                 addToSyntaxTable("<charconst>","INT");
                 if(checker(IDENTIFIER))
                 {
+                    code = code.concat(" "+getItem());
                     addToSyntaxTable("<charconst>","Identifier");
                     if(checker(EQUAL))
                     {
+                        code = code.concat(" =");
                         addToSyntaxTable("<charconst>","=");
                         addToSyntaxTable("<charconst>","<charval>");
                             production_charval();
@@ -5901,6 +5926,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             production_nextchar();
                         if(checker(SEMICOLON))
                         {
+                            code = code.concat(";");
                             addToSyntaxTable("<charconst>", ";");
                         }
                         else if(hasError == false)
@@ -5924,14 +5950,17 @@ public class OrchestraFrame extends javax.swing.JFrame {
             
             case STRING:
                 checker(STRING);
+                code = code.concat("\n String");
                 addToSyntaxTable("<const>","<stringconst>");
                 addToSyntaxTable("<stringconst>", "CONST");
                 addToSyntaxTable("<stringconst>","STRING");
                 if(checker(IDENTIFIER))
                 {
+                    code = code.concat(" "+getItem());
                     addToSyntaxTable("<stringconst>","Identifier");
                     if(checker(EQUAL))
                     {
+                        code = code.concat(" =");
                         addToSyntaxTable("<stringconst>","=");
                         addToSyntaxTable("<stringconst>","<stringval>");
                             production_stringval();
@@ -5939,6 +5968,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             production_nextstring();
                         if(checker(SEMICOLON))
                         {
+                            code = code.concat(";");
                             addToSyntaxTable("<stringconst>", ";");
                         }
                         else if(hasError == false)
@@ -5962,14 +5992,17 @@ public class OrchestraFrame extends javax.swing.JFrame {
             
             case BOOL:
                 checker(BOOL);
+                code = code.concat("\n boolean");
                 addToSyntaxTable("<const>","<boolconst>");
                 addToSyntaxTable("<boolconst>", "CONST"); 
                 addToSyntaxTable("<boolconst>","BOOL");
                 if(checker(IDENTIFIER))
                 {
+                    code = code.concat(" "+getItem());
                     addToSyntaxTable("<boolconst>","Identifier");
                     if(checker(EQUAL))
                     {
+                        code = code.concat(" =");
                         addToSyntaxTable("<boolconst>","=");
                         addToSyntaxTable("<boolconst>","<boolval>");
                             production_boolval();
@@ -5977,6 +6010,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             production_nextbool();
                         if(checker(SEMICOLON))
                         {
+                            code = code.concat(";");
                             addToSyntaxTable("<boolconst>", ";");
                         }
                         else if(hasError == false)
@@ -6007,12 +6041,15 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         if(checker(COMMA))
         {
+            code = code.concat(" ,");
             addToSyntaxTable("<nextint>",",");
             if(checker(IDENTIFIER))
             {
+                code = code.concat(" "+getItem());
                 addToSyntaxTable("<nextint>","Identifier");
                 if(checker(EQUAL))
                 {
+                    code = code.concat(" =");
                     addToSyntaxTable("<nextint>","=");
                     addToSyntaxTable("<nextint>","<intval>");
                         production_intval();
@@ -6042,11 +6079,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case INTEGERLITERAL:
                 checker(INTEGERLITERAL);
+                code = code.concat(" "+getItem());
                     addToSyntaxTable("<intval>", "INT_LIT");
                 break;
             case IDENTIFIER:
                     addToSyntaxTable("<intval>", "<identifier>");
                     checker(IDENTIFIER);
+                    code = code.concat(" "+getItem());
                     production_identifier();
                 break;
             default: addToSyntaxErrorTable("<intval>","Expecting Integer Literal or Identifier");
@@ -6058,12 +6097,15 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         if(checker(COMMA))
         {
+            code = code.concat(" ,");
             addToSyntaxTable("<nextfloat>",",");
             if(checker(IDENTIFIER))
             {
+                code = code.concat(" "+getItem());
                 addToSyntaxTable("<nextfloat>","Identifier");
                 if(checker(EQUAL))
                 {
+                    code = code.concat(" =");
                     addToSyntaxTable("<nextfloat>","=");
                     addToSyntaxTable("<nextfloat>","<floatval>");
                         production_floatval();
@@ -6093,11 +6135,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case FLOATLITERAL:
                 checker(FLOATLITERAL);
+                code = code.concat(" "+getItem());
                     addToSyntaxTable("<floatval>", "FLOAT_LIT");
                 break;
             case IDENTIFIER:
                     addToSyntaxTable("<floatval>", "<identifier>");
                     checker(IDENTIFIER);
+                    code = code.concat(" "+getItem());
                     production_identifier();
                 break;
             default: addToSyntaxErrorTable("<floatval>","Expecting Float Literal or Identifier"); hasError = true;
@@ -6108,12 +6152,15 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         if(checker(COMMA))
         {
+            code = code.concat(" ,");
             addToSyntaxTable("<nextchar>",",");
             if(checker(IDENTIFIER))
             {
+                code = code.concat(" "+getItem());
                 addToSyntaxTable("<nextchar>","Identifier");
                 if(checker(EQUAL))
                 {
+                    code = code.concat(" =");
                     addToSyntaxTable("<nextchar>","=");
                     addToSyntaxTable("<nextchar>","<charval>");
                         production_charval();
@@ -6143,11 +6190,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case CHARLITERAL:
                     checker(CHARLITERAL);
+                    code = code.concat(" "+getItem());
                     addToSyntaxTable("<charval>", "CHAR_LIT");
                 break;
             case IDENTIFIER:
                     addToSyntaxTable("<charval>", "<identifier>");
                     checker(IDENTIFIER);
+                    code = code.concat(" "+getItem());
                     production_identifier();
                 break;
             default: addToSyntaxErrorTable("<charval>","Expecting Char Literal or Identifier"); hasError = true;
@@ -6158,12 +6207,15 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         if(checker(COMMA))
         {
+            code = code.concat(" ,");
             addToSyntaxTable("<nextstring>",",");
             if(checker(IDENTIFIER))
             {
+                code = code.concat(" "+getItem());
                 addToSyntaxTable("<nextstring>","Identifier");
                 if(checker(EQUAL))
                 {
+                    code = code.concat(" =");
                     addToSyntaxTable("<nextstring>","=");
                     addToSyntaxTable("<nextstring>","<stringval>");
                         production_stringval();
@@ -6193,11 +6245,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case STRINGLITERAL:
                 checker(STRINGLITERAL);
+                code = code.concat(" "+getItem());
                     addToSyntaxTable("<stringval>", "STRING_LIT");
                 break;
             case IDENTIFIER:
                     addToSyntaxTable("<stringval>", "<identifier>");
                     checker(IDENTIFIER);
+                    code = code.concat(" "+getItem());
                     production_identifier();
                 break;
             default: addToSyntaxErrorTable("<charval>","Expecting String Literal or Identifier"); hasError = true;
@@ -6208,12 +6262,15 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         if(checker(COMMA))
         {
+            code = code.concat(" ,");
             addToSyntaxTable("<nextbool>",",");
             if(checker(IDENTIFIER))
             {
+                code = code.concat(" "+getItem());
                 addToSyntaxTable("<nextbool>","Identifier");
                 if(checker(EQUAL))
                 {
+                    code = code.concat(" =");
                     addToSyntaxTable("<nextbool>","=");
                     addToSyntaxTable("<nextbool>","<boolval>");
                         production_boolval();
@@ -6243,11 +6300,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case BOOLLITERAL:
                 checker(BOOLLITERAL);
+                code = code.concat(" "+getItem());
                     addToSyntaxTable("<boolval>", "BOOL_LIT");
                 break;
             case IDENTIFIER:
                     addToSyntaxTable("<boolval>", "<identifier>");
                     checker(IDENTIFIER);
+                    code = code.concat(" "+getItem());
                     production_identifier();
                 break;
             default: addToSyntaxErrorTable("<boolval>","Expecting Bool Literal or Identifier"); hasError = true;
@@ -6256,48 +6315,27 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
     void production_functiondef()
     {
-        
-//        if(checker1(INT)||checker1(FLOAT)||checker1(CHAR)||checker1(STRING)||checker1(BOOL) && hasError == false) //check if pupunta kay production vardec1 // localdec
-//        {
-//            addToSyntaxTable("<program>","<localdec>");
-//                production_vardec1();
-//            addToSyntaxTable("<program>","<statements>");
-//                production_statements();
-//            if(checker(CLOSECURLYBRACE))
-//            {
-//                addToSyntaxTable("<program>","}"); 
-//                if(checker(ENCORE))
-//                {
-//                    addToSyntaxTable("<program>","ENCORE");
-//                }
-//                else
-//                {
-//                    addToSyntaxErrorTable("<program>", "Expecting ENCORE");
-//                }
-//            }   
-//            else if(hasError == false)
-//            {
-//                addToSyntaxErrorTable("<program>", "Expecting }, Identifier, ++, --, IF, ELSEIF, ELSE, CHORDS, LOOP, DO, OUTRO, INTRO");
-//                hasError = true;
-//            }
-//        }
-        
         if(checker(MUTE))
         {
+            code = code.concat("\n void");
             addToSyntaxTable("<functiondef>", "MUTE");
              if(checker(IDENTIFIER))
             {
+                code = code.concat(" "+getItem());
                 addToSyntaxTable("<functiondef>","Identifier");
                 if(checker(OPENPARENTHESIS))
                 {
+                    code = code.concat(" (");
                     addToSyntaxTable("<functiondef>","(");
                     addToSyntaxTable("<functiondef>","<funcparam>");
                         production_funcparam();
                     if(checker(CLOSEPARENTHESIS))
                     {
+                        code = code.concat(" )");
                         addToSyntaxTable("<functiondef>",")");
                         if(checker(OPENCURLYBRACE))
                         {
+                            code = code.concat(" {");
                             if(checker1(INT)||checker1(FLOAT)||checker1(CHAR)||checker1(STRING)||checker1(BOOL) && hasError == false) //check if pupunta kay production vardec1 // localdec
                             {
                                 addToSyntaxTable("<program>","<localdec>");
@@ -6311,6 +6349,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                 }
                                 if(checker(CLOSECURLYBRACE))
                                 {
+                                    code = code.concat("\n }");
                                     addToSyntaxTable("<functiondef>","}");
                                 }
                                 else if(hasError == false)
@@ -6331,6 +6370,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                 }
                                 if(checker(CLOSECURLYBRACE))
                                 {
+                                    code = code.concat("\n }");
                                     addToSyntaxTable("<functiondef>","}");
                                 }
                                 else if(hasError == false)
@@ -6370,27 +6410,33 @@ public class OrchestraFrame extends javax.swing.JFrame {
             {
                 case INT: 
                     checker(INT);
+                    code = code.concat("\n int");
                     addToSyntaxTable("<functiondef>","<datatype>");
                     addToSyntaxTable("<datatype>","INT");
                     if(checker(IDENTIFIER))
                     {
+                        code = code.concat(" "+getItem());
                         addToSyntaxTable("<functiondef>","Identifier");
                         if(checker(OPENPARENTHESIS))
                         {
+                            code = code.concat(" (");
                             addToSyntaxTable("<functiondef>","(");
                             addToSyntaxTable("<functiondef>","<funcparam>");
                                 production_funcparam();
                             if(checker(CLOSEPARENTHESIS))
                             {
+                                code = code.concat(")");
                                 addToSyntaxTable("<functiondef>",")");
                                 if(checker(OPENCURLYBRACE))
                                 {
+                                    code = code.concat(" {");
                                     addToSyntaxTable("<functiondef>","{");
                                     addToSyntaxTable("<functiondef>","<statements>");
                                         production_statements();
                                         System.out.print(token);
                                     if(checker(PRODUCE))
                                     {
+                                        code = code.concat("\n return");
                                         addToSyntaxTable("<functiondef>","PRODUCE");
                                         if(checker1(OPENPARENTHESIS) || checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
                                         || checker1(BOOLLITERAL) || checker1(STRINGLITERAL) || checker1(IDENTIFIER) )
@@ -6403,8 +6449,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                     production_literal();
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                        code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -6423,9 +6473,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                     production_mathexpr();
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     addToSyntaxTable("<returnval>",";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                        code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -6451,6 +6505,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                                                                     //System.out.println("return val from int id after: "+token);
                                                     if(checker(SEMICOLON))
                                                     {
+                                                        code = code.concat(";");
                                                         addToSyntaxTable("<returnval>",";");
                                                         if(checker(CLOSECURLYBRACE))
                                                             addToSyntaxTable("<functiondef>","}");
@@ -6469,12 +6524,15 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                 else
                                                 {
                                                     production_identifier();
-                                                                                                    //System.out.println("return val from int id after: "+token);
                                                     if(checker(SEMICOLON))
                                                     {
+                                                        code = code.concat(";");
                                                         addToSyntaxTable("<returnval>",";");
                                                         if(checker(CLOSECURLYBRACE))
+                                                        {
+                                                            code = code.concat("\n }");
                                                             addToSyntaxTable("<functiondef>","}");
+                                                        }
                                                         else if(hasError == false)
                                                         {
                                                             addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -6487,9 +6545,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                         hasError = true;
                                                     }
                                                 }
-                                                
-
-
                                            }
                                            else if(hasError == false)
                                            {
@@ -6536,27 +6591,33 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     
                 case FLOAT:
                     checker(FLOAT);
+                    code = code.concat("\n float");
                     addToSyntaxTable("<functiondef>","<datatype>");
                     addToSyntaxTable("<datatype>","FLOAT");
                     if(checker(IDENTIFIER))
                     {
+                        code = code.concat(" "+getItem());
                         addToSyntaxTable("<functiondef>","Identifier");
                         if(checker(OPENPARENTHESIS))
                         {
+                            code = code.concat(" (");
                             addToSyntaxTable("<functiondef>","(");
                             addToSyntaxTable("<functiondef>","<funcparam>");
                                 production_funcparam();
                             if(checker(CLOSEPARENTHESIS))
                             {
+                                code = code.concat(" )");
                                 addToSyntaxTable("<functiondef>",")");
                                 if(checker(OPENCURLYBRACE))
                                 {
+                                    code = code.concat(" {");
                                     addToSyntaxTable("<functiondef>","{");
                                     addToSyntaxTable("<functiondef>","<statements>");
                                         production_statements();
                                         System.out.print(token);
                                     if(checker(PRODUCE))
                                     {
+                                        code = code.concat("\n return");
                                         addToSyntaxTable("<functiondef>","PRODUCE");
                                         if(checker1(OPENPARENTHESIS) || checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
                                         || checker1(BOOLLITERAL) || checker1(STRINGLITERAL) || checker1(IDENTIFIER) )
@@ -6569,8 +6630,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                     production_literal();
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                     code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -6589,9 +6654,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                     production_mathexpr();
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     addToSyntaxTable("<returnval>",";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                        code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -6609,13 +6678,18 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                 //System.out.println("return val from int id: "+token);
                                                 addToSyntaxTable("<returnval>","<identifier>");
                                                 checker(IDENTIFIER);
+                                                code = code.concat(" "+getItem());
                                                 production_identifier();
                                                 //System.out.println("return val from int id after: "+token);
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     addToSyntaxTable("<returnval>",";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                        code = code.concat(" "+getItem());
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -6674,27 +6748,33 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
                 case CHAR: 
                     checker(CHAR);
+                    code = code.concat("\n char");
                     addToSyntaxTable("<functiondef>","<datatype>");
                     addToSyntaxTable("<datatype>","CHAR");
                     if(checker(IDENTIFIER))
                     {
+                        code = code.concat(" "+getItem());
                         addToSyntaxTable("<functiondef>","Identifier");
                         if(checker(OPENPARENTHESIS))
                         {
+                            code = code.concat("(");
                             addToSyntaxTable("<functiondef>","(");
                             addToSyntaxTable("<functiondef>","<funcparam>");
                                 production_funcparam();
                             if(checker(CLOSEPARENTHESIS))
                             {
+                                code = code.concat(")");
                                 addToSyntaxTable("<functiondef>",")");
                                 if(checker(OPENCURLYBRACE))
                                 {
+                                    code = code.concat(" {");
                                     addToSyntaxTable("<functiondef>","{");
                                     addToSyntaxTable("<functiondef>","<statements>");
                                         production_statements();
                                         System.out.print(token);
                                     if(checker(PRODUCE))
                                     {
+                                        code = code.concat("\n return");
                                         addToSyntaxTable("<functiondef>","PRODUCE");
                                         if(checker1(OPENPARENTHESIS) || checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
                                         || checker1(BOOLLITERAL) || checker1(STRINGLITERAL) || checker1(IDENTIFIER) )
@@ -6707,8 +6787,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                     production_literal();
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                        code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -6727,9 +6811,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                     production_mathexpr();
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     addToSyntaxTable("<returnval>",";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                        code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -6747,13 +6835,18 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                 //System.out.println("return val from int id: "+token);
                                                 addToSyntaxTable("<returnval>","<identifier>");
                                                 checker(IDENTIFIER);
+                                                code = code.concat(" "+getItem());
                                                 production_identifier();
                                                 //System.out.println("return val from int id after: "+token);
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     addToSyntaxTable("<returnval>",";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                        code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -6812,27 +6905,33 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
                 case STRING:
                     checker(STRING);
+                    code = code.concat("\n String");
                     addToSyntaxTable("<functiondef>","<datatype>");
                     addToSyntaxTable("<datatype>","STRING");
                     if(checker(IDENTIFIER))
                     {
+                        code = code.concat(" "+getItem());
                         addToSyntaxTable("<functiondef>","Identifier");
                         if(checker(OPENPARENTHESIS))
                         {
+                            code = code.concat(" (");
                             addToSyntaxTable("<functiondef>","(");
                             addToSyntaxTable("<functiondef>","<funcparam>");
                                 production_funcparam();
                             if(checker(CLOSEPARENTHESIS))
                             {
+                                code = code.concat(")");
                                 addToSyntaxTable("<functiondef>",")");
                                 if(checker(OPENCURLYBRACE))
                                 {
+                                    code = code.concat("{");
                                     addToSyntaxTable("<functiondef>","{");
                                     addToSyntaxTable("<functiondef>","<statements>");
                                         production_statements();
                                         System.out.print(token);
                                     if(checker(PRODUCE))
                                     {
+                                        code = code.concat("\n return");
                                         addToSyntaxTable("<functiondef>","PRODUCE");
                                         if(checker1(OPENPARENTHESIS) || checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
                                         || checker1(BOOLLITERAL) || checker1(STRINGLITERAL) || checker1(IDENTIFIER) )
@@ -6845,8 +6944,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                     production_literal();
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                        code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -6865,9 +6968,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                     production_mathexpr();
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     addToSyntaxTable("<returnval>",";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                        code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -6885,13 +6992,18 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                 //System.out.println("return val from int id: "+token);
                                                 addToSyntaxTable("<returnval>","<identifier>");
                                                 checker(IDENTIFIER);
+                                                code = code.concat(" "+getItem());
                                                 production_identifier();
                                                 //System.out.println("return val from int id after: "+token);
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     addToSyntaxTable("<returnval>",";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                        code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -6950,27 +7062,33 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
                 case BOOL:
                     checker(BOOL);
+                    code = code.concat("\n boolean");
                     addToSyntaxTable("<functiondef>","<datatype>");
                     addToSyntaxTable("<datatype>","BOOL");
                     if(checker(IDENTIFIER))
                     {
+                        code = code.concat(" "+getItem());
                         addToSyntaxTable("<functiondef>","Identifier");
                         if(checker(OPENPARENTHESIS))
                         {
+                            code = code.concat("(");
                             addToSyntaxTable("<functiondef>","(");
                             addToSyntaxTable("<functiondef>","<funcparam>");
                                 production_funcparam();
                             if(checker(CLOSEPARENTHESIS))
                             {
+                                code = code.concat(")");
                                 addToSyntaxTable("<functiondef>",")");
                                 if(checker(OPENCURLYBRACE))
                                 {
+                                    code = code.concat("{");
                                     addToSyntaxTable("<functiondef>","{");
                                     addToSyntaxTable("<functiondef>","<statements>");
                                         production_statements();
                                         System.out.print(token);
                                     if(checker(PRODUCE))
                                     {
+                                        code = code.concat("\n return");
                                         addToSyntaxTable("<functiondef>","PRODUCE");
                                         if(checker1(OPENPARENTHESIS) || checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
                                         || checker1(BOOLLITERAL) || checker1(STRINGLITERAL) || checker1(IDENTIFIER) )
@@ -6983,8 +7101,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                     production_literal();
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                        code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -7003,9 +7125,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                     production_mathexpr();
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     addToSyntaxTable("<returnval>",";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                        code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -7023,13 +7149,18 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                 //System.out.println("return val from int id: "+token);
                                                 addToSyntaxTable("<returnval>","<identifier>");
                                                 checker(IDENTIFIER);
+                                                code = code.concat(" "+getItem());
                                                 production_identifier();
                                                 //System.out.println("return val from int id after: "+token);
                                                 if(checker(SEMICOLON))
                                                 {
+                                                    code = code.concat(";");
                                                     addToSyntaxTable("<returnval>",";");
                                                     if(checker(CLOSECURLYBRACE))
+                                                    {
+                                                        code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
+                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -7100,8 +7231,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
 //            addToSyntaxTable("<statements>","<localdec>");
 //                production_vardec1();
 //        }
+        
         if(checker(IDENTIFIER) && hasError == false) //assignment stmnts
         {
+            code = code.concat(" "+getItem());
             if(checker1(OPENPARENTHESIS))
             {
                 addToSyntaxTable("<statements>","<funccall>");
@@ -7146,6 +7279,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     void production_funccall()
     {
         checker(OPENPARENTHESIS);
+        code = code.concat("(");
         addToSyntaxTable("<statements>","<funccall>");
         addToSyntaxTable("<funccall>","id");
         addToSyntaxTable("<funccall>","(");
@@ -7153,9 +7287,11 @@ public class OrchestraFrame extends javax.swing.JFrame {
             production_funcargs();
         if(checker(CLOSEPARENTHESIS))
         {
+            code = code.concat(")");
             addToSyntaxTable("<funccall>",")");
             if(checker(SEMICOLON))
             {
+                code = code.concat(";");   
                 addToSyntaxTable("<funccall>",";");
             }
             else if(hasError == false)
@@ -7177,6 +7313,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case OUTRO:
                 checker(OUTRO);
+                code = code.concat("\n cout<<");
                 addToSyntaxTable("<I/Ostatements>","<outro>");
                 addToSyntaxTable("<outro>","OUTRO");
                 addToSyntaxTable("<outro>","<output>");
@@ -7185,6 +7322,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     production_nextoutput();
                 if(checker(SEMICOLON))
                 {
+                    code = code.concat(";");
                     addToSyntaxTable("<outro>",";");
                 }
                 else if(hasError == false)
@@ -7196,15 +7334,18 @@ public class OrchestraFrame extends javax.swing.JFrame {
             
             case INTRO:
                 checker(INTRO);
+                code = code.concat(" cin>>");
                 addToSyntaxTable("<I/Ostatements>","<intro>");
                 addToSyntaxTable("<intro>","INTRO");
                 addToSyntaxTable("<intro>","<identifier>");
                 checker(IDENTIFIER);
+                code = code.concat(" "+getItem());
                     production_identifier();
                 addToSyntaxTable("<inttro>","<nextinput>");
                     production_nextinput();
                 if(checker(SEMICOLON))
                 {
+                    code = code.concat(";");
                     addToSyntaxTable("<intro>",";");
                 }
                 else if(hasError == false)
@@ -7222,9 +7363,11 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case COMMA:
                 checker(COMMA);
+                code = code.concat(" >>");
                 addToSyntaxTable("<nextinput>",",");
                 addToSyntaxTable("<nextinput>","<identifier>");
                     checker(IDENTIFIER);
+                    code = code.concat(" "+getItem());
                     production_identifier();
                 addToSyntaxTable("<nextinput>","<nextinput>");
                     production_nextinput();
@@ -7240,6 +7383,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case PERIOD:
                 checker(PERIOD);
+                code = code.concat(" <<");
                 addToSyntaxTable("<nextoutput>","<output>");
                     production_output();
                     production_nextoutput();
@@ -7255,11 +7399,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case STRINGLITERAL:
                 checker(STRINGLITERAL);
+                code = code.concat(" "+getItem());
                 addToSyntaxTable("<output>","<STRING LIT>");
                 break;
                 
             case IDENTIFIER:
                 checker(IDENTIFIER);
+                code = code.concat(" "+getItem());
                 if(checker1(PLUS)||checker1(MINUS)||checker1(DIVIDE)||checker1(MODULUS)||checker1(MULTIPLY))
                 {
                     addToSyntaxTable("<output>","<mathexpr>");
@@ -7296,35 +7442,43 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case LOOP:
             checker(LOOP);
+            code = code.concat("\n for");
             addToSyntaxTable("<loopstatements>","<loop>");
             addToSyntaxTable("<loop>","LOOP");
             if(checker(OPENPARENTHESIS))
             {
+                code = code.concat("(");
                 addToSyntaxTable("<loop>","(");
                 addToSyntaxTable("<loop>","<identifier>");
                 checker(IDENTIFIER);
+                code = code.concat(" "+getItem());
                     production_identifier();
                 if(checker(EQUAL))
                 {
+                    code = code.concat(" =");
                     addToSyntaxTable("<loop>","=");
                     addToSyntaxTable("<loop>","<loopinit>");
                         production_loopinit();
                     if(checker(SEMICOLON))
                     {
+                        code = code.concat(";");
                         addToSyntaxTable("<loop>",";");
                         addToSyntaxTable("<loop>","<condexpr>");
                             production_condexpr();
                             production_nextcondexpr();
                         if(checker(SEMICOLON))
                         {
+                            code = code.concat(";");
                             addToSyntaxTable("<loop>",";");
                             addToSyntaxTable("<loop>","<incdec>");
                                 production_incdec();
                             if(checker(CLOSEPARENTHESIS))
                             {
+                                code = code.concat(")");
                                 addToSyntaxTable("<loop>",")");
                                 if(checker(OPENCURLYBRACE))
                                 {
+                                    code = code.concat(" {");
                                     addToSyntaxTable("<loop>","{");
                                     addToSyntaxTable("<loop>","<statements>");
                                         production_statements();
@@ -7332,6 +7486,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                         production_stopplay();
                                     if(checker(CLOSECURLYBRACE))
                                     {
+                                        code = code.concat("\n }");
                                         addToSyntaxTable("<loop>","}");
                                     }
                                     else if(hasError == false)
@@ -7379,19 +7534,23 @@ public class OrchestraFrame extends javax.swing.JFrame {
             
             case REPEAT:
             checker(REPEAT);
+            code = code.concat("\n while");
             addToSyntaxTable("<loopstatements>","<repeat>");
             addToSyntaxTable("<repeat>","REPEAT");
             if(checker(OPENPARENTHESIS))
             {
+                code = code.concat(" (");
                 addToSyntaxTable("<repeat>","(");
                 addToSyntaxTable("<repeat>","<condexpr>");
                     production_condexpr();
                     production_nextcondexpr();
                 if(checker(CLOSEPARENTHESIS))
                 {
+                    code = code.concat(")");
                     addToSyntaxTable("<repeat>",")");
                     if(checker(OPENCURLYBRACE))
                     {
+                        code = code.concat(" {");
                         addToSyntaxTable("<repeat>","{");
                         addToSyntaxTable("<repeat>","<statements>");
                             production_statements();
@@ -7399,6 +7558,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             production_stopplay();
                         if(checker(CLOSECURLYBRACE))
                         {
+                            code = code.concat("\n }");
                             addToSyntaxTable("<repeat>","}");
                         }
                         else if(hasError == false)
@@ -7429,10 +7589,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
             
             case DO:
             checker(DO);
+            code = code.concat("\n do");
             addToSyntaxTable("<loopstatements>","<dorepeat>");
             addToSyntaxTable("<dorepeat>","DO");
             if(checker(OPENCURLYBRACE))
             {
+                code = code.concat("{");
                 addToSyntaxTable("<dorepeat>","{");
                 addToSyntaxTable("<dorepeat>","<statements>");
                     production_statements();
@@ -7440,21 +7602,26 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     production_stopplay();
                 if(checker(CLOSECURLYBRACE))
                 {
+                    code = code.concat("\n }");
                     addToSyntaxTable("<dorepeat>","}");
                     if(checker(REPEAT))
                     {
+                        code = code.concat(" while");
                         addToSyntaxTable("<dorepeat>","REPEAT");
                         if(checker(OPENPARENTHESIS))
                         {
+                            code = code.concat(" (");
                             addToSyntaxTable("<dorepeat>","(");
                             addToSyntaxTable("<dorepeat>","<condexpr>");
                                 production_condexpr();
                                 production_nextcondexpr();
                             if(checker(CLOSEPARENTHESIS))
                             {
+                                code = code.concat(" )");
                                 addToSyntaxTable("<dorepeat>",")");
                                 if(checker(SEMICOLON))
                                 {
+                                    code = code.concat(";");
                                     addToSyntaxTable("<dorepeat>",";");
                                 }
                                 else if(hasError == false)
@@ -7508,11 +7675,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
             case INCREMENT: case DECREMENT:
                 if(checker(INCREMENT))
                 {
+                    code = code.concat(" ++");
                     addToSyntaxTable("<incdec>","<preinc>");
                     addToSyntaxTable("<preinc>","++");
                         production_preinc();
                     if(checker(SEMICOLON))
                     {
+                        code = code.concat(";");
                         addToSyntaxTable("<incdec>",";");
                     }
                     else if(hasError == false)
@@ -7523,11 +7692,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 }
                 else if(checker(DECREMENT))
                 {
+                    code = code.concat(" --");
                     addToSyntaxTable("<incdec>","<predec>");
                     addToSyntaxTable("<predec>","--");
                         production_predec();
                     if(checker(SEMICOLON))
                     {
+                        code = code.concat(";");
                         addToSyntaxTable("<incdec>",";");
                     }
                     else if(hasError == false)
@@ -7540,13 +7711,16 @@ public class OrchestraFrame extends javax.swing.JFrame {
             
             case IDENTIFIER:
                 checker(IDENTIFIER);
+                code = code.concat("\n "+getItem());
                 production_identifier();
                 if(checker(INCREMENT))
                 {
+                    code = code.concat(" ++");
                     addToSyntaxTable("<incdec>","<postinc>");
                     addToSyntaxTable("<postinc>","++");
                     if(checker(SEMICOLON))
                     {
+                        code = code.concat(";");
                         addToSyntaxTable("<incdec>",";");
                     }
                     else if(hasError == false)
@@ -7557,10 +7731,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 }
                 else if(checker(DECREMENT))
                 {
+                    code = code.concat(" --");
                     addToSyntaxTable("<incdec>","<postdec>");
                     addToSyntaxTable("<postidec>","--");
                     if(checker(SEMICOLON))
                     {
+                        code = code.concat(";");
                         addToSyntaxTable("<incdec>",";");
                     }
                     else if(hasError == false)
@@ -7578,6 +7754,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         addToSyntaxTable("<preinc>","<identifier>");
             checker(IDENTIFIER);
+            code = code.concat(" "+getItem());
             production_identifier();
     }
     
@@ -7585,6 +7762,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         addToSyntaxTable("<predec>","<identifier>");
             checker(IDENTIFIER);
+            code = code.concat(" "+getItem());
             production_identifier();
     }
     
@@ -7595,10 +7773,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
             case IDENTIFIER:
                 addToSyntaxTable("<loopinit>","<identifier>");
                 checker(IDENTIFIER);
+                code = code.concat(" "+getItem());
                 production_identifier(); break;
             
             case INTEGERLITERAL:
                 checker(INTEGERLITERAL);
+                code = code.concat(" "+getItem());
                 addToSyntaxTable("<loopinit>","INT LIT"); break;
                 
             default: addToSyntaxErrorTable("<loopinit>","Expecting Identifier or Integer Literal"); hasError = true;
@@ -7611,10 +7791,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case IF:
             checker(IF); //determines that it is an IF statement
+            code = code.concat("\n if");
             addToSyntaxTable("<condstatements>","<ifstatement>");
             addToSyntaxTable("<ifstatement>","IF");
             if(checker(OPENPARENTHESIS))
             {
+                code = code.concat(" (");
                 addToSyntaxTable("<ifstatement>","(");
                 addToSyntaxTable("<ifstatement>","<condexpr>");
                     production_condexpr();
@@ -7622,9 +7804,11 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     production_nextcondexpr();
                 if(checker(CLOSEPARENTHESIS))
                 {
+                    code = code.concat(")");
                     addToSyntaxTable("<ifstatement>",")");
                     if(checker(OPENCURLYBRACE))
                     {
+                        code = code.concat(" {");
                         addToSyntaxTable("<ifstatement>","{");
                         addToSyntaxTable("<ifstatement>","<statements>");
                             production_statements();
@@ -7632,6 +7816,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             production_stopplay();
                         if(checker(CLOSECURLYBRACE))
                         {
+                            code = code.concat("\n }");
                             addToSyntaxTable("<ifstatement>","}");
                             addToSyntaxTable("<ifstatement>","<elseifstatement>");
                                 production_elseifstatement();
@@ -7665,19 +7850,24 @@ public class OrchestraFrame extends javax.swing.JFrame {
             
             case CHORDS:
             checker(CHORDS);
+            code = code.concat("\n switch");
             addToSyntaxTable("<condstatements>","<switchstatement>");
             addToSyntaxTable("<switchstatement>","CHORDS");
             if(checker(OPENPARENTHESIS))
             {
+                code = code.concat("(");
                 addToSyntaxTable("<switchstatement>","(");
                 addToSyntaxTable("<switchstatement>","<identifier>");
                     checker(IDENTIFIER);
+                    code = code.concat(" "+getItem());
                     production_identifier();
                 if(checker(CLOSEPARENTHESIS))
                 {
+                    code = code.concat(" )");
                     addToSyntaxTable("<switchstatement>",")");
                     if(checker(OPENCURLYBRACE))
                     {
+                        code = code.concat(" {");
                         addToSyntaxTable("<switchstatement>","{");
                         addToSyntaxTable("<switchstatement>","<case>");
                             production_case();
@@ -7685,6 +7875,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             production_default();
                         if(checker(CLOSECURLYBRACE))
                         {
+                            code = code.concat("\n }");
                             addToSyntaxTable("<switchstatement>","}");
                         }
                         else if(hasError == false)
@@ -7718,9 +7909,11 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         if(checker(CADENCE))
         {
+            code = code.concat("\n default");
             addToSyntaxTable("<default>","CADENCE");
             if(checker(COLON))
             {
+                code = code.concat(":");
                 addToSyntaxTable("<default>",":");
                 addToSyntaxTable("<default>","<statements>");
                     production_statements();
@@ -7739,11 +7932,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         if(checker(NOTE))
         {
+            code = code.concat("\n case");
             addToSyntaxTable("<case>","NOTE");
             addToSyntaxTable("<case>","<switchconst>");
                 production_switchconst();
             if(checker(COLON))
             {
+                code = code.concat(" :");
                 addToSyntaxTable("<case>","<statements>");
                     production_statements();
                 addToSyntaxTable("<case>","<stop/play>");
@@ -7782,9 +7977,11 @@ public class OrchestraFrame extends javax.swing.JFrame {
             case STOP:
                 addToSyntaxTable("<stop/play>","<stop>");
                 checker(STOP);
+                code = code.concat("\n break");
                 addToSyntaxTable("<stop>","STOP");
                 if(checker(SEMICOLON))
                 {
+                    code = code.concat(" ;");
                     addToSyntaxTable("<stop>",";");
                 }
                 else if(hasError == false)
@@ -7797,9 +7994,11 @@ public class OrchestraFrame extends javax.swing.JFrame {
             case PLAY:
                 addToSyntaxTable("<stop/play>","<play>");
                 checker(PLAY);
+                code = code.concat("\n continue");
                 addToSyntaxTable("<play>","PLAY");
                 if(checker(SEMICOLON))
                 {
+                    code = code.concat(";");
                     addToSyntaxTable("<play>",";");
                 }
                 else if(hasError == false)
@@ -7820,11 +8019,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case INTEGERLITERAL:
                 checker(INTEGERLITERAL);
+                code = code.concat(" "+getItem());
                 addToSyntaxTable("<switchconst>","INT LIT");
                 break;
                 
             case CHARLITERAL:
                 checker(CHARLITERAL);
+                code = code.concat(" "+getItem());
                 addToSyntaxTable("<switchconst>","CHAR LIT");
                 break;
                 
@@ -7837,18 +8038,22 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         if(checker(ELSEIF))
         {
+            code = code.concat("\n else if");
             addToSyntaxTable("<elseifstatement>","ELSEIF");
             if(checker(OPENPARENTHESIS))
             {
+                code = code.concat(" (");
                 addToSyntaxTable("<elseifstatement>","(");
                 addToSyntaxTable("<elseifstatement>","<condexpr>");
                     production_condexpr();
                     production_nextcondexpr();
                 if(checker(CLOSEPARENTHESIS))
                 {
+                    code = code.concat(" )");
                     addToSyntaxTable("<elseifstatement>",")");
                     if(checker(OPENCURLYBRACE))
                     {
+                         code = code.concat(" {");
                         addToSyntaxTable("<elseifstatement>","{");
                         addToSyntaxTable("<elseifstatement>","<statements>");
                             production_statements();
@@ -7856,6 +8061,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             production_stopplay();
                         if(checker(CLOSECURLYBRACE))
                         {
+                            code = code.concat("\n }");
                             addToSyntaxTable("<elseifstatement>","}");
                             addToSyntaxTable("<elseifstatement>","<elseifstatement>");
                                 production_elseifstatement();
@@ -7894,9 +8100,11 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         if(checker(ELSE))
         {
+            code = code.concat("\n else");
             addToSyntaxTable("<elsestatement>","ELSE");
             if(checker(OPENCURLYBRACE))
             {
+                code = code.concat(" {");
                 addToSyntaxTable("<elsestatement>","{");
                 addToSyntaxTable("<elsestatement>","<statements>");
                     production_statements();
@@ -7904,6 +8112,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         production_stopplay();
                 if(checker(CLOSECURLYBRACE))
                 {
+                    code = code.concat("\n }");
                     addToSyntaxTable("<elsestatement>","}");
                     System.out.println("HOY"+token);
                         production_statements();
@@ -7930,12 +8139,14 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case OPENPARENTHESIS:
                 checker(OPENPARENTHESIS);
+                code = code.concat(" (");
                 addToSyntaxTable("<condexpr>","(");
                     production_condexpr();
                 //addToSyntaxTable("<condexpr>","<condexpr>");
                     production_nextcondexpr();
                 if(checker(CLOSEPARENTHESIS))
                 {
+                    code = code.concat(" )");
                     addToSyntaxTable("<condexpr>",")");
                 }
                 else if(hasError == false)
@@ -7955,6 +8166,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             case IDENTIFIER:
                 addToSyntaxTable("<condexpr>","<identifier>");
                 checker(IDENTIFIER);
+                code = code.concat(" "+getItem());
                     production_identifier();
                 //addToSyntaxTable("<condexpr>","<condexpr>");
                     production_nextcondexpr();
@@ -7963,7 +8175,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         
     }
-    
     
     void production_nextcondexpr()
     {
@@ -7976,7 +8187,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             addToSyntaxErrorTable("<condexpr>","Invalid. Two Consecutive Operators Found.");
             hasError = true;
-            System.out.println("token is: "+token);
         }
         else
         {
@@ -8016,11 +8226,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case OPENPARENTHESIS:
                 checker(OPENPARENTHESIS);
+                code = code.concat(" (");
                 addToSyntaxTable("<mathexpr>","(");
                     production_mathexpr();
                     production_nextmathexpr();
                 if(checker(CLOSEPARENTHESIS))
                 {
+                    code = code.concat(" )");
                     addToSyntaxTable("<mathexpr>",")");
                     if(checker1(PLUS)||checker1(MINUS)||checker1(MULTIPLY)||checker1(DIVIDE)||checker1(MODULUS))
                         production_nextmathexpr();
@@ -8042,6 +8254,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             case IDENTIFIER:
                 addToSyntaxTable("<mathexpr>","<identifier>");
                 checker(IDENTIFIER);
+                code = code.concat(" "+getItem());
                     production_identifier();
                     production_nextmathexpr();
                 break;
@@ -8054,6 +8267,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case PLUS:
                 checker(PLUS);
+                code = code.concat(" +");
                 addToSyntaxTable("<mathop>","+");
                 production_mathexpr();
                 production_nextmathexpr();
@@ -8061,6 +8275,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case MINUS:
                 checker(MINUS);
+                code = code.concat(" -");
                 addToSyntaxTable("<mathop>","-");
                 production_mathexpr();
                 production_nextmathexpr();
@@ -8068,6 +8283,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case MULTIPLY:
                 checker(MULTIPLY);
+                code = code.concat(" *");
                 addToSyntaxTable("<mathop>","*");
                 production_mathexpr();
                 production_nextmathexpr();
@@ -8075,12 +8291,14 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case DIVIDE:
                 checker(DIVIDE);
+                code = code.concat(" /");
                 addToSyntaxTable("<mathop>","/");
                 production_mathexpr();
                 production_nextmathexpr();
                 break;
                 
             case MODULUS:
+                code = code.concat(" %");
                 checker(MODULUS);
                 addToSyntaxTable("<mathop>","%");
                 production_mathexpr();
@@ -8095,26 +8313,31 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case PLUS:
                 checker(PLUS);
+                code = code.concat(" +");
                 addToSyntaxTable("<mathop>","+");
                 break;
                 
             case MINUS:
                 checker(MINUS);
+                code = code.concat(" -");
                 addToSyntaxTable("<mathop>","-");
                 break;
                 
             case MULTIPLY:
                 checker(MULTIPLY);
+                code = code.concat(" *");
                 addToSyntaxTable("<mathop>","*");
                 break;
                 
             case DIVIDE:
                 checker(DIVIDE);
+                code = code.concat(" /");
                 addToSyntaxTable("<mathop>","/");
                 break;
                 
             case MODULUS:
                 checker(MODULUS);
+                code = code.concat(" %");
                 addToSyntaxTable("<mathop>","%");
                 break;
         }
@@ -8126,31 +8349,37 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case GREATERTHAN:
                 checker(GREATERTHAN);
+                code = code.concat(" >");
                 addToSyntaxTable("<relop>",">");
                 break;
                 
             case LESSTHAN:
                 checker(LESSTHAN);
+                code = code.concat(" <");
                 addToSyntaxTable("<relop>","<");
                 break;
                 
             case GREATERTHANEQUAL:
                 checker(GREATERTHANEQUAL);
+                code = code.concat(">=");
                 addToSyntaxTable("<relop>",">=");
                 break;
                 
             case LESSTHANEQUAL:
                 checker(LESSTHANEQUAL);
+                code = code.concat(" <=");
                 addToSyntaxTable("<relop>","<=");
                 break;
                 
             case EQUALEQUAL:
                 checker(EQUALEQUAL);
+                code = code.concat(" ==");
                 addToSyntaxTable("<relop>","==");
                 break;
                 
             case NOTEQUAL:
                 checker(NOTEQUAL);
+                code = code.concat(" !=");
                 addToSyntaxTable("<relop>","!=");
                 break;
         }
@@ -8162,16 +8391,19 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case AND:
                 checker(AND);
+                code = code.concat(" &&");
                 addToSyntaxTable("<logicop>","&&");
                 break;
                 
             case OR:
                 checker(OR);
+                code = code.concat(" ||");
                 addToSyntaxTable("<logicop>","||");
                 break;
                 
             case NOT:
                 checker(NOT);
+                code = code.concat(" !");
                 addToSyntaxTable("<logicop>","!");
                 break;
         }
@@ -8183,17 +8415,21 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case INT : 
                 checker(INT); 
+                code = code.concat("\nint ");
                 addToSyntaxTable("<vardec>", "INT"); 
                     if(checker(IDENTIFIER))
                     {
+                        code = code.concat(" "+getItem());
                         addToSyntaxTable("<vardec>","Identifier");
                         if(checker(OPENBRACKET)) //pupunta kay arraydec since naka detect openbracket
                         {
+                            code = code.concat("[");
                             addToSyntaxTable("<arraydec>","[");
                             addToSyntaxTable("<arraydec>","<size>");   
                                 production_size();
                             if(checker(CLOSEBRACKET))
                             {
+                                code = code.concat("]");
                                 addToSyntaxTable("<arraydec>","]");
                                 addToSyntaxTable("<arraydec>","<dimension>");
                                     production_dimension();
@@ -8203,6 +8439,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                     production_nextarrint();
                                 if(checker(SEMICOLON))
                                 {
+                                    code = code.concat(";");
                                     addToSyntaxTable("<arraydec>",";");
                                 } 
                                 else if(hasError == false)
@@ -8225,6 +8462,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                 production_nextintdec();
                             if(checker(SEMICOLON))
                             {
+                                code = code.concat(";");
                                 addToSyntaxTable("<vardec>", ";");
                             }
                             else if(hasError == false)
@@ -8243,17 +8481,21 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case FLOAT : 
                 checker(FLOAT); 
+                code = code.concat("\n float");
                 addToSyntaxTable("<datatype>", "FLOAT"); 
                     if(checker(IDENTIFIER))
                     {
+                        code = code.concat(" "+getItem());
                         addToSyntaxTable("<vardec>","Identifier");
                         if(checker(OPENBRACKET)) //pupunta kay arraydec since naka detect openbracket
                         {
+                            code = code.concat(" [");
                             addToSyntaxTable("<arraydec>","[");
                             addToSyntaxTable("<arraydec>","<size>");   
                                 production_size();
                             if(checker(CLOSEBRACKET))
                             {
+                                code = code.concat("]");
                                 addToSyntaxTable("<arraydec>","]");
                                 addToSyntaxTable("<arraydec>","<dimension>");
                                     production_dimension();
@@ -8263,6 +8505,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                     production_nextarrfloat();
                                 if(checker(SEMICOLON))
                                 {
+                                    code = code.concat(";");
                                     addToSyntaxTable("<arraydec>",";");
                                 } 
                                 else if(hasError == false)
@@ -8285,6 +8528,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                 production_nextfloatdec();
                             if(checker(SEMICOLON))
                             {
+                                code = code.concat(";");
                                 addToSyntaxTable("<vardec>", ";");
                             }
                             else if(hasError == false)
@@ -8303,17 +8547,21 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case CHAR : 
                 checker(CHAR); 
+                code = code.concat("\n char");
                 addToSyntaxTable("<datatype>", "CHAR"); 
                     if(checker(IDENTIFIER))
                     {
+                        code = code.concat(" "+getItem());
                         addToSyntaxTable("<vardec>","Identifier");
                         if(checker(OPENBRACKET)) //pupunta kay arraydec since naka detect openbracket
                         {
+                            code = code.concat(" [");
                             addToSyntaxTable("<arraydec>","[");
                             addToSyntaxTable("<arraydec>","<size>");   
                                 production_size();
                             if(checker(CLOSEBRACKET))
                             {
+                                code = code.concat("]");
                                 addToSyntaxTable("<arraydec>","]");
                                 addToSyntaxTable("<arraydec>","<dimension>");
                                     production_dimension();
@@ -8323,6 +8571,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                     production_nextarrchar();
                                 if(checker(SEMICOLON))
                                 {
+                                    code = code.concat(";");
                                     addToSyntaxTable("<arraydec>",";");
                                 } 
                                 else if(hasError == false)
@@ -8345,6 +8594,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                 production_nextchardec();
                             if(checker(SEMICOLON))
                             {
+                                code = code.concat(";");
                                 addToSyntaxTable("<vardec>", ";");
                             }
                             else if(hasError == false)
@@ -8363,17 +8613,21 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case STRING : 
                 checker(STRING); 
+                code = code.concat("\n String");
                 addToSyntaxTable("<datatype>", "STRING"); 
                     if(checker(IDENTIFIER))
                     {
+                        code = code.concat(" "+getItem());
                         addToSyntaxTable("<vardec>","Identifier");
                         if(checker(OPENBRACKET)) //pupunta kay arraydec since naka detect openbracket
                         {
+                            code = code.concat("[");
                             addToSyntaxTable("<arraydec>","[");
                             addToSyntaxTable("<arraydec>","<size>");   
                                 production_size();
                             if(checker(CLOSEBRACKET))
                             {
+                                code = code.concat("]");
                                 addToSyntaxTable("<arraydec>","]");
                                 addToSyntaxTable("<arraydec>","<dimension>");
                                     production_dimension();
@@ -8383,6 +8637,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                     production_nextarrstring();
                                 if(checker(SEMICOLON))
                                 {
+                                    code = code.concat(";");
                                     addToSyntaxTable("<arraydec>",";");
                                 } 
                                 else if(hasError == false)
@@ -8404,7 +8659,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             addToSyntaxTable("<vardec>","<nextstringdec>");
                                 production_nextstringdec();
                             if(checker(SEMICOLON))
+                            {
+                                code = code.concat(";");
                                 addToSyntaxTable("<vardec>", ";");
+                            }
                             else if(hasError == false)
                             {
                                 addToSyntaxErrorTable("<vardec>", "Expecting ;, Comma");   
@@ -8421,17 +8679,21 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case BOOL : 
                 checker(BOOL); 
+                code = code.concat("\n boolean");
                 addToSyntaxTable("<datatype>", "BOOL"); 
                     if(checker(IDENTIFIER))
                     {
+                        code = code.concat(" "+getItem());
                         addToSyntaxTable("<vardec>","Identifier");
                         if(checker(OPENBRACKET)) //pupunta kay arraydec since naka detect openbracket
                         {
+                            code = code.concat("[");
                             addToSyntaxTable("<arraydec>","[");
                             addToSyntaxTable("<arraydec>","<size>");   
                                 production_size();
                             if(checker(CLOSEBRACKET))
                             {
+                                code = code.concat("]");
                                 addToSyntaxTable("<arraydec>","]");
                                 addToSyntaxTable("<arraydec>","<dimension>");
                                     production_dimension();
@@ -8441,6 +8703,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                     production_nextarrbool();
                                 if(checker(SEMICOLON))
                                 {
+                                    code = code.concat(";");
                                     addToSyntaxTable("<arraydec>",";");
                                 } 
                                 else if(hasError == false)
@@ -8463,6 +8726,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                 production_nextbooldec();
                             if(checker(SEMICOLON))
                             {
+                                code = code.concat(";");
                                 addToSyntaxTable("<vardec>", ";");
                             }    
                             else if(hasError == false)
@@ -10869,7 +11133,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         else if(errorCode == 5)
         {
-            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Variable "+tblLexeme.getModel().getValueAt(tokenPos-2, 0)+
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Variableeee "+tblLexeme.getModel().getValueAt(tokenPos-2, 0)+
             " can't be altered.", "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)}); 
         }
         else if(errorCode == 6)
@@ -11096,7 +11360,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break; 
         }
     }
-    
+    boolean isFunction = false; 
     void semantic_value2()
     {
         switch(token)
@@ -11114,7 +11378,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     System.out.println("check");
                     String text = getItem();
                     identifier = text;
-                    //System.out.println("ID: "+text);
                     concert_checkIfDefined(text);
                 }
                 else
@@ -11124,13 +11387,54 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     checkIfDefined(text);  
                 }
                 
+                System.out.println("DataTypeCatcher: "+dataTypeCatcher);
+                System.out.println("DataType: "+datatype);
+                
+                if(isFunction == false)
+                {
+                    checkSameDataType(dataTypeCatcher,datatype);
+                }
+                
                 semantic_extension();
+                semantic_nextOperand();
                 break;
                 
             case INTEGERLITERAL: case FLOATLITERAL: case CHARLITERAL: case STRINGLITERAL: case BOOLLITERAL:
                 semantic_value();
+                if(isFunction == false)
+                {
+                    checkSameDataType(dataTypeCatcher,datatype);
+                }
+                semantic_nextOperand();
                 break;
         }
+    }
+    
+    void semantic_nextOperand()
+    {
+        
+    }
+    
+    void checkSameDataType(String datatype, String datatype1)
+    {
+        DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
+        if(datatype.equals(datatype1))
+        {
+
+        }
+        else if(datatype.equals("INT") && datatype1.equals("FLOAT"))
+        {
+            
+        }
+        else if(datatype1 == null)
+        {
+
+        }
+        else
+        {
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+datatype1+" Cannot be converted to "+datatype, tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
+        }
+        datatype = null;
     }
     
     void semantic_extension()
@@ -11139,7 +11443,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case OPENBRACKET: //array
                 checker(OPENBRACKET);
-                semantic_arraySize();
+                semantic_const_arraySize();
                 if(checker(CLOSEBRACKET))
                 {
                     semantic_2dArray();
@@ -11375,7 +11679,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         return null;
     }
-    
+    String dataTypeCatcher = "";
     void semantic_declaration()
     {
         switch(token)
@@ -11403,6 +11707,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         identifier = text;
                         checkAlreadyDefined(text);
                     }
+                    dataTypeCatcher = parentDataType;
                     //System.out.println("identifier: "+identifier);
                     semantic_valueInitialize();
                     semantic_nextVariable();
@@ -11421,6 +11726,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 semantic_nextOutput();
                 if(checker(SEMICOLON))
                 {
+                    semantic_declaration();
                 }
                 break;
                 
@@ -11447,7 +11753,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         checkIfDefined(text);
                     }
                     
-//                    if(datatype.equals("CONVO"))
+//                    if(datatype.equals("STRINNG"))
 //                    {
 //                        check_change_cin_to_getline();
 //                    }
@@ -11455,6 +11761,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     semantic_nextInput();
                     if(checker(SEMICOLON))
                     {
+                        semantic_declaration();
                     }
                 }
                 break;
@@ -11479,13 +11786,14 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     identifier = text;
                     checkIfDefined(text);
                 }
-                
-//                datatypeCatcher = datatype;
+                dataTypeCatcher = datatype;
                 semantic_checkIfConstant(identifier);
                 semantic_extension();
                 semantic_assignmentOperator();
                 
-                if(checker(SEMICOLON)){}
+                if(checker(SEMICOLON)){
+                    semantic_declaration();
+                }
                 break;
         }
     }
@@ -11546,7 +11854,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         if(checker(EQUAL))
         {
-            semantic_value();
+            semantic_value2();
             addToLocalDeclarationTable();
         }
         else if(checker(OPENBRACKET))
@@ -11562,7 +11870,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         else
         {
-            value = null;
+            checkNotInitialized(); //if variable was not initialized a value, values will be set to default accordign to datatype
+            value = Default;
             addToLocalDeclarationTable();
         }
     }
@@ -11609,7 +11918,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break;
                 
             default: store1DValues();
-            
         }       
     }
     int countArray2D1 = 0;
@@ -11889,7 +12197,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 literalType = "INT Literal";
                 arraySize = getItem();
                 checkArraySize(Integer.parseInt(arraySize));
-                //System.out.println("SIZE: "+arraySize);
                 break;
         }
     }
@@ -11929,6 +12236,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         switch(token)
         {
             case IDENTIFIER:
+                
                 break;
             
             case INTEGERLITERAL:
@@ -11971,7 +12279,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
    
     void semantic_checkIfConstant(String identifier)
     {
-        ///DefaultTableModel semanticerror = (DefaultTableModel)tblSemanticError.getModel();
         boolean isConstantDeclared = false, isLocallyDeclared = false; 
         
         int identifierrow = tblConstantDeclaration.getRowCount();
@@ -11979,8 +12286,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             if(identifier.equals(tblConstantDeclaration.getValueAt(i, 0).toString()))
             {
-//                errorCode = 5;
-//                addToSemanticErrorTable(errorCode);
                 isConstantDeclared = true;
             }
         }
@@ -11990,13 +12295,11 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             if(identifier.equals(tblLocalDeclaration.getValueAt(i, 0).toString()))
             {
-//                errorCode = 5;
-//                addToSemanticErrorTable(errorCode);
                 isLocallyDeclared = true;
             }
         }
         
-        if (!(isConstantDeclared && isLocallyDeclared))
+        if(isConstantDeclared==true && isLocallyDeclared==false)
         {
             errorCode = 5;
             addToSemanticErrorTable(errorCode);
@@ -12031,7 +12334,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     
     void concert_checkIfDefined(String identifier)
     {
-//        System.out.println("ID: "+identifier);
+        System.out.println("ID: "+identifier);
         boolean isDefined = false, isDefined1 = false;
         int identifierrow = tblIdentifier.getRowCount();
         int i,k;
@@ -12049,30 +12352,30 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             if(identifier.equals(tblLocalDeclaration.getValueAt(k, 0).toString()))
             {
-                isDefined = true;
+                isDefined1 = true;
                 break;
             }
         }
         
         if(isDefined == false && isDefined1 == false)
         {
+            System.out.println("pt0");
             errorCode = 4;
             addToSemanticErrorTable(errorCode);
         }
         else if(i < identifierrow)
         {
+            System.out.println("pt1");
             datatype = tblIdentifier.getValueAt(i,2).toString();
             value = tblIdentifier.getValueAt(i,1).toString();
             literalType = datatype;
-            //System.out.println("identifier hoy");
         }
         else if(k < identifierrow1)
         {
-            datatype = tblLocalDeclaration.getValueAt(i,2).toString();
-            value = tblLocalDeclaration.getValueAt(i,1).toString();
-            
+            System.out.println("pt2: "+k);
+            datatype = tblLocalDeclaration.getValueAt(k,2).toString();
+            value = tblLocalDeclaration.getValueAt(k,1).toString();
             literalType = datatype;
-            //System.out.println("local dec hoy");
         }
         arraySize = value;
         System.out.println("data_type: "+datatype);
@@ -12221,25 +12524,20 @@ public class OrchestraFrame extends javax.swing.JFrame {
         int errorCode = 0;
         if(i == (identifierrow) && k == identifierrow1) //undeclared variable
         {
-            System.out.println("AA");
             errorCode = 9;
             addToSemanticErrorTable(errorCode);
         }
         else if(i < identifierrow && !tblLocalDeclaration.getValueAt(i, 2).toString().equals("INT") && flagIdentifier == false) //variable is declared in LOCAL but different data type 
         {
-            System.out.println("AA1");
             semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+tblLocalDeclaration.getValueAt(i, 2).toString()+" Cannot be converted to INT", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
         }
         else if(k < identifierrow1 && !tblIdentifier.getValueAt(k, 2).toString().equals("INT") && flagLocal == false) //variable is declared in CONST or GLOBAL but different data type
         {
-            System.out.println("AA2");
             semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+tblIdentifier.getValueAt(k, 2).toString()+" Cannot be converted to INT", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
         }
         else if((flagLocal == false) && (flagIdentifier == true))
         {
-            System.out.println("BB");
             arraySize = tblIdentifier.getValueAt(k, 1).toString();    
-            System.out.println("asdasd: "+arraySize);
         }
         else
         {
@@ -12335,59 +12633,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
 //        }
     }
 
-   
-    private void btnSyntaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSyntaxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSyntaxActionPerformed
-
-    private void btnSyntaxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSyntaxMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSyntaxMouseClicked
-    
+       
     private void LexicalMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LexicalMouseReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_LexicalMouseReleased
     String code="#include <iostream>\n #include <cstdlib>\n  #include <exception>\n #include <iomanip>\n using namespace std; int main ( ) { std::cout << std::setprecision(6) << std::fixed; cout<< \"HI JRPT\" ; system(\"pause\");\n" +
 " return 0;}";
-    private void btnSyntaxMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSyntaxMousePressed
-        // TODO add your handling code here:
-        DefaultTableModel modelSyntax = (DefaultTableModel) tblSyntax.getModel(); //Table for Syntax
-        DefaultTableModel errorSyntax = (DefaultTableModel) tblErrorSyntax.getModel();
-        int rowModelSyntax = modelSyntax.getRowCount();
-        int rowErrorSyntax = errorSyntax.getRowCount();
-        
-        for(int ctr = rowModelSyntax-1; ctr>=0; ctr--)
-            modelSyntax.removeRow(ctr);
-        
-        for(int ctr1 = rowErrorSyntax-1; ctr1>=0; ctr1--)
-            errorSyntax.removeRow(ctr1);
-        code = "";  //translate to c++
-        hasError = false;
-        tokenPos = 0;
-        removeNotNeed();
-        token = getToken();
-        production_program();
-            
-        if(tblErrorSyntax.getRowCount() == 0) //check the error table of Syntax Error Table and THERE IS NO ERROR
-        {
-            btnSemantic.setEnabled(true);  // Enables the Syntax Button
-            tabMainTables.setSelectedIndex(1);
-            tabErrorTables.setSelectedIndex(1);
-            JOptionPane.showMessageDialog(null, "No Syntax Error Detected!");
-            //playSound("Justin Bieber - Baby.wav");
-
-        }
-        else
-        {
-            btnSemantic.setEnabled(false);    
-            btnRemove.setEnabled(true);    
-            tabMainTables.setSelectedIndex(1); 
-            tabErrorTables.setSelectedIndex(1);  
-            //playSound("318_harry_potter_hedwigs_theme_song_music_mp3_ringtone_ringtone_mp3.wav");
-            JOptionPane.showMessageDialog(null, "Syntax Error Detected!");
-        }
-    }//GEN-LAST:event_btnSyntaxMousePressed
-
     private void LexicalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LexicalActionPerformed
         // TODO add your handling code hcoere:
     }//GEN-LAST:event_LexicalActionPerformed
@@ -12416,7 +12667,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         modelFunctionReturn.setRowCount(0);
         modelArray.setRowCount(0);
         //
-
+        System.out.println("code: "+code);
         tokenPos = 0;
         removeNotNeed();
         token = getToken();
@@ -12549,6 +12800,53 @@ public class OrchestraFrame extends javax.swing.JFrame {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnSyntaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSyntaxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSyntaxActionPerformed
+
+    private void btnSyntaxMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSyntaxMousePressed
+        // TODO add your handling code here:
+        DefaultTableModel modelSyntax = (DefaultTableModel) tblSyntax.getModel(); //Table for Syntax
+        DefaultTableModel errorSyntax = (DefaultTableModel) tblErrorSyntax.getModel();
+        int rowModelSyntax = modelSyntax.getRowCount();
+        int rowErrorSyntax = errorSyntax.getRowCount();
+
+        for(int ctr = rowModelSyntax-1; ctr>=0; ctr--)
+        modelSyntax.removeRow(ctr);
+
+        for(int ctr1 = rowErrorSyntax-1; ctr1>=0; ctr1--)
+        errorSyntax.removeRow(ctr1);
+        code = "";  //translate to c++
+        hasError = false;
+        tokenPos = 0;
+        removeNotNeed();
+        token = getToken();
+        production_program();
+
+        if(tblErrorSyntax.getRowCount() == 0) //check the error table of Syntax Error Table and THERE IS NO ERROR
+        {
+            btnSemantic.setEnabled(true);  // Enables the Syntax Button
+            tabMainTables.setSelectedIndex(1);
+            tabErrorTables.setSelectedIndex(1);
+            JOptionPane.showMessageDialog(null, "No Syntax Error Detected!");
+            //playSound("Justin Bieber - Baby.wav");
+
+        }
+        else
+        {
+            btnSemantic.setEnabled(false);
+            btnRemove.setEnabled(true);
+            tabMainTables.setSelectedIndex(1);
+            tabErrorTables.setSelectedIndex(1);
+            //playSound("318_harry_potter_hedwigs_theme_song_music_mp3_ringtone_ringtone_mp3.wav");
+            JOptionPane.showMessageDialog(null, "Syntax Error Detected!");
+        }
+    }//GEN-LAST:event_btnSyntaxMousePressed
+
+    private void btnSyntaxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSyntaxMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSyntaxMouseClicked
     public int colNum;
     /**
      * @param args the command line arguments
