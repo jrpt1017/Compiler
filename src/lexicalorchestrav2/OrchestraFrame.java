@@ -5428,6 +5428,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         reInitialize();
         code = "";
+        
         DefaultTableModel model = (DefaultTableModel) tblLexeme.getModel(); //Table for Lexeme
         DefaultTableModel modelSyntax = (DefaultTableModel) tblSyntax.getModel(); //Table for Syntax
         DefaultTableModel modelConstantDec = (DefaultTableModel) tblConstantDeclaration.getModel(); //Table for Semantic
@@ -7471,12 +7472,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     hasError = true;
         }
     }
-    
+    boolean isFromForLoop = false;
     void production_loopstatements()
     {
         switch(token)
         {
             case LOOP:
+            isFromForLoop = true;
             checker(LOOP);
             code = code.concat("\n for");
             addToSyntaxTable("<loopstatements>","<loop>");
@@ -7524,6 +7526,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                     {
                                         code = code.concat("\n }");
                                         addToSyntaxTable("<loop>","}");
+                                       
                                     }
                                     else if(hasError == false)
                                     {
@@ -7701,7 +7704,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             default: 
                 addToSyntaxTable("<loopstatements>","null");
         }
-        production_statements();
+         production_statements();
     }
     
     void production_incdec()
@@ -7717,7 +7720,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         production_preinc();
                     if(checker(SEMICOLON))
                     {
-                        code = code.concat(";");
+                        if(isFromForLoop == false)
+                            code = code.concat(";");
                         addToSyntaxTable("<incdec>",";");
                     }
                     else if(hasError == false)
@@ -7734,7 +7738,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         production_predec();
                     if(checker(SEMICOLON))
                     {
-                        code = code.concat(";");
+                        if(isFromForLoop == false)
+                            code = code.concat(";");
                         addToSyntaxTable("<incdec>",";");
                     }
                     else if(hasError == false)
@@ -7756,7 +7761,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     addToSyntaxTable("<postinc>","++");
                     if(checker(SEMICOLON))
                     {
-                        code = code.concat(";");
+                        System.out.println("isFromForLoop"+isFromForLoop);
+                        if(isFromForLoop == false)
+                            code = code.concat(";");
                         addToSyntaxTable("<incdec>",";");
                     }
                     else if(hasError == false)
@@ -7772,7 +7779,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     addToSyntaxTable("<postidec>","--");
                     if(checker(SEMICOLON))
                     {
-                        code = code.concat(";");
+                        if(isFromForLoop == false)
+                            code = code.concat(";");
                         addToSyntaxTable("<incdec>",";");
                     }
                     else if(hasError == false)
@@ -11317,6 +11325,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             countArraySeparator = 0;
             IDArray = "";
             countArray2D2 = 0;
+            isFromForLoop = false;
     }
     
     String getItem()
