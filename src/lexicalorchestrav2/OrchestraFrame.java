@@ -4611,59 +4611,30 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     // "
                     else if(sourcecode.charAt(i) == '"')
                     {
-                       // lexeme = lexeme.concat("\"");
+
+                        lexeme = lexeme.concat("\"");
                         if(i == (sourcecode.length()-1))
                         {
-                            error.addRow(new String[]{"\"", "Expecting String Literal",  " Error At Line "+(j+1)+" Column : "+(i+2)});
-                            lexeme = "";
+                                error.addRow(new String[]{lexeme, "Expecting String Literal", "Error At Line "+(j+1)+", Column : "+(i+2)});
+                                lexeme = "";
                         }
                         else
                         {
-                            i++;
+                                i++;
                             while(sourcecode.charAt(i) != '"')
                             {
-                                if(sourcecode.charAt(i)=='\\')
+                                lexeme += sourcecode.charAt(i);
+                                i++;
+                                if(i == (sourcecode.length()-1))
                                 {
-                                    // int y=i+1;
-                                    if(sourcecode.charAt(i+1)=='"'){
-                                        lexeme += sourcecode.charAt(i+1);
-                                        i=i+2;
-                                    }
+                                   break;
                                 }
-                                else
-                                {
-                                    lexeme += sourcecode.charAt(i);
-                                    i++;
-                                }
-//                                if(i == (sourcecode.length()-1))
-//                                {
-//                                     break;
-//                                }
                             }
                             if(sourcecode.charAt(i) == '"')
                             {
-                             //   lexeme = lexeme.concat("\"");
-                                if(i == (sourcecode.length()-1))
-                                {
-                                    model.addRow(new String[]{lexeme, "String_Literal",""+(j+1),""+(i+2)});
-                                    lexeme = "";
-                                }
-                                else
-                                {
-                                    if(sourcecode.charAt(i+1)=='\n'||sourcecode.charAt(i+1)==';'||sourcecode.charAt(i+1)==' '
-                                    ||sourcecode.charAt(i+1)==','||sourcecode.charAt(i+1)=='}'||sourcecode.charAt(i+1) == '.')
-                                    {
-                                        model.addRow(new String[]{lexeme, "String_Literal",""+(j+1),""+(i+1)});
-                                        lexeme = "";
-                                    }
-                                    else
-                                    {
-                                        //lexeme="";
-                                        lexeme += sourcecode.charAt(i+1);
-                                        error.addRow(new String[]{lexeme ,"String Literal has invalid delimeter",  " Error at Line "+(j+1)+" Column :"+(i+2)});
-                                        lexeme = "";
-                                    }
-                                }
+                               lexeme += sourcecode.charAt(i);
+                               model.addRow(new String[]{lexeme, "String_Literal",""+(j+1),""+(i+2)});
+                               lexeme = "";
                             }
                             else if(i == (sourcecode.length()-1))
                             {
@@ -4672,6 +4643,69 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             }
                         }
                     }
+//                    else if(sourcecode.charAt(i) == '"')
+//                    {
+//                        lexeme = lexeme.concat("\"");
+//                        if(i == (sourcecode.length()-1))
+//                        {
+//                            error.addRow(new String[]{"\"", "Expecting String Literal",  " Error At Line "+(j+1)+" Column : "+(i+2)});
+//                            lexeme = "";
+//                        }
+//                        else
+//                        {
+//                            i++;
+//                            while(sourcecode.charAt(i) != '"')
+//                            {
+//                                if(sourcecode.charAt(i)=='\\')
+//                                {
+//                                    // int y=i+1;
+//                                    if(sourcecode.charAt(i+1)=='"'){
+//                                        lexeme += sourcecode.charAt(i+1);
+//                                        i=i+2;
+//                                    }
+//                                }
+//                                else
+//                                {
+//                                    lexeme += sourcecode.charAt(i);
+//                                    i++;
+//                                }
+////                                if(i == (sourcecode.length()-1))
+////                                {
+////                                     break;
+////                                }
+//                            }
+//                            if(sourcecode.charAt(i) == '"')
+//                            {
+//                                lexeme = lexeme.concat("\"");
+//                                if(i == (sourcecode.length()-1))
+//                                {
+//                                    model.addRow(new String[]{lexeme, "String_Literal",""+(j+1),""+(i+2)});
+//                                    lexeme = "";
+//                                }
+//                                else
+//                                {
+//                                    if(sourcecode.charAt(i+1)=='\n'||sourcecode.charAt(i+1)==';'||sourcecode.charAt(i+1)==' '
+//                                    ||sourcecode.charAt(i+1)==','||sourcecode.charAt(i+1)=='}'||sourcecode.charAt(i+1) == '.')
+//                                    {
+//                                        model.addRow(new String[]{lexeme, "String_Literal",""+(j+1),""+(i+1)});
+//                                        lexeme = "";
+//                                    }
+//                                    else
+//                                    {
+//                                        //lexeme="";
+//                                        lexeme += sourcecode.charAt(i+1);
+//                                        error.addRow(new String[]{lexeme ,"String Literal has invalid delimeter",  " Error at Line "+(j+1)+" Column :"+(i+2)});
+//                                        lexeme = "";
+//                                    }
+//                                }
+//                            }
+//                            else if(i == (sourcecode.length()-1))
+//                            {
+//                                error.addRow(new String[]{lexeme, "Expecting \" for String Literal ",  " Error At Line "+(j+1)+" Column : "+(i+2)});
+//                                lexeme = "";
+//                            }
+//                        }
+//                    }
                     else if(sourcecode.charAt(i) == '#')
                     {
                       //  lexeme = lexeme.concat("#");
@@ -4741,13 +4775,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         }
                     }
                     // \n
-                    else if(sourcecode.charAt(i) == '\n')
-                    {
-                        lexeme = "";
-                        lexeme = lexeme.concat("\\n");
-                        model.addRow(new String[]{lexeme, "New Line",""+(j+1),""+(i+2)});
-                        lexeme = "";
-                    }
+//                    else if(sourcecode.charAt(i) == '\n')
+//                    {
+//                        lexeme = "";
+//                        lexeme = lexeme.concat("\\n");
+//                        model.addRow(new String[]{lexeme, "New Line",""+(j+1),""+(i+2)});
+//                        lexeme = "";
+//                    }
                     
                     // [
                     else if(sourcecode.charAt(i) == '[')
@@ -5106,7 +5140,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                     }
                                     else
                                     {
-                                        if(sourcecode.charAt(i+1) == ' '||sourcecode.charAt(i+1) == '\n' ||
+                                        if(sourcecode.charAt(i+1) == ' '||
                                         Character.isAlphabetic(sourcecode.charAt(i+1)) || Character.isDigit(sourcecode.charAt(i+1))
                                         || sourcecode.charAt(i+1) == ',' || sourcecode.charAt(i+1) == ';'|| sourcecode.charAt(i+1) == '}')
                                         {
@@ -5180,7 +5214,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                     || sourcecode.charAt(i) == ')' || sourcecode.charAt(i) == ';'
                                     || sourcecode.charAt(i) == '[' || sourcecode.charAt(i) == ']'
                                     || sourcecode.charAt(i) == ',' || sourcecode.charAt(i) == ':'
-                                    || sourcecode.charAt(i) == '\t'|| sourcecode.charAt(i) == '\n') // Delimeter
+                                    || sourcecode.charAt(i) == '\t') // Delimeter
                                     {
                                         //TRAILING ZEROES ON WORKING
                                        //lexeme.replace(' ',lexeme.charAt(lexeme.length()-1));
@@ -5289,14 +5323,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                     //Adds the Lexeme, Line # and Column # to the Lexical Table
                                     if(stringList.contains(lexeme))
                                     {
-                                        System.out.println("Hala nahulog");
                                         idstring = stringList.toArray(new String[] {});
                                         for(idcount=1;idcount<idstring.length;idcount++)
                                         {
                                             System.out.println(idstring[idcount]);
                                             if(idstring[idcount].equals(lexeme))
                                             {
-                                            System.out.println("nangyayari ba ako");
+                                            //System.out.println("nangyayari ba ako");
                                             model.addRow(new String[]{lexeme,"ID",""+(j+1),""+(i+1),"ID"+idcount});
                                             }
                                         }
@@ -5346,12 +5379,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         model.addRow(new String[]{" ","Space",""+(j+1),""+(i+2)});
                         lexeme = "";
                     }
-                    else if(sourcecode.charAt(i) == '\n')
-                    {
-                        lexeme += sourcecode.charAt(i);
-                        model.addRow(new String[]{"\n", "New Line",""+(j+1),""+(i+2)});
-                        lexeme = "";
-                    }
+//                    else if(sourcecode.charAt(i) == '\n')
+//                    {
+//                        lexeme += sourcecode.charAt(i);
+//                        model.addRow(new String[]{"\n", "New Line",""+(j+1),""+(i+2)});
+//                        lexeme = "";
+//                    }
                     else
                     {
                         error.addRow(new String[]{"","INVALID - Unrecognized Character", "Error at Line"+(j+1)+", Column:"+(i+1)});
@@ -5393,7 +5426,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
     private void btnRemoveMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRemoveMousePressed
         // TODO add your handling code here:
-        
+        reInitialize();
+        code = "";
         DefaultTableModel model = (DefaultTableModel) tblLexeme.getModel(); //Table for Lexeme
         DefaultTableModel modelSyntax = (DefaultTableModel) tblSyntax.getModel(); //Table for Syntax
         DefaultTableModel modelConstantDec = (DefaultTableModel) tblConstantDeclaration.getModel(); //Table for Semantic
@@ -11251,6 +11285,39 @@ public class OrchestraFrame extends javax.swing.JFrame {
     String arraySize = null;
     String Default = "";
     int errorCode;
+    boolean isFunction = false; 
+    String dataTypeCatcher = "";
+    ArrayList<String> ArrayValues = new ArrayList<>();
+    int countArray1D = 0;
+    int countArray2D1 = 0;
+    int countArraySeparator = 0;
+    String IDArray = "";
+    int countArray2D2 = 0;
+    
+    
+    void reInitialize()
+    {
+            scope = null;
+            parentDataType = null;
+            identifier = null;
+            value = null;
+            datatype = null;
+            literalType = null;
+            functionName = null;
+            array1D = null;
+            array2d = null;
+            arraySize = null;
+            Default = "";
+            errorCode = 0;
+            isFunction = false; 
+            dataTypeCatcher = "";
+            ArrayValues.clear();
+            countArray1D = 0;
+            countArray2D1 = 0;
+            countArraySeparator = 0;
+            IDArray = "";
+            countArray2D2 = 0;
+    }
     
     String getItem()
     {
@@ -11544,7 +11611,42 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break; 
         }
     }
-    boolean isFunction = false; 
+    
+    void semantic_value4()
+    {
+        switch(token)
+        {
+            case IDENTIFIER:
+                checker(IDENTIFIER);
+                if(scope == "interlude")
+                {                        
+                    String text = getItem();
+                    identifier = text;
+                    interlude_checkIfDefined(text);
+                }
+                else if(scope == "concert")
+                {
+                    System.out.println("check");
+                    String text = getItem();
+                    identifier = text;
+                    concert_checkIfDefined(text);
+                }
+                else
+                {
+                    String text = getItem();
+                    identifier = text;
+                    checkIfDefined(text);  
+                }
+                
+                semantic_extension();
+                break;
+                
+            case INTEGERLITERAL: case FLOATLITERAL: case CHARLITERAL: case STRINGLITERAL: case BOOLLITERAL:
+                semantic_value();
+                break;
+        }
+    }
+
     void semantic_value2()
     {
         switch(token)
@@ -11585,6 +11687,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case INTEGERLITERAL: case FLOATLITERAL: case CHARLITERAL: case STRINGLITERAL: case BOOLLITERAL:
                 semantic_value();
+                System.out.println("DataTypeCatcher: "+dataTypeCatcher);
+                System.out.println("DataType: "+datatype);
                 if(isFunction == false)
                 {
                     checkSameDataType(dataTypeCatcher,datatype);
@@ -11863,7 +11967,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         return null;
     }
-    String dataTypeCatcher = "";
+
     void semantic_declaration()
     {
         switch(token)
@@ -11892,7 +11996,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         checkAlreadyDefined(text);
                     }
                     dataTypeCatcher = parentDataType;
-                    //System.out.println("identifier: "+identifier);
                     semantic_valueInitialize();
                     semantic_nextVariable();
                     
@@ -11905,8 +12008,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case OUTRO:
                 checker(OUTRO);
-                System.out.println("ops.");
-                semantic_value2();
+                semantic_value4();
                 semantic_nextOutput();
                 if(checker(SEMICOLON))
                 {
@@ -12033,7 +12135,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             }
         }
     }
-    ArrayList<String> ArrayValues = new ArrayList<>();
+
     void semantic_valueInitialize()
     {
         if(checker(EQUAL))
@@ -12068,7 +12170,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             semantic_nextOutput();
         }
     }
-    int countArray1D = 0;
+
     void semantic_2dArray()
     {
         switch(token)
@@ -12104,8 +12206,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             default: store1DValues();
         }       
     }
-    int countArray2D1 = 0;
-    int countArraySeparator = 0;
+
     void semantic_2dArrayValue()
     {
         switch(token)
@@ -12295,8 +12396,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             addToSemanticErrorTable(errorCode);
         }
     }
-    String IDArray = "";
-    int countArray2D2 = 0;
+
     void semantic_value3()
     {
         switch(token)
@@ -12829,7 +12929,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
     private void btnSemanticMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSemanticMousePressed
         // TODO add your handling code here:
-
+        reInitialize(); //re-initialize globbal variables
+        
         DefaultTableModel modelConstantDec = (DefaultTableModel) tblConstantDeclaration.getModel(); //Table for Semantic
         DefaultTableModel modelGlobalDec = (DefaultTableModel) tblGlobalDeclaration.getModel(); //Table for Semantic
         DefaultTableModel modelLocalDec = (DefaultTableModel) tblLocalDeclaration.getModel(); //Table for Semantic
@@ -12851,7 +12952,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         modelFunctionReturn.setRowCount(0);
         modelArray.setRowCount(0);
         //
-        System.out.println("code: "+code);
+        System.out.println("code: \n"+code);
         tokenPos = 0;
         removeNotNeed();
         token = getToken();
@@ -13002,6 +13103,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         for(int ctr1 = rowErrorSyntax-1; ctr1>=0; ctr1--)
         errorSyntax.removeRow(ctr1);
         code = "";  //translate to c++
+        code = "#include <iostream>\n #include <cstdlib>\n  #include <exception>\n #include <iomanip>\n using namespace std;\n\n";
         hasError = false;
         tokenPos = 0;
         removeNotNeed();
