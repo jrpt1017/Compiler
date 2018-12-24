@@ -6450,180 +6450,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     code = code.concat("\n int");
                     addToSyntaxTable("<functiondef>","<datatype>");
                     addToSyntaxTable("<datatype>","INT");
-                    if(checker(IDENTIFIER))
-                    {
-                        code = code.concat(" "+getItem());
-                        addToSyntaxTable("<functiondef>","Identifier");
-                        if(checker(OPENPARENTHESIS))
-                        {
-                            code = code.concat(" (");
-                            addToSyntaxTable("<functiondef>","(");
-                            addToSyntaxTable("<functiondef>","<funcparam>");
-                                production_funcparam();
-                            if(checker(CLOSEPARENTHESIS))
-                            {
-                                code = code.concat(")");
-                                addToSyntaxTable("<functiondef>",")");
-                                if(checker(OPENCURLYBRACE))
-                                {
-                                    code = code.concat(" {");
-                                    addToSyntaxTable("<functiondef>","{");
-                                    addToSyntaxTable("<functiondef>","<statements>");
-                                        production_statements();
-                                        System.out.print(token);
-                                    if(checker(PRODUCE))
-                                    {
-                                        code = code.concat("\n return");
-                                        addToSyntaxTable("<functiondef>","PRODUCE");
-                                        if(checker1(OPENPARENTHESIS) || checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
-                                        || checker1(BOOLLITERAL) || checker1(STRINGLITERAL) || checker1(IDENTIFIER) )
-                                        {
-                                           addToSyntaxTable("<functiondef>","<returnval>");
-                                           if(checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
-                                           || checker1(BOOLLITERAL) || checker1(STRINGLITERAL))
-                                           {
-                                                addToSyntaxTable("<returnval>","<literal>");
-                                                    production_literal();
-                                                if(checker(SEMICOLON))
-                                                {
-                                                    code = code.concat(";");
-                                                    if(checker(CLOSECURLYBRACE))
-                                                    {
-                                                        code = code.concat("\n }");
-                                                        addToSyntaxTable("<functiondef>","}");
-                                                    }
-                                                    else if(hasError == false)
-                                                    {
-                                                        addToSyntaxErrorTable("<functiondef>", "Expecting }");
-                                                        hasError = true;
-                                                    }
-                                                }
-                                                else if(hasError == false)
-                                                {
-                                                    addToSyntaxErrorTable("<functiondef>","Expecting ;");
-                                                    hasError = true;
-                                                }
-                                           }
-                                           else if(checker1(OPENPARENTHESIS))
-                                           {
-                                                addToSyntaxTable("<returnval>","<mathexpr>");
-                                                    production_mathexpr();
-                                                if(checker(SEMICOLON))
-                                                {
-                                                    code = code.concat(";");
-                                                    addToSyntaxTable("<returnval>",";");
-                                                    if(checker(CLOSECURLYBRACE))
-                                                    {
-                                                        code = code.concat("\n }");
-                                                        addToSyntaxTable("<functiondef>","}");
-                                                    }
-                                                    else if(hasError == false)
-                                                    {
-                                                        addToSyntaxErrorTable("<functiondef>", "Expecting }");
-                                                        hasError = true;
-                                                    }
-                                                }
-                                                else if(hasError == false)
-                                                {
-                                                    addToSyntaxErrorTable("<functiondef>","Expecting ;");
-                                                    hasError = true;
-                                                }
-                                            }
-                                           else if(checker1(IDENTIFIER))
-                                           {
-                                                //System.out.println("return val from int id: "+token);
-                                                addToSyntaxTable("<returnval>","<identifier>");
-                                                checker(IDENTIFIER);
-                                                if(checker1(PLUS)||checker1(MINUS)||checker1(DIVIDE)||checker1(MODULUS)||checker1(MULTIPLY))
-                                                {
-                                                    addToSyntaxTable("<size>","<mathexpr>");
-                                                    addToSyntaxTable("<mathexpr>","INT_LIT");
-                                                        production_nextmathexpr();
-                                                                                                    //System.out.println("return val from int id after: "+token);
-                                                    if(checker(SEMICOLON))
-                                                    {
-                                                        code = code.concat(";");
-                                                        addToSyntaxTable("<returnval>",";");
-                                                        if(checker(CLOSECURLYBRACE))
-                                                            addToSyntaxTable("<functiondef>","}");
-                                                        else if(hasError == false)
-                                                        {
-                                                            addToSyntaxErrorTable("<functiondef>", "Expecting }");
-                                                            hasError = true;
-                                                        }
-                                                    }
-                                                    else if(hasError == false)
-                                                    {
-                                                        addToSyntaxErrorTable("<functiondef>","Expecting ;");
-                                                        hasError = true;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    production_identifier();
-                                                    if(checker(SEMICOLON))
-                                                    {
-                                                        code = code.concat(";");
-                                                        addToSyntaxTable("<returnval>",";");
-                                                        if(checker(CLOSECURLYBRACE))
-                                                        {
-                                                            code = code.concat("\n }");
-                                                            addToSyntaxTable("<functiondef>","}");
-                                                        }
-                                                        else if(hasError == false)
-                                                        {
-                                                            addToSyntaxErrorTable("<functiondef>", "Expecting }");
-                                                            hasError = true;
-                                                        }
-                                                    }
-                                                    else if(hasError == false)
-                                                    {
-                                                        addToSyntaxErrorTable("<functiondef>","Expecting ;");
-                                                        hasError = true;
-                                                    }
-                                                }
-                                           }
-                                           else if(hasError == false)
-                                           {
-                                               addToSyntaxErrorTable("<functiondef>","Invalid Return Value, Expecting Literals, Identifier of Math Expression");
-                                               hasError = true;
-                                           }
-                                        }
-                                        else if(hasError == false)
-                                        {
-                                            addToSyntaxErrorTable("<functiondef>","Expecting return value");
-                                            hasError = true;
-                                        }
-                                    }
-                                    else if(hasError == false)
-                                    {
-                                        addToSyntaxErrorTable("<functiondef>","Expecting PRODUCE");  
-                                        hasError = true;
-                                    }
-                                }
-                                else if(hasError == false)
-                                {
-                                    addToSyntaxErrorTable("<functiondef>","Expecting {");
-                                    hasError = true;
-                                }
-                            }
-                            else if(hasError == false)
-                            {
-                                addToSyntaxErrorTable("<functiondef>","Expecting )");
-                                hasError = true;
-                            }
-                        }
-                        else if(hasError == false)
-                        {
-                            addToSyntaxErrorTable("<functiondef>","(");
-                            hasError = true;
-                        }
-                    }
-                    else if(hasError == false)
-                    {
-                        addToSyntaxErrorTable("<functiondef>","Expecting Identifier");
-                        hasError = true;
-                    }
                     break;
                     
                 case FLOAT:
@@ -6631,156 +6457,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     code = code.concat("\n float");
                     addToSyntaxTable("<functiondef>","<datatype>");
                     addToSyntaxTable("<datatype>","FLOAT");
-                    if(checker(IDENTIFIER))
-                    {
-                        code = code.concat(" "+getItem());
-                        addToSyntaxTable("<functiondef>","Identifier");
-                        if(checker(OPENPARENTHESIS))
-                        {
-                            code = code.concat(" (");
-                            addToSyntaxTable("<functiondef>","(");
-                            addToSyntaxTable("<functiondef>","<funcparam>");
-                                production_funcparam();
-                            if(checker(CLOSEPARENTHESIS))
-                            {
-                                code = code.concat(" )");
-                                addToSyntaxTable("<functiondef>",")");
-                                if(checker(OPENCURLYBRACE))
-                                {
-                                    code = code.concat(" {");
-                                    addToSyntaxTable("<functiondef>","{");
-                                    addToSyntaxTable("<functiondef>","<statements>");
-                                        production_statements();
-                                        System.out.print(token);
-                                    if(checker(PRODUCE))
-                                    {
-                                        code = code.concat("\n return");
-                                        addToSyntaxTable("<functiondef>","PRODUCE");
-                                        if(checker1(OPENPARENTHESIS) || checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
-                                        || checker1(BOOLLITERAL) || checker1(STRINGLITERAL) || checker1(IDENTIFIER) )
-                                        {
-                                           addToSyntaxTable("<functiondef>","<returnval>");
-                                           if(checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
-                                           || checker1(BOOLLITERAL) || checker1(STRINGLITERAL))
-                                           {
-                                                addToSyntaxTable("<returnval>","<literal>");
-                                                    production_literal();
-                                                if(checker(SEMICOLON))
-                                                {
-                                                    code = code.concat(";");
-                                                    if(checker(CLOSECURLYBRACE))
-                                                    {
-                                                     code = code.concat("\n }");
-                                                        addToSyntaxTable("<functiondef>","}");
-                                                    }
-                                                    else if(hasError == false)
-                                                    {
-                                                        addToSyntaxErrorTable("<functiondef>", "Expecting }");
-                                                        hasError = true;
-                                                    }
-                                                }
-                                                else if(hasError == false)
-                                                {
-                                                    addToSyntaxErrorTable("<functiondef>","Expecting ;");
-                                                    hasError = true;
-                                                }
-                                           }
-                                           else if(checker1(OPENPARENTHESIS))
-                                           {
-                                                addToSyntaxTable("<returnval>","<mathexpr>");
-                                                    production_mathexpr();
-                                                if(checker(SEMICOLON))
-                                                {
-                                                    code = code.concat(";");
-                                                    addToSyntaxTable("<returnval>",";");
-                                                    if(checker(CLOSECURLYBRACE))
-                                                    {
-                                                        code = code.concat("\n }");
-                                                        addToSyntaxTable("<functiondef>","}");
-                                                    }
-                                                    else if(hasError == false)
-                                                    {
-                                                        addToSyntaxErrorTable("<functiondef>", "Expecting }");
-                                                        hasError = true;
-                                                    }
-                                                }
-                                                else if(hasError == false)
-                                                {
-                                                    addToSyntaxErrorTable("<functiondef>","Expecting ;");
-                                                    hasError = true;
-                                                }
-                                            }
-                                           else if(checker1(IDENTIFIER))
-                                           {
-                                                //System.out.println("return val from int id: "+token);
-                                                addToSyntaxTable("<returnval>","<identifier>");
-                                                checker(IDENTIFIER);
-                                                code = code.concat(" "+getItem());
-                                                production_identifier();
-                                                //System.out.println("return val from int id after: "+token);
-                                                if(checker(SEMICOLON))
-                                                {
-                                                    code = code.concat(";");
-                                                    addToSyntaxTable("<returnval>",";");
-                                                    if(checker(CLOSECURLYBRACE))
-                                                    {
-                                                        code = code.concat(" "+getItem());
-                                                        addToSyntaxTable("<functiondef>","}");
-                                                    }
-                                                    else if(hasError == false)
-                                                    {
-                                                        addToSyntaxErrorTable("<functiondef>", "Expecting }");
-                                                        hasError = true;
-                                                    }
-                                                }
-                                                else if(hasError == false)
-                                                {
-                                                    addToSyntaxErrorTable("<functiondef>","Expecting ;");
-                                                    hasError = true;
-                                                }
-
-                                           }
-                                           else if(hasError == false)
-                                           {
-                                               addToSyntaxErrorTable("<functiondef>","Invalid Return Value, Expecting Literals, Identifier of Math Expression");
-                                               hasError = true;
-                                           }
-                                        }
-                                        else if(hasError == false)
-                                        {
-                                            addToSyntaxErrorTable("<functiondef>","Expecting return value");
-                                            hasError = true;
-                                        }
-                                    }
-                                    else if(hasError == false)
-                                    {
-                                        addToSyntaxErrorTable("<functiondef>","Expecting PRODUCE");  
-                                        hasError = true;
-                                    }
-                                }
-                                else if(hasError == false)
-                                {
-                                    addToSyntaxErrorTable("<functiondef>","Expecting {");
-                                    hasError = true;
-                                }
-                            }
-                            else if(hasError == false)
-                            {
-                                addToSyntaxErrorTable("<functiondef>","Expecting )");
-                                hasError = true;
-                            }
-                        }
-                        else if(hasError == false)
-                        {
-                            addToSyntaxErrorTable("<functiondef>","(");
-                            hasError = true;
-                        }
-                    }
-                    else if(hasError == false)
-                    {
-                        addToSyntaxErrorTable("<functiondef>","Expecting Identifier");
-                        hasError = true;
-                    }
                     break;
                 
                 case CHAR: 
@@ -6788,156 +6464,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     code = code.concat("\n char");
                     addToSyntaxTable("<functiondef>","<datatype>");
                     addToSyntaxTable("<datatype>","CHAR");
-                    if(checker(IDENTIFIER))
-                    {
-                        code = code.concat(" "+getItem());
-                        addToSyntaxTable("<functiondef>","Identifier");
-                        if(checker(OPENPARENTHESIS))
-                        {
-                            code = code.concat("(");
-                            addToSyntaxTable("<functiondef>","(");
-                            addToSyntaxTable("<functiondef>","<funcparam>");
-                                production_funcparam();
-                            if(checker(CLOSEPARENTHESIS))
-                            {
-                                code = code.concat(")");
-                                addToSyntaxTable("<functiondef>",")");
-                                if(checker(OPENCURLYBRACE))
-                                {
-                                    code = code.concat(" {");
-                                    addToSyntaxTable("<functiondef>","{");
-                                    addToSyntaxTable("<functiondef>","<statements>");
-                                        production_statements();
-                                        System.out.print(token);
-                                    if(checker(PRODUCE))
-                                    {
-                                        code = code.concat("\n return");
-                                        addToSyntaxTable("<functiondef>","PRODUCE");
-                                        if(checker1(OPENPARENTHESIS) || checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
-                                        || checker1(BOOLLITERAL) || checker1(STRINGLITERAL) || checker1(IDENTIFIER) )
-                                        {
-                                           addToSyntaxTable("<functiondef>","<returnval>");
-                                           if(checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
-                                           || checker1(BOOLLITERAL) || checker1(STRINGLITERAL))
-                                           {
-                                                addToSyntaxTable("<returnval>","<literal>");
-                                                    production_literal();
-                                                if(checker(SEMICOLON))
-                                                {
-                                                    code = code.concat(";");
-                                                    if(checker(CLOSECURLYBRACE))
-                                                    {
-                                                        code = code.concat("\n }");
-                                                        addToSyntaxTable("<functiondef>","}");
-                                                    }
-                                                    else if(hasError == false)
-                                                    {
-                                                        addToSyntaxErrorTable("<functiondef>", "Expecting }");
-                                                        hasError = true;
-                                                    }
-                                                }
-                                                else if(hasError == false)
-                                                {
-                                                    addToSyntaxErrorTable("<functiondef>","Expecting ;");
-                                                    hasError = true;
-                                                }
-                                           }
-                                           else if(checker1(OPENPARENTHESIS))
-                                           {
-                                                addToSyntaxTable("<returnval>","<mathexpr>");
-                                                    production_mathexpr();
-                                                if(checker(SEMICOLON))
-                                                {
-                                                    code = code.concat(";");
-                                                    addToSyntaxTable("<returnval>",";");
-                                                    if(checker(CLOSECURLYBRACE))
-                                                    {
-                                                        code = code.concat("\n }");
-                                                        addToSyntaxTable("<functiondef>","}");
-                                                    }
-                                                    else if(hasError == false)
-                                                    {
-                                                        addToSyntaxErrorTable("<functiondef>", "Expecting }");
-                                                        hasError = true;
-                                                    }
-                                                }
-                                                else if(hasError == false)
-                                                {
-                                                    addToSyntaxErrorTable("<functiondef>","Expecting ;");
-                                                    hasError = true;
-                                                }
-                                            }
-                                           else if(checker1(IDENTIFIER))
-                                           {
-                                                //System.out.println("return val from int id: "+token);
-                                                addToSyntaxTable("<returnval>","<identifier>");
-                                                checker(IDENTIFIER);
-                                                code = code.concat(" "+getItem());
-                                                production_identifier();
-                                                //System.out.println("return val from int id after: "+token);
-                                                if(checker(SEMICOLON))
-                                                {
-                                                    code = code.concat(";");
-                                                    addToSyntaxTable("<returnval>",";");
-                                                    if(checker(CLOSECURLYBRACE))
-                                                    {
-                                                        code = code.concat("\n }");
-                                                        addToSyntaxTable("<functiondef>","}");
-                                                    }
-                                                    else if(hasError == false)
-                                                    {
-                                                        addToSyntaxErrorTable("<functiondef>", "Expecting }");
-                                                        hasError = true;
-                                                    }
-                                                }
-                                                else if(hasError == false)
-                                                {
-                                                    addToSyntaxErrorTable("<functiondef>","Expecting ;");
-                                                    hasError = true;
-                                                }
-
-                                           }
-                                           else if(hasError == false)
-                                           {
-                                               addToSyntaxErrorTable("<functiondef>","Invalid Return Value, Expecting Literals, Identifier of Math Expression");
-                                               hasError = true;
-                                           }
-                                        }
-                                        else if(hasError == false)
-                                        {
-                                            addToSyntaxErrorTable("<functiondef>","Expecting return value");
-                                            hasError = true;
-                                        }
-                                    }
-                                    else if(hasError == false)
-                                    {
-                                        addToSyntaxErrorTable("<functiondef>","Expecting PRODUCE");  
-                                        hasError = true;
-                                    }
-                                }
-                                else if(hasError == false)
-                                {
-                                    addToSyntaxErrorTable("<functiondef>","Expecting {");
-                                    hasError = true;
-                                }
-                            }
-                            else if(hasError == false)
-                            {
-                                addToSyntaxErrorTable("<functiondef>","Expecting )");
-                                hasError = true;
-                            }
-                        }
-                        else if(hasError == false)
-                        {
-                            addToSyntaxErrorTable("<functiondef>","(");
-                            hasError = true;
-                        }
-                    }
-                    else if(hasError == false)
-                    {
-                        addToSyntaxErrorTable("<functiondef>","Expecting Identifier");
-                        hasError = true;
-                    }
                     break;
 
                 case STRING:
@@ -6945,156 +6471,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     code = code.concat("\n String");
                     addToSyntaxTable("<functiondef>","<datatype>");
                     addToSyntaxTable("<datatype>","STRING");
-                    if(checker(IDENTIFIER))
-                    {
-                        code = code.concat(" "+getItem());
-                        addToSyntaxTable("<functiondef>","Identifier");
-                        if(checker(OPENPARENTHESIS))
-                        {
-                            code = code.concat(" (");
-                            addToSyntaxTable("<functiondef>","(");
-                            addToSyntaxTable("<functiondef>","<funcparam>");
-                                production_funcparam();
-                            if(checker(CLOSEPARENTHESIS))
-                            {
-                                code = code.concat(")");
-                                addToSyntaxTable("<functiondef>",")");
-                                if(checker(OPENCURLYBRACE))
-                                {
-                                    code = code.concat("{");
-                                    addToSyntaxTable("<functiondef>","{");
-                                    addToSyntaxTable("<functiondef>","<statements>");
-                                        production_statements();
-                                        System.out.print(token);
-                                    if(checker(PRODUCE))
-                                    {
-                                        code = code.concat("\n return");
-                                        addToSyntaxTable("<functiondef>","PRODUCE");
-                                        if(checker1(OPENPARENTHESIS) || checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
-                                        || checker1(BOOLLITERAL) || checker1(STRINGLITERAL) || checker1(IDENTIFIER) )
-                                        {
-                                           addToSyntaxTable("<functiondef>","<returnval>");
-                                           if(checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
-                                           || checker1(BOOLLITERAL) || checker1(STRINGLITERAL))
-                                           {
-                                                addToSyntaxTable("<returnval>","<literal>");
-                                                    production_literal();
-                                                if(checker(SEMICOLON))
-                                                {
-                                                    code = code.concat(";");
-                                                    if(checker(CLOSECURLYBRACE))
-                                                    {
-                                                        code = code.concat("\n }");
-                                                        addToSyntaxTable("<functiondef>","}");
-                                                    }
-                                                    else if(hasError == false)
-                                                    {
-                                                        addToSyntaxErrorTable("<functiondef>", "Expecting }");
-                                                        hasError = true;
-                                                    }
-                                                }
-                                                else if(hasError == false)
-                                                {
-                                                    addToSyntaxErrorTable("<functiondef>","Expecting ;");
-                                                    hasError = true;
-                                                }
-                                           }
-                                           else if(checker1(OPENPARENTHESIS))
-                                           {
-                                                addToSyntaxTable("<returnval>","<mathexpr>");
-                                                    production_mathexpr();
-                                                if(checker(SEMICOLON))
-                                                {
-                                                    code = code.concat(";");
-                                                    addToSyntaxTable("<returnval>",";");
-                                                    if(checker(CLOSECURLYBRACE))
-                                                    {
-                                                        code = code.concat("\n }");
-                                                        addToSyntaxTable("<functiondef>","}");
-                                                    }
-                                                    else if(hasError == false)
-                                                    {
-                                                        addToSyntaxErrorTable("<functiondef>", "Expecting }");
-                                                        hasError = true;
-                                                    }
-                                                }
-                                                else if(hasError == false)
-                                                {
-                                                    addToSyntaxErrorTable("<functiondef>","Expecting ;");
-                                                    hasError = true;
-                                                }
-                                            }
-                                           else if(checker1(IDENTIFIER))
-                                           {
-                                                //System.out.println("return val from int id: "+token);
-                                                addToSyntaxTable("<returnval>","<identifier>");
-                                                checker(IDENTIFIER);
-                                                code = code.concat(" "+getItem());
-                                                production_identifier();
-                                                //System.out.println("return val from int id after: "+token);
-                                                if(checker(SEMICOLON))
-                                                {
-                                                    code = code.concat(";");
-                                                    addToSyntaxTable("<returnval>",";");
-                                                    if(checker(CLOSECURLYBRACE))
-                                                    {
-                                                        code = code.concat("\n }");
-                                                        addToSyntaxTable("<functiondef>","}");
-                                                    }
-                                                    else if(hasError == false)
-                                                    {
-                                                        addToSyntaxErrorTable("<functiondef>", "Expecting }");
-                                                        hasError = true;
-                                                    }
-                                                }
-                                                else if(hasError == false)
-                                                {
-                                                    addToSyntaxErrorTable("<functiondef>","Expecting ;");
-                                                    hasError = true;
-                                                }
-
-                                           }
-                                           else if(hasError == false)
-                                           {
-                                               addToSyntaxErrorTable("<functiondef>","Invalid Return Value, Expecting Literals, Identifier of Math Expression");
-                                               hasError = true;
-                                           }
-                                        }
-                                        else if(hasError == false)
-                                        {
-                                            addToSyntaxErrorTable("<functiondef>","Expecting return value");
-                                            hasError = true;
-                                        }
-                                    }
-                                    else if(hasError == false)
-                                    {
-                                        addToSyntaxErrorTable("<functiondef>","Expecting PRODUCE");  
-                                        hasError = true;
-                                    }
-                                }
-                                else if(hasError == false)
-                                {
-                                    addToSyntaxErrorTable("<functiondef>","Expecting {");
-                                    hasError = true;
-                                }
-                            }
-                            else if(hasError == false)
-                            {
-                                addToSyntaxErrorTable("<functiondef>","Expecting )");
-                                hasError = true;
-                            }
-                        }
-                        else if(hasError == false)
-                        {
-                            addToSyntaxErrorTable("<functiondef>","(");
-                            hasError = true;
-                        }
-                    }
-                    else if(hasError == false)
-                    {
-                        addToSyntaxErrorTable("<functiondef>","Expecting Identifier");
-                        hasError = true;
-                    }
                     break;
 
                 case BOOL:
@@ -7102,48 +6478,109 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     code = code.concat("\n boolean");
                     addToSyntaxTable("<functiondef>","<datatype>");
                     addToSyntaxTable("<datatype>","BOOL");
-                    if(checker(IDENTIFIER))
+                    break;
+
+                default:
+                    addToSyntaxErrorTable("<functiondef>","Expecting MUTE, INT, FLOAT, CHAR, STRING or BOOL datatype"); hasError = true;
+            }
+            if(checker(IDENTIFIER))
+            {
+                code = code.concat(" "+getItem());
+                addToSyntaxTable("<functiondef>","Identifier");
+                if(checker(OPENPARENTHESIS))
+                {
+                    code = code.concat(" (");
+                    addToSyntaxTable("<functiondef>","(");
+                    addToSyntaxTable("<functiondef>","<funcparam>");
+                        production_funcparam();
+                    if(checker(CLOSEPARENTHESIS))
                     {
-                        code = code.concat(" "+getItem());
-                        addToSyntaxTable("<functiondef>","Identifier");
-                        if(checker(OPENPARENTHESIS))
+                        code = code.concat(")");
+                        addToSyntaxTable("<functiondef>",")");
+                        if(checker(OPENCURLYBRACE))
                         {
-                            code = code.concat("(");
-                            addToSyntaxTable("<functiondef>","(");
-                            addToSyntaxTable("<functiondef>","<funcparam>");
-                                production_funcparam();
-                            if(checker(CLOSEPARENTHESIS))
+                            code = code.concat(" {");
+                            if(checker1(INT)||checker1(FLOAT)||checker1(CHAR)||checker1(STRING)||checker1(BOOL) && hasError == false) //check if pupunta kay production vardec1 // localdec
                             {
-                                code = code.concat(")");
-                                addToSyntaxTable("<functiondef>",")");
-                                if(checker(OPENCURLYBRACE))
+                                addToSyntaxTable("<functiondef>","{");
+                                addToSyntaxTable("<functiondef>","<localdec>");
+                                    production_vardec1();
+                                addToSyntaxTable("<functiondef>","<statements>");
+                                    production_statements();
+                                if(checker(PRODUCE))
                                 {
-                                    code = code.concat("{");
-                                    addToSyntaxTable("<functiondef>","{");
-                                    addToSyntaxTable("<functiondef>","<statements>");
-                                        production_statements();
-                                        System.out.print(token);
-                                    if(checker(PRODUCE))
+                                    code = code.concat("\n return");
+                                    addToSyntaxTable("<functiondef>","PRODUCE");
+                                    if(checker1(OPENPARENTHESIS) || checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
+                                    || checker1(BOOLLITERAL) || checker1(STRINGLITERAL) || checker1(IDENTIFIER) )
                                     {
-                                        code = code.concat("\n return");
-                                        addToSyntaxTable("<functiondef>","PRODUCE");
-                                        if(checker1(OPENPARENTHESIS) || checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
-                                        || checker1(BOOLLITERAL) || checker1(STRINGLITERAL) || checker1(IDENTIFIER) )
+                                       addToSyntaxTable("<functiondef>","<returnval>");
+                                       if(checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
+                                       || checker1(BOOLLITERAL) || checker1(STRINGLITERAL))
+                                       {
+                                            addToSyntaxTable("<returnval>","<literal>");
+                                                production_literal();
+                                            if(checker(SEMICOLON))
+                                            {
+                                                code = code.concat(";");
+                                                if(checker(CLOSECURLYBRACE))
+                                                {
+                                                    code = code.concat("\n }");
+                                                    addToSyntaxTable("<functiondef>","}");
+                                                }
+                                                else if(hasError == false)
+                                                {
+                                                    addToSyntaxErrorTable("<functiondef>", "Expecting }");
+                                                    hasError = true;
+                                                }
+                                            }
+                                            else if(hasError == false)
+                                            {
+                                                addToSyntaxErrorTable("<functiondef>","Expecting ;");
+                                                hasError = true;
+                                            }
+                                       }
+                                       else if(checker1(OPENPARENTHESIS))
+                                       {
+                                            addToSyntaxTable("<returnval>","<mathexpr>");
+                                                production_mathexpr();
+                                            if(checker(SEMICOLON))
+                                            {
+                                                code = code.concat(";");
+                                                addToSyntaxTable("<returnval>",";");
+                                                if(checker(CLOSECURLYBRACE))
+                                                {
+                                                    code = code.concat("\n }");
+                                                    addToSyntaxTable("<functiondef>","}");
+                                                }
+                                                else if(hasError == false)
+                                                {
+                                                    addToSyntaxErrorTable("<functiondef>", "Expecting }");
+                                                    hasError = true;
+                                                }
+                                            }
+                                            else if(hasError == false)
+                                            {
+                                                addToSyntaxErrorTable("<functiondef>","Expecting ;");
+                                                hasError = true;
+                                            }
+                                        }
+                                        else if(checker1(IDENTIFIER))
                                         {
-                                           addToSyntaxTable("<functiondef>","<returnval>");
-                                           if(checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
-                                           || checker1(BOOLLITERAL) || checker1(STRINGLITERAL))
-                                           {
-                                                addToSyntaxTable("<returnval>","<literal>");
-                                                    production_literal();
+                                            addToSyntaxTable("<returnval>","<identifier>");
+                                            checker(IDENTIFIER);
+                                            code = code.concat(" "+getItem());
+                                            if(checker1(PLUS)||checker1(MINUS)||checker1(DIVIDE)||checker1(MODULUS)||checker1(MULTIPLY))
+                                            {
+                                                addToSyntaxTable("<size>","<mathexpr>");
+                                                addToSyntaxTable("<mathexpr>","INT_LIT");
+                                                    production_nextmathexpr();
                                                 if(checker(SEMICOLON))
                                                 {
                                                     code = code.concat(";");
+                                                    addToSyntaxTable("<returnval>",";");
                                                     if(checker(CLOSECURLYBRACE))
-                                                    {
-                                                        code = code.concat("\n }");
                                                         addToSyntaxTable("<functiondef>","}");
-                                                    }
                                                     else if(hasError == false)
                                                     {
                                                         addToSyntaxErrorTable("<functiondef>", "Expecting }");
@@ -7155,11 +6592,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                     addToSyntaxErrorTable("<functiondef>","Expecting ;");
                                                     hasError = true;
                                                 }
-                                           }
-                                           else if(checker1(OPENPARENTHESIS))
-                                           {
-                                                addToSyntaxTable("<returnval>","<mathexpr>");
-                                                    production_mathexpr();
+                                            }
+                                            else
+                                            {
+                                                production_identifier();
                                                 if(checker(SEMICOLON))
                                                 {
                                                     code = code.concat(";");
@@ -7181,14 +6617,120 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                     hasError = true;
                                                 }
                                             }
-                                           else if(checker1(IDENTIFIER))
-                                           {
-                                                //System.out.println("return val from int id: "+token);
-                                                addToSyntaxTable("<returnval>","<identifier>");
-                                                checker(IDENTIFIER);
-                                                code = code.concat(" "+getItem());
+                                        }
+                                        else if(hasError == false)
+                                        {
+                                            addToSyntaxErrorTable("<functiondef>","Invalid Return Value, Expecting Literals, Identifier of Math Expression");
+                                            hasError = true;
+                                        }
+                                    }
+                                    else if(hasError == false)
+                                    {
+                                        addToSyntaxErrorTable("<functiondef>","Expecting return value");
+                                        hasError = true;
+                                    }
+                                }
+                                else if(hasError == false)
+                                {
+                                    addToSyntaxErrorTable("<functiondef>","Expecting PRODUCE");  
+                                    hasError = true;
+                                }
+                            }
+                            else
+                            {
+                                addToSyntaxTable("<functiondef>","{");
+                                addToSyntaxTable("<functiondef>","<statements>");
+                                    production_statements();
+
+                                if(checker(PRODUCE))
+                                {
+                                    code = code.concat("\n return");
+                                    addToSyntaxTable("<functiondef>","PRODUCE");
+                                    if(checker1(OPENPARENTHESIS) || checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
+                                    || checker1(BOOLLITERAL) || checker1(STRINGLITERAL) || checker1(IDENTIFIER) )
+                                    {
+                                       addToSyntaxTable("<functiondef>","<returnval>");
+                                       if(checker1(INTEGERLITERAL) || checker1(FLOATLITERAL) || checker1(CHARLITERAL) 
+                                       || checker1(BOOLLITERAL) || checker1(STRINGLITERAL))
+                                       {
+                                            addToSyntaxTable("<returnval>","<literal>");
+                                                production_literal();
+                                            if(checker(SEMICOLON))
+                                            {
+                                                code = code.concat(";");
+                                                if(checker(CLOSECURLYBRACE))
+                                                {
+                                                    code = code.concat("\n }");
+                                                    addToSyntaxTable("<functiondef>","}");
+                                                }
+                                                else if(hasError == false)
+                                                {
+                                                    addToSyntaxErrorTable("<functiondef>", "Expecting }");
+                                                    hasError = true;
+                                                }
+                                            }
+                                            else if(hasError == false)
+                                            {
+                                                addToSyntaxErrorTable("<functiondef>","Expecting ;");
+                                                hasError = true;
+                                            }
+                                       }
+                                       else if(checker1(OPENPARENTHESIS))
+                                       {
+                                            addToSyntaxTable("<returnval>","<mathexpr>");
+                                                production_mathexpr();
+                                            if(checker(SEMICOLON))
+                                            {
+                                                code = code.concat(";");
+                                                addToSyntaxTable("<returnval>",";");
+                                                if(checker(CLOSECURLYBRACE))
+                                                {
+                                                    code = code.concat("\n }");
+                                                    addToSyntaxTable("<functiondef>","}");
+                                                }
+                                                else if(hasError == false)
+                                                {
+                                                    addToSyntaxErrorTable("<functiondef>", "Expecting }");
+                                                    hasError = true;
+                                                }
+                                            }
+                                            else if(hasError == false)
+                                            {
+                                                addToSyntaxErrorTable("<functiondef>","Expecting ;");
+                                                hasError = true;
+                                            }
+                                        }
+                                       else if(checker1(IDENTIFIER))
+                                       {
+                                            addToSyntaxTable("<returnval>","<identifier>");
+                                            checker(IDENTIFIER);
+                                            code = code.concat(" "+getItem());
+                                            if(checker1(PLUS)||checker1(MINUS)||checker1(DIVIDE)||checker1(MODULUS)||checker1(MULTIPLY))
+                                            {
+                                                addToSyntaxTable("<size>","<mathexpr>");
+                                                addToSyntaxTable("<mathexpr>","INT_LIT");
+                                                    production_nextmathexpr();
+                                                if(checker(SEMICOLON))
+                                                {
+                                                    code = code.concat(";");
+                                                    addToSyntaxTable("<returnval>",";");
+                                                    if(checker(CLOSECURLYBRACE))
+                                                        addToSyntaxTable("<functiondef>","}");
+                                                    else if(hasError == false)
+                                                    {
+                                                        addToSyntaxErrorTable("<functiondef>", "Expecting }");
+                                                        hasError = true;
+                                                    }
+                                                }
+                                                else if(hasError == false)
+                                                {
+                                                    addToSyntaxErrorTable("<functiondef>","Expecting ;");
+                                                    hasError = true;
+                                                }
+                                            }
+                                            else
+                                            {
                                                 production_identifier();
-                                                //System.out.println("return val from int id after: "+token);
                                                 if(checker(SEMICOLON))
                                                 {
                                                     code = code.concat(";");
@@ -7209,53 +6751,49 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                                     addToSyntaxErrorTable("<functiondef>","Expecting ;");
                                                     hasError = true;
                                                 }
-
-                                           }
-                                           else if(hasError == false)
-                                           {
-                                               addToSyntaxErrorTable("<functiondef>","Invalid Return Value, Expecting Literals, Identifier of Math Expression");
-                                               hasError = true;
-                                           }
-                                        }
-                                        else if(hasError == false)
-                                        {
-                                            addToSyntaxErrorTable("<functiondef>","Expecting return value");
-                                            hasError = true;
-                                        }
+                                            }
+                                       }
+                                       else if(hasError == false)
+                                       {
+                                           addToSyntaxErrorTable("<functiondef>","Invalid Return Value, Expecting Literals, Identifier of Math Expression");
+                                           hasError = true;
+                                       }
                                     }
                                     else if(hasError == false)
                                     {
-                                        addToSyntaxErrorTable("<functiondef>","Expecting PRODUCE");  
+                                        addToSyntaxErrorTable("<functiondef>","Expecting return value");
                                         hasError = true;
                                     }
                                 }
                                 else if(hasError == false)
                                 {
-                                    addToSyntaxErrorTable("<functiondef>","Expecting {");
+                                    addToSyntaxErrorTable("<functiondef>","Expecting PRODUCE");  
                                     hasError = true;
-                                }
-                            }
-                            else if(hasError == false)
-                            {
-                                addToSyntaxErrorTable("<functiondef>","Expecting )");
-                                hasError = true;
+                                }    
                             }
                         }
                         else if(hasError == false)
                         {
-                            addToSyntaxErrorTable("<functiondef>","(");
+                            addToSyntaxErrorTable("<functiondef>","Expecting {");
                             hasError = true;
                         }
                     }
                     else if(hasError == false)
                     {
-                        addToSyntaxErrorTable("<functiondef>","Expecting Identifier");
+                        addToSyntaxErrorTable("<functiondef>","Expecting )");
                         hasError = true;
                     }
-                    break;
-
-                default:
-                    addToSyntaxErrorTable("<functiondef>","Expecting MUTE, INT, FLOAT, CHAR, STRING or BOOL datatype"); hasError = true;
+                }
+                else if(hasError == false)
+                {
+                    addToSyntaxErrorTable("<functiondef>","(");
+                    hasError = true;
+                }
+            }
+            else if(hasError == false)
+            {
+                addToSyntaxErrorTable("<functiondef>","Expecting Identifier");
+                hasError = true;
             }
         }
         production_global(); 
@@ -7263,12 +6801,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
     
     void production_statements()
     {
-//        if(checker1(INT)||checker1(FLOAT)||checker1(CHAR)||checker1(STRING)||checker1(BOOL) && hasError == false) //check if pupunta kay production vardec1 // localdec
-//        {
-//            addToSyntaxTable("<statements>","<localdec>");
-//                production_vardec1();
-//        }
-        
         if(checker(IDENTIFIER) && hasError == false) //assignment stmnts
         {
             code = code.concat(" "+getItem());
@@ -9015,7 +8547,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case INT: 
                 checker(INT);
-                code = code.concat(" "+getItem());
+                code = code.concat(" int");
                 addToSyntaxTable("<datatype>","INT");
                 if(checker(IDENTIFIER))
                 {
@@ -9033,7 +8565,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case FLOAT:
                 checker(FLOAT);
-                code = code.concat(" "+getItem());
+                code = code.concat(" float");
                 addToSyntaxTable("<datatype>","FLOAT");
                 if(checker(IDENTIFIER))
                 {
@@ -9051,7 +8583,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case CHAR: 
                 checker(CHAR);
-                code = code.concat(" "+getItem());
+                code = code.concat(" char");
                 addToSyntaxTable("<datatype>","CHAR");
                 if(checker(IDENTIFIER))
                 {
@@ -9069,7 +8601,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case STRING:
                 checker(STRING);
-                code = code.concat(" "+getItem());
+                code = code.concat(" String");
                 addToSyntaxTable("<datatype>","STRING");
                 if(checker(IDENTIFIER))
                 {
@@ -9087,7 +8619,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             
             case BOOL:
                 checker(BOOL);
-                code = code.concat(" "+getItem());
+                code = code.concat(" bool");
                 addToSyntaxTable("<datatype>","BOOL");
                 if(checker(IDENTIFIER))
                 {
