@@ -5987,7 +5987,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             
             case STRING:
                 checker(STRING);
-                code = code.concat(" String");
+                code = code.concat(" string");
                 addToSyntaxTable("<const>","<stringconst>");
                 addToSyntaxTable("<stringconst>", "CONST");
                 addToSyntaxTable("<stringconst>","STRING");
@@ -6468,7 +6468,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
                 case STRING:
                     checker(STRING);
-                    code = code.concat("\n String");
+                    code = code.concat("\n string");
                     addToSyntaxTable("<functiondef>","<datatype>");
                     addToSyntaxTable("<datatype>","STRING");
                     break;
@@ -8200,7 +8200,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case STRING : 
                 checker(STRING); 
-                code = code.concat("\n String");
+                code = code.concat("\n string");
                 addToSyntaxTable("<datatype>", "STRING"); 
                     if(checker(IDENTIFIER))
                     {
@@ -8621,7 +8621,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case STRING:
                 checker(STRING);
-                code = code.concat(" String");
+                code = code.concat(" string");
                 addToSyntaxTable("<datatype>","STRING");
                 if(checker(IDENTIFIER))
                 {
@@ -9024,7 +9024,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case STRING : 
                 checker(STRING); 
-                code = code.concat("\n String");
+                code = code.concat("\n string");
                 //addToSyntaxTable("<datatype>", "STRING"); 
                     if(checker(IDENTIFIER))
                     {
@@ -9415,7 +9415,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case STRING : 
                 checker(STRING); 
-                code = code.concat("\n String");
+                code = code.concat("\n string");
                 addToSyntaxTable("<datatype>", "STRING"); 
                     if(checker(IDENTIFIER))
                     {
