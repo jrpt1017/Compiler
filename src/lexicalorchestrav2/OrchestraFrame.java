@@ -6808,6 +6808,17 @@ public class OrchestraFrame extends javax.swing.JFrame {
             {
                 addToSyntaxTable("<statements>","<funccall>");
                     production_funccall();
+                    System.out.println("token hey: "+token);
+                if(checker(SEMICOLON))
+                {
+                    code = code.concat(";");
+                    addToSyntaxTable("<statements>",";");
+                }
+                else if(hasError == false)
+                {
+                    addToSyntaxErrorTable("<statements>","Expecting ;");
+                    hasError = true;
+                }
             }
             if(checker1(INCREMENT) || checker1(DECREMENT))
             {
@@ -6858,16 +6869,16 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             code = code.concat(")");
             addToSyntaxTable("<funccall>",")");
-            if(checker(SEMICOLON))
-            {
-                code = code.concat(";");   
-                addToSyntaxTable("<funccall>",";");
-            }
-            else if(hasError == false)
-            {
-                addToSyntaxErrorTable("<funccall>","Expecting ;");
-                hasError = true;
-            }
+//            if(checker(SEMICOLON))
+//            {
+//                code = code.concat(";");   
+//                addToSyntaxTable("<funccall>",";");
+//            }
+//            else if(hasError == false)
+//            {
+//                addToSyntaxErrorTable("<funccall>","Expecting ;");
+//                hasError = true;
+//            }
         }
         else if(hasError == false)
         {
@@ -8400,26 +8411,35 @@ public class OrchestraFrame extends javax.swing.JFrame {
     
     void production_varassign()
     {
-        if(checker1(INTEGERLITERAL)||checker1(FLOATLITERAL)||checker1(CHARLITERAL)||checker1(STRINGLITERAL)||checker1(BOOLLITERAL))
+        switch(token)
         {
+            case INTEGERLITERAL: case FLOATLITERAL: case CHARLITERAL: case STRINGLITERAL: case BOOLLITERAL:
                 production_literal();
-        }
-        else if(checker1(IDENTIFIER))
-        {
-            addToSyntaxTable("<varassign>", "<identifier>");
-            checker(IDENTIFIER);
-            code = code.concat(" "+getItem());
-                production_identifier(); 
-        }
-        else if(checker1(OPENPARENTHESIS))
-        {
-            addToSyntaxTable("<varassign>","<mathexpr>");
+                break;
+            
+            case IDENTIFIER:
+                checker(IDENTIFIER);
+                code = code.concat(" "+getItem());
+                addToSyntaxTable("<varassign>", "<identifier>");
+                if(checker1(OPENPARENTHESIS))
+                {
+                    production_funccall();
+                }
+                else
+                {
+                    production_identifier(); 
+                }
+                break;
+                
+            case OPENPARENTHESIS:
+                addToSyntaxTable("<varassign>","<mathexpr>");
                 production_mathexpr();
-        }
-        else if(hasError == false)
-        {
-            addToSyntaxErrorTable("<varassign>", "Expecting Integer Literal, Float Literal, Char Literal, String Literal, Bool Literal, Identifier or Math Expression");
-            hasError = true;
+                break;
+                
+            default: if(hasError == false){
+                addToSyntaxErrorTable("<varassign>", "Expecting Integer Literal, Float Literal, Char Literal, String Literal, Bool Literal, Identifier or Math Expression");
+                hasError = true;
+            }
         }
 
     }
