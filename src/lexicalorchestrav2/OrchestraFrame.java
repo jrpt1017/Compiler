@@ -5502,7 +5502,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         colNum = caretPos - offset + 1;
         lblRowCol.setText("LINE: "+rowNum+"\n COLUMN: "+colNum);
     }//GEN-LAST:event_txtareaCompilerCaretUpdate
-
+    //list of tokens
     final int CONCERT = 1, INTERLUDE = 2, PRODUCE = 3, CONST = 4, STOP = 5, PLAY = 6, IF = 7, ELSE =8, ELSEIF = 9, CHORDS = 10
               ,NOTE = 11, CADENCE = 12, LOOP = 13, REPEAT = 14, DO = 15, INT = 16, FLOAT = 17, STRING = 18, CHAR = 19, BOOL = 20
               ,RECORDS = 21, MUTE = 22, OUTRO = 23, INTRO = 24, PRELUDE = 25, TRUE = 26, FALSE = 27
@@ -11010,10 +11010,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
     
     void semantic_program()
     {
-        
         if(checker(PRELUDE))
         {
             semantic_global();
+            System.out.println("token: "+token);
             if(checker(CONCERT))
             {
                 scope = "concert";
@@ -11069,7 +11069,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         else if(checker(INTERLUDE))
         {    
-            scope = "interlude";
+            scope = "function";
             semantic_functiondef();
         }
     }
@@ -11118,12 +11118,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         {
                             semantic_declaration();
                             semantic_nextDeclaration();
-                            if(checker(SEMICOLON))
+                            if(checker(CLOSECURLYBRACE))
                             {
-                                if(checker(CLOSECURLYBRACE))
-                                {
 
-                                }
                             }
                         }
                     }
@@ -11636,7 +11633,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             case INT: case FLOAT: case CHAR: case STRING: case BOOL:
                 parentDataType = getParentDataType();
                 if(checker(IDENTIFIER))
-                {
+                {   
                     if(scope == "concert")
                     {
                         String text = getItem();
@@ -11802,7 +11799,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
         if(checker(EQUAL))
         {
             semantic_value2();
-            addToLocalDeclarationTable();
+            if(scope == "function")
+                addToFunctionTable();
+            else 
+                addToLocalDeclarationTable();
         }
         else if(checker(OPENBRACKET))
         {
@@ -11813,13 +11813,19 @@ public class OrchestraFrame extends javax.swing.JFrame {
             {
                 semantic_2dArray();
             }
-            addToLocalDeclarationTable();
+            if(scope == "function")
+                addToFunctionTable();
+            else 
+                addToLocalDeclarationTable();
         }
         else
         {
             checkNotInitialized(); //if variable was not initialized a value, values will be set to default accordign to datatype
             value = Default;
-            addToLocalDeclarationTable();
+            if(scope == "function")
+                addToFunctionTable();
+            else 
+                addToLocalDeclarationTable();
         }
     }
     
