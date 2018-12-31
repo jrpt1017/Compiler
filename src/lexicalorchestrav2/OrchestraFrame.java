@@ -8534,7 +8534,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 production_nextmathexpr();
             }
             else
-            addToSyntaxTable("<identifier>", "Identifier");
+                addToSyntaxTable("<identifier>", "Identifier");
         }
     }
     
@@ -10920,6 +10920,20 @@ public class OrchestraFrame extends javax.swing.JFrame {
         
         model.addRow(new Object[] {identifier, value, parentDataType});
     }
+    
+    void addToParameterTable()
+    {
+        DefaultTableModel model = (DefaultTableModel)tblFunctionParemeters.getModel();
+        
+        model.addRow(new Object[] {functionName, identifier, value, parentDataType});
+    }
+    
+    void addToFunctionTable()
+    {
+        DefaultTableModel model = (DefaultTableModel)tblFunctionDeclaration.getModel();
+        
+        model.addRow(new Object[] {functionName, identifier, value, parentDataType});
+    }
         
     void addToSemanticErrorTable(int errorCode)
     {
@@ -11057,44 +11071,47 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {    
             scope = "interlude";
             semantic_functiondef();
-        }       
+        }
     }
     
     void semantic_functiondef()
     {
+        DefaultTableModel identifierTable = (DefaultTableModel)tblIdentifier.getModel();
+        String text = "";
         switch(token)
         {
             case MUTE:  //void
                 checker(MUTE);
-                parentDataType = getParentDataType();
-                
                 if(checker(IDENTIFIER))
                 {
                     if(scope == "interlude")
-                    {                        
-                        String text = getItem();
+                    {            
+                        text = getItem();
                         identifier = text;
                         interlude_checkAlreadyDefined(text);
                     }
                     else if(scope == "concert")
                     {
-                        String text = getItem();
+                        text = getItem();
                         identifier = text;
                         concert_checkAlreadyDefined(text);
                     }
                     else
                     {
-                        String text = getItem();
+                        text = getItem();
                         identifier = text;
                         checkAlreadyDefined(text);  
                     }
                 }
-                functionName = getItem();
-                value = null;
-                addToIdentifierTable();
                 
+                functionName = text;
+//                checkNotInitialized();
+                value = "0";
+                identifierTable.addRow(new Object[] {functionName, value, "MUTE"});
                 if(checker(OPENPARENTHESIS))
                 {
+                    semantic_parameters();
+                    semantic_nextParameter();
                     if(checker(CLOSEPARENTHESIS))
                     {
                         if(checker(OPENCURLYBRACE))
@@ -11118,7 +11135,96 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
                 break;
         }
+        System.out.println("next tok: "+token);
         semantic_global();
+    }
+    
+    void semantic_parameters()
+    {
+        switch(token)
+        {
+            case INT: case FLOAT: case CHAR: case STRING: case BOOL:
+                parentDataType = getParentDataType();
+                if(checker(IDENTIFIER))
+                {
+                    checkNotInitialized();
+                    
+                    if(scope == "concert")
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        concert_checkAlreadyDefined(text);
+                    }
+                    else if(scope == "interlude")
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        interlude_checkAlreadyDefined(text);
+                    }
+                    else
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        checkAlreadyDefined(text);
+                    }
+                    semantic_parameter_extension(); //for array index, struct id
+                    addToParameterTable();
+                    addToFunctionTable();
+                }
+            break;
+        }
+    }
+    
+    void semantic_nextParameter()
+    {
+        if(checker(COMMA))
+        {
+            parentDataType = getParentDataType();
+            if(checker(IDENTIFIER))
+            {
+                checkNotInitialized();
+                value = Default;
+                if(scope == "concert")
+                {
+                    String text = getItem();
+                    identifier = text;
+                    concert_checkAlreadyDefined(text);
+                }
+                else if(scope == "interlude")
+                {
+                    String text = getItem();
+                    identifier = text;
+                    interlude_checkAlreadyDefined(text);
+                }
+                else
+                {
+                    String text = getItem();
+                    identifier = text;
+                    checkAlreadyDefined(text);
+                }
+                semantic_parameter_extension(); //for array index, struct id
+                addToParameterTable();
+                addToFunctionTable();
+                semantic_nextParameter();
+            }
+        }
+        
+    }
+    
+    void semantic_parameter_extension()
+    {
+        switch(token)
+        {
+            case OPENBRACKET:
+                checker(OPENBRACKET);
+                semantic_const_arraySize();
+                array1D = arraySize;
+                if(checker(CLOSEBRACKET))
+                {
+                    semantic_2dArray();
+                }
+            case TILDE: 
+        }
     }
     
     void semantic_worldtour()
@@ -11144,7 +11250,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 identifier = text;
                 checkAlreadyDefined(text);
             }
-            System.out.println("Identifier @worldtour:"+identifier);
             semantic_worldtour_extension();
             semantic_worldtour_nextVariable();
         }
@@ -11234,9 +11339,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     checkIfDefined(text);  
                 }
                 
-                System.out.println("DataTypeCatcher: "+dataTypeCatcher);
-                System.out.println("DataType: "+datatype);
-                
                 if(isFunction == false)
                 {
                     checkSameDataType(dataTypeCatcher,datatype);
@@ -11248,8 +11350,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case INTEGERLITERAL: case FLOATLITERAL: case CHARLITERAL: case STRINGLITERAL: case BOOLLITERAL:
                 semantic_value();
-                System.out.println("DataTypeCatcher: "+dataTypeCatcher);
-                System.out.println("DataType: "+datatype);
                 if(isFunction == false)
                 {
                     checkSameDataType(dataTypeCatcher,datatype);
@@ -12513,7 +12613,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         modelFunctionReturn.setRowCount(0);
         modelArray.setRowCount(0);
         //
-        System.out.println("code: \n"+code);
+        //System.out.println("code: \n"+code);
         tokenPos = 0;
         removeNotNeed();
         token = getToken();
