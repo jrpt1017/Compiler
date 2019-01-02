@@ -11000,7 +11000,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         else if(parentDataType.equals("BOOL"))
         {
-            Default = "false";
+            Default = "FALSE";
         }
         else
         {
@@ -11013,7 +11013,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
         if(checker(PRELUDE))
         {
             semantic_global();
-            System.out.println("token: "+token);
             if(checker(CONCERT))
             {
                 scope = "concert";
@@ -11073,7 +11072,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             semantic_functiondef();
         }
     }
-    
+    String functionDataType = "";
     void semantic_functiondef()
     {
         DefaultTableModel identifierTable = (DefaultTableModel)tblIdentifier.getModel();
@@ -11084,7 +11083,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 checker(MUTE);
                 if(checker(IDENTIFIER))
                 {
-                    if(scope == "interlude")
+                    if(scope == "function")
                     {            
                         text = getItem();
                         identifier = text;
@@ -11129,11 +11128,80 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break;
                 
             case INT: case FLOAT: case CHAR: case STRING: case BOOL:
+                parentDataType = getParentDataType();
+                functionDataType = parentDataType;
+                if(checker(IDENTIFIER))
+                {
+                    if(scope == "function")
+                    {            
+                        text = getItem();
+                        identifier = text;
+                        interlude_checkAlreadyDefined(text);
+                    }
+                    else if(scope == "concert")
+                    {
+                        text = getItem();
+                        identifier = text;
+                        concert_checkAlreadyDefined(text);
+                    }
+                    else
+                    {
+                        text = getItem();
+                        identifier = text;
+                        checkAlreadyDefined(text);  
+                    }
+                }
                 
+                functionName = text;
+//                checkNotInitialized();
+                value = "0";
+                identifierTable.addRow(new Object[] {functionName, value, functionDataType});
+                if(checker(OPENPARENTHESIS))
+                {
+                    semantic_parameters();
+                    semantic_nextParameter();
+                    if(checker(CLOSEPARENTHESIS))
+                    {
+                        if(checker(OPENCURLYBRACE))
+                        {
+                            semantic_declaration();
+                            semantic_nextDeclaration();
+                            if(checker(PRODUCE))
+                            {
+                                semantic_operand();
+                                checkReturnValue(functionDataType, datatype);
+                                if(checker(SEMICOLON))
+                                {
+                                    if(checker(CLOSECURLYBRACE))
+                                    {
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
         }
-        System.out.println("next tok: "+token);
         semantic_global();
+    }
+    
+    void checkReturnValue(String datatype, String datatype1)
+    {
+        DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
+        if(datatype.equals(datatype1))
+        {
+
+        }else if(datatype.equals("TAG") && datatype1.equals("HASHTAG"))
+        {
+
+        }else if(datatype1 == null)
+        {
+
+        }
+        else{
+           semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Returning Data Type Does Not Match: "+datatype1+" to "+datatype, tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
+        }
     }
     
     void semantic_parameters()
@@ -11152,7 +11220,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         identifier = text;
                         concert_checkAlreadyDefined(text);
                     }
-                    else if(scope == "interlude")
+                    else if(scope == "function")
                     {
                         String text = getItem();
                         identifier = text;
@@ -11187,7 +11255,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     identifier = text;
                     concert_checkAlreadyDefined(text);
                 }
-                else if(scope == "interlude")
+                else if(scope == "function")
                 {
                     String text = getItem();
                     identifier = text;
@@ -11235,7 +11303,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 identifier = text;
                 concert_checkAlreadyDefined(text);
             }
-            else if(scope == "interlude")
+            else if(scope == "function")
             {
                 String text = getItem();
                 identifier = text;
@@ -11281,7 +11349,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case IDENTIFIER:
                 checker(IDENTIFIER);
-                if(scope == "interlude")
+                if(scope == "function")
                 {                        
                     String text = getItem();
                     identifier = text;
@@ -11316,7 +11384,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case IDENTIFIER:
                 checker(IDENTIFIER);
-                if(scope == "interlude")
+                System.out.println("scope: "+scope);
+                if(scope == "function")
                 {                        
                     String text = getItem();
                     identifier = text;
@@ -11324,7 +11393,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 }
                 else if(scope == "concert")
                 {
-                    System.out.println("check");
                     String text = getItem();
                     identifier = text;
                     concert_checkIfDefined(text);
@@ -11401,8 +11469,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
                 break;
                 
-            case OPENPARENTHESIS: //mathexpr
-                checker(OPENPARENTHESIS);
+//            case OPENPARENTHESIS: 
+//                checker(OPENPARENTHESIS);
         }
     }
     
@@ -11425,16 +11493,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 semantic_worldtour_nextVariable();
                 break;
                 
-//            case OPENBRACKET:
-//                checker(OPENBRACKET);
-//                semantic_arraySize();
-//                array1D = arraySize;
-//                if(checker(CLOSEBRACKET))
-//                {
-//                    semantic_2dArray();
-//                    semantic_worldtour_nextVariable();
-//                }
-//                break;
                 
             case SEMICOLON:
                 checker(SEMICOLON);
@@ -11751,9 +11809,121 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 semantic_operand();
                 break;
             
+            case OPENPARENTHESIS: 
+                semantic_interlude();
         }
     }
     
+    void semantic_interlude()
+    {
+        System.out.println("aspdapsd");
+        String funcName = getItem();
+        String line = tblLexeme.getModel().getValueAt(tokenPos-2, 2).toString();
+        String column = tblLexeme.getModel().getValueAt(tokenPos-2, 3).toString();
+        
+        
+        checker(OPENPARENTHESIS);
+            checkIfFunctionName(funcName,line,column);
+            isFunction = true;
+            semanticArguments();
+            if(checker(CLOSEPARENTHESIS))
+            {
+                checkTransferedParameters(funcName);
+                isFunction=false;
+            }
+            System.out.println("hey JONNEL: "+argumentIdentifier);
+    }
+    
+    void checkTransferedParameters(String functionName)
+    {
+        DefaultTableModel function = (DefaultTableModel)tblFunctionParemeters.getModel();
+        DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
+        int i = 0;
+        int j = 0;
+        int parameter_num = 0;
+        ArrayList<Integer> parameter_num_index = new ArrayList<>();
+        
+        while(i < function.getRowCount())
+        {
+            if(tblFunctionParemeters.getValueAt(i, 0).toString().equals(functionName))
+            {
+                parameter_num++;
+                parameter_num_index.add(i);            
+            }
+                i++;
+        }
+        System.out.println("argu id size: "+argumentIdentifier.size());
+        System.out.println("parameter num: "+parameter_num);
+        if(parameter_num < argumentIdentifier.size())
+            {
+                 semanticerror.addRow(new Object[] {argumentIdentifier.toString(), "Passed Arguments is Greater Than Required", tblLexeme.getModel().getValueAt(tokenPos-2, 2)});   
+            }else if(parameter_num > argumentIdentifier.size())
+            {
+                semanticerror.addRow(new Object[] {argumentIdentifier.toString(), "Passed Arguments is Less Than Required", tblLexeme.getModel().getValueAt(tokenPos-2, 2)});   
+            }else{
+                    
+//                    for(j = 0; j < parameter_num_index.size(); j++)
+//                    {
+//                        if(check_same_dtype_parameters(tblFunctionParemeters.getValueAt(parameter_num_index.get(j), 3).toString(), argumentDataType.get(j),parameter_num_index.get(j), j, parameter_num) == false)
+//                        {
+//                            break;
+//                        }
+//                    } 
+            }
+        argumentIdentifier.clear();
+        argumentDataType.clear();
+    }
+    
+    void semanticArguments()
+    {
+        switch(token)
+        {
+            case IDENTIFIER: case INTEGERLITERAL: case FLOATLITERAL: case CHARLITERAL: case STRINGLITERAL: case BOOLLITERAL:
+                semantic_operand();
+                semanticNextArguments();
+            break;
+        }
+    }   
+    
+    void semanticNextArguments()
+    {
+        if(checker(COMMA))
+        {
+            isFunction = true;
+            semantic_operand();
+            semanticNextArguments();
+        }
+    }
+    
+    void checkIfFunctionName(String functionName, String line, String column)
+    {
+        DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
+        int identifierrow = tblFunctionParemeters.getRowCount();
+        int i;
+        boolean var = false, var1 = false;
+        for( i = 0; i < identifierrow; i++)
+        {
+            if(functionName.equals(tblFunctionParemeters.getValueAt(i, 0).toString()))
+            {
+                var = true;
+            }
+        }
+        
+        int identifierrow1 = tblIdentifier.getRowCount();
+        int k;
+        for(k = 0; k < identifierrow1; k++)
+        {
+            if(functionName.equals(tblIdentifier.getValueAt(k, 0).toString()))
+            {
+                var1 = true;
+            }
+        }
+        
+        if(var == false && var1 == false)
+            semanticerror.addRow(new Object[] {functionName, "Function "+functionName+" was NOT Defined.", "Line: "+line+ "Colum: "+column});
+    }
+    ArrayList<String> argumentIdentifier = new ArrayList<>();
+    ArrayList<String> argumentDataType = new ArrayList<>();
     void semantic_operand()
     {
         switch(token)
@@ -11761,6 +11931,62 @@ public class OrchestraFrame extends javax.swing.JFrame {
             case IDENTIFIER: case INTEGERLITERAL: case FLOATLITERAL:
             case CHARLITERAL: case STRINGLITERAL: case BOOLLITERAL:
                 semantic_value2();
+                if(isFunction == true)
+                {
+                    String text = getItem();
+                    argumentIdentifier.add(text);
+                    argumentDataType.add(datatype);
+                    isFunction = false;
+                }
+                semantic_unary();
+                semantic_nextOperand1();
+                break;
+        }
+    }
+    
+    void semantic_nextOperand1()
+    {
+        switch(token)
+        {
+            case PLUS: case MINUS: case MULTIPLY: case DIVIDE: case MODULUS: 
+                semantic_operator();
+                semantic_operand();
+                semantic_nextOperand1();
+                break;
+        }
+    }
+    
+    void semantic_operator()
+    {
+        switch(token)
+        {
+            case PLUS: 
+                checker(PLUS);
+                break;
+            case MINUS:
+                checker(MINUS);
+                break;
+            case MULTIPLY:
+                checker(MULTIPLY);
+                break;
+            case DIVIDE:
+                checker(DIVIDE);
+                break;
+            case MODULUS:
+                checker(MODULUS);
+                break;
+        }
+    }
+    
+    void semantic_unary()
+    {
+        switch(token)
+        {
+            case INCREMENT:
+                checker(INCREMENT);
+                break;
+            case DECREMENT:
+                checker(DECREMENT);
                 break;
         }
     }
@@ -12364,6 +12590,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
         boolean isDefined = false, isDefined1 = false;
         int i,k;
         int identifierrow = tblIdentifier.getRowCount();
+        
+        System.out.println("identifier mo: "+identifier);
         for(i = 0; i < identifierrow; i++)
         {
             if(identifier.equals(tblIdentifier.getValueAt(i, 0).toString()))
@@ -12384,6 +12612,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
             }
         }
         
+        
+        System.out.println("i: "+i);
+        System.out.println("k:"+k);
+        
         if(isDefined == false && isDefined1 == false)
         {
             errorCode = 4;
@@ -12391,16 +12623,17 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         else if(i < identifierrow)
         {
-            datatype = tblIdentifier.getValueAt(k, 2).toString();
-            value = tblIdentifier.getValueAt(k, 1).toString();
+            datatype = tblIdentifier.getValueAt(i, 2).toString();
+            value = tblIdentifier.getValueAt(i, 1).toString();
             literalType = datatype;
         }
         else if(k < identifierrow1)
         {
-            datatype = tblFunctionDeclaration.getValueAt(i, 3).toString();
-            value = tblFunctionDeclaration.getValueAt(i, 2).toString();
+            datatype = tblFunctionDeclaration.getValueAt(k, 3).toString();
+            value = tblFunctionDeclaration.getValueAt(k, 2).toString();
             literalType = datatype;
         }
+        System.out.println("dtype: "+datatype);
     }
     
     void checkAlreadyDefined(String identifier)
