@@ -10959,7 +10959,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         else if(errorCode == 5)
         {
-            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Variableeee "+tblLexeme.getModel().getValueAt(tokenPos-2, 0)+
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Variable "+tblLexeme.getModel().getValueAt(tokenPos-2, 0)+
             " can't be altered.", "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)}); 
         }
         else if(errorCode == 6)
@@ -11469,8 +11469,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
                 break;
                 
-//            case OPENPARENTHESIS: 
-//                checker(OPENPARENTHESIS);
+            case OPENPARENTHESIS: 
+                semantic_interlude();
+                break;
         }
     }
     
