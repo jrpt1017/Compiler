@@ -7489,7 +7489,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 hasError = true;
             }
         }
-        //production_statements();
+        production_statements();
     }
     
     void production_default()
@@ -11856,23 +11856,43 @@ public class OrchestraFrame extends javax.swing.JFrame {
         System.out.println("argu id size: "+argumentIdentifier.size());
         System.out.println("parameter num: "+parameter_num);
         if(parameter_num < argumentIdentifier.size())
+        {
+             semanticerror.addRow(new Object[] {argumentIdentifier.toString(), "Passed Arguments is Greater Than Required", tblLexeme.getModel().getValueAt(tokenPos-2, 2)});   
+        }
+        else if(parameter_num > argumentIdentifier.size())
+        {
+            semanticerror.addRow(new Object[] {argumentIdentifier.toString(), "Passed Arguments is Less Than Required", tblLexeme.getModel().getValueAt(tokenPos-2, 2)});   
+        }
+        else
+        {         
+            for(j = 0; j < parameter_num_index.size(); j++)
             {
-                 semanticerror.addRow(new Object[] {argumentIdentifier.toString(), "Passed Arguments is Greater Than Required", tblLexeme.getModel().getValueAt(tokenPos-2, 2)});   
-            }else if(parameter_num > argumentIdentifier.size())
-            {
-                semanticerror.addRow(new Object[] {argumentIdentifier.toString(), "Passed Arguments is Less Than Required", tblLexeme.getModel().getValueAt(tokenPos-2, 2)});   
-            }else{
-                    
-//                    for(j = 0; j < parameter_num_index.size(); j++)
-//                    {
-//                        if(check_same_dtype_parameters(tblFunctionParemeters.getValueAt(parameter_num_index.get(j), 3).toString(), argumentDataType.get(j),parameter_num_index.get(j), j, parameter_num) == false)
-//                        {
-//                            break;
-//                        }
-//                    } 
-            }
+                if(checkSameDataTypeParameters(tblFunctionParemeters.getValueAt(parameter_num_index.get(j), 3).toString(), argumentDataType.get(j),parameter_num_index.get(j), j, parameter_num) == false)
+                {
+                    break;
+                }
+            } 
+        }
         argumentIdentifier.clear();
         argumentDataType.clear();
+    }
+    
+    boolean checkSameDataTypeParameters(String datatype,String datatype1, int i, int j, int numParameter)
+    {
+        DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
+        if(datatype.equals(datatype1))
+            return true;
+        else if(datatype.equals("INT") && datatype1.equals("FLOAT"))
+            return true;
+        else if(datatype.equals("FLOAT") && datatype1.equals("INT"))
+            return true;
+        else if(datatype1 == null)
+            return true;
+        else
+        {
+           semanticerror.addRow(new Object[] {argumentIdentifier.get(j), "Incompatible Types: "+tblFunctionParemeters.getValueAt(i, 3)+" Cannot be converted to "+argumentDataType.get(j), tblLexeme.getModel().getValueAt(tokenPos-2, 2)});   
+           return false;
+        }
     }
     
     void semanticArguments()
