@@ -111,6 +111,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
         jPanel19 = new javax.swing.JPanel();
         jScrollPane14 = new javax.swing.JScrollPane();
         tblArray = new javax.swing.JTable();
+        jPanel20 = new javax.swing.JPanel();
+        jScrollPane15 = new javax.swing.JScrollPane();
+        tblStructDeclaration = new javax.swing.JTable();
         btnSyntax = new javax.swing.JButton();
         tabErrorTables = new javax.swing.JTabbedPane();
         jPanel6 = new javax.swing.JPanel();
@@ -364,7 +367,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Constant Declaration", jPanel5);
@@ -389,7 +392,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -413,7 +416,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+            .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Local Declaration", jPanel12);
@@ -436,7 +439,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel14Layout.setVerticalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+            .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Identifier", jPanel14);
@@ -459,7 +462,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
+            .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
         );
 
         jTabbedPane2.addTab("Parameters", jPanel16);
@@ -482,7 +485,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
+            .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
         );
 
         jTabbedPane2.addTab("Declaration", jPanel17);
@@ -505,7 +508,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel18Layout.setVerticalGroup(
             jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
+            .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
         );
 
         jTabbedPane2.addTab("Return", jPanel18);
@@ -541,10 +544,33 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel19Layout.setVerticalGroup(
             jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+            .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Array", jPanel19);
+
+        tblStructDeclaration.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Struct Name", "Object Name", "Member ID", "Value", "Member Type"
+            }
+        ));
+        jScrollPane15.setViewportView(tblStructDeclaration);
+
+        javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
+        jPanel20.setLayout(jPanel20Layout);
+        jPanel20Layout.setHorizontalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
+        );
+        jPanel20Layout.setVerticalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Struct Declaration", jPanel20);
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -5439,6 +5465,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         DefaultTableModel modelFunctionDeclaration = (DefaultTableModel) tblFunctionDeclaration.getModel(); //Table for Semantic
         DefaultTableModel modelFunctionReturn = (DefaultTableModel) tblFunctionReturn.getModel(); //Table for Semantic
         DefaultTableModel modelArray = (DefaultTableModel) tblArray.getModel(); //Table for Semantic
+        DefaultTableModel modelStruct = (DefaultTableModel) tblStructDeclaration.getModel(); //Table for Semantic
         DefaultTableModel error = (DefaultTableModel) tblError.getModel();
         DefaultTableModel errorSyntax = (DefaultTableModel) tblErrorSyntax.getModel();
         DefaultTableModel errorSemantic = (DefaultTableModel) tblErrorSemantic.getModel();
@@ -5455,6 +5482,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         modelGlobalDec.setRowCount(0);
         modelLocalDec.setRowCount(0);
         modelArray.setRowCount(0);
+        modelStruct.setRowCount(0);
         modelIdentifier.setRowCount(0);
         error.setRowCount(0);
         errorSyntax.setRowCount(0);
@@ -10848,6 +10876,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
     boolean isFunction = false; 
     String dataTypeCatcher = "";
     ArrayList<String> ArrayValues = new ArrayList<>();
+    ArrayList<String> memberName = new ArrayList<>();
+    ArrayList<String> memberValue = new ArrayList<>();
+    ArrayList<String> memberType = new ArrayList<>();
     int countArray1D = 0;
     int countArray2D1 = 0;
     int countArraySeparator = 0;
@@ -10872,6 +10903,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
             isFunction = false; 
             dataTypeCatcher = "";
             ArrayValues.clear();
+            memberName.clear();
+            memberValue.clear();
+            memberType.clear();
             countArray1D = 0;
             countArray2D1 = 0;
             countArraySeparator = 0;
@@ -10934,6 +10968,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
         
         model.addRow(new Object[] {functionName, identifier, value, parentDataType});
     }
+    
+    void addToStructTable()
+    {
+        DefaultTableModel model = (DefaultTableModel)tblStructDeclaration.getModel();
+        
+        model.addRow(new Object[] {structName, identifier, value, parentDataType});
+    }
         
     void addToSemanticErrorTable(int errorCode)
     {
@@ -10978,6 +11019,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Variable "+tblLexeme.getModel().getValueAt(tokenPos-2, 0)+" is NOT Defined", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
         }
+        
     }
     
     void checkNotInitialized()
@@ -11053,7 +11095,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         if(checker(RECORDS))
         {
-            //semantic_struct();
+            semantic_struct();
         }
         else if(checker(CONST))
         {
@@ -11072,6 +11114,240 @@ public class OrchestraFrame extends javax.swing.JFrame {
             semantic_functiondef();
         }
     }
+    
+    String structName = "";
+    void semantic_struct()
+    {
+        System.out.println("\n\n\nSTRUCT!\n\n\n\n");
+        String text = "";
+        parentDataType = "RECORDS";
+        if(checker(IDENTIFIER))
+        {
+            structName = getItem();
+            if(scope == "function")
+            {            
+                text = getItem();
+                identifier = text;
+                interlude_checkAlreadyDefined(text);
+            }
+            else if(scope == "concert")
+            {
+                text = getItem();
+                identifier = text;
+                concert_checkAlreadyDefined(text);
+            }
+            else
+            {
+                text = getItem();
+                identifier = text;
+                checkAlreadyDefined(text);  
+            }
+            value = "0";
+            addToIdentifierTable();
+            if(checker(OPENCURLYBRACE))
+            {
+                parentDataType = getParentDataType();
+                if(checker(IDENTIFIER))
+                {
+                    if(scope == "function")
+                    {            
+                        text = getItem();
+                        identifier = text;
+                        interlude_checkAlreadyDefined(text);
+                    }
+                    else if(scope == "concert")
+                    {
+                        text = getItem();
+                        identifier = text;
+                        concert_checkAlreadyDefined(text);
+                    }
+                    else
+                    {
+                        text = getItem();
+                        identifier = text;
+                        checkAlreadyDefined(text);  
+                    }
+                    identifier = text;
+                    semantic_valueInitialize2();
+                    semantic_nextStructVariable();
+                    if(checker(SEMICOLON))
+                    {
+
+                        semantic_nextMember();
+                        if(checker(CLOSECURLYBRACE))
+                        {
+                            if(checker(IDENTIFIER))
+                            {
+                                objectName = getItem();
+                                checkStoreStructValues();
+                                //semantic_valueInitialize2();
+                                semantic_nextObject();
+
+                                memberName.clear();
+                                memberValue.clear();
+                                memberType.clear();
+                                if(checker(SEMICOLON))
+                                {
+                                    semantic_global();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    void semantic_nextObject()
+    {
+        if(checker(COMMA))
+        {
+            if(checker(IDENTIFIER))
+            {
+                objectName = getItem();
+                checkStoreStructValues();
+                semantic_nextObject();
+            }
+        }
+    }
+    
+    void checkStoreStructValues()
+    {
+        System.out.println("structName: "+structName);
+        System.out.println("obj: "+objectName);
+        DefaultTableModel model = (DefaultTableModel)tblStructDeclaration.getModel();   
+        DefaultTableModel identifier = (DefaultTableModel)tblIdentifier.getModel();  
+        int i =0;
+        checkAlreadyDefined(objectName);
+        identifier.addRow(new Object[] {objectName, "", "STRUCT_ALIAS"});
+        
+        while(i < memberName.size())
+        {
+            structCheckAlreadyDefined(memberName.get(i), i);
+            model.addRow(new Object[] {structName, objectName, memberName.get(i), memberValue.get(i), memberType.get(i)});
+            i++;
+        }
+    }
+    
+    void structCheckAlreadyDefined(String identifier, int member)
+    {
+        DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
+        int identifierrow = tblIdentifier.getRowCount(); 
+        boolean flag = false, flag1= false;
+        for(int i = 0; i < identifierrow; i++)
+        {
+            if(identifier.equals(tblIdentifier.getValueAt(i, 0).toString()))
+            {
+                flag1 = true; break;
+            }
+        }
+        
+        System.out.println("flag1: "+flag1);
+        
+        if(flag1 == true)
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Variable "+tblLexeme.getModel().getValueAt(tokenPos-2, 0)+" is Already Defined", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
+        
+        int identifierrow1 = tblStructDeclaration.getRowCount();
+        for(int i = 0; i < identifierrow1; i++)
+        {
+            if(identifier.equals(tblStructDeclaration.getValueAt(i, 2).toString()) && objectName.equals(tblStructDeclaration.getValueAt(i, 1).toString()))
+            {
+                flag = true; break;
+            }
+        }
+        
+        System.out.println("flag: "+flag);
+        
+        if(flag == true)
+            semanticerror.addRow(new Object[] {memberName.get(member), "Variable "+memberName.get(member)+" is Already Defined", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
+    }
+    
+    String objectName = "";
+    
+    void semantic_nextMember()
+    {
+        String text = "";
+        switch(token)
+        {
+            case INT: case FLOAT: case CHAR: case STRING: case BOOL:
+                parentDataType = getParentDataType();
+                if(checker(IDENTIFIER))
+                {
+                    if(scope == "function")
+                    {            
+                        text = getItem();
+                        identifier = text;
+                        interlude_checkAlreadyDefined(text);
+                    }
+                    else if(scope == "concert")
+                    {
+                        text = getItem();
+                        identifier = text;
+                        concert_checkAlreadyDefined(text);
+                    }
+                    else
+                    {
+                        text = getItem();
+                        identifier = text;
+                        checkAlreadyDefined(text);  
+                    }
+                    identifier = text;
+                    semantic_valueInitialize2();
+                    semantic_nextStructVariable();
+                    if(checker(SEMICOLON))
+                    {
+                        semantic_nextMember();
+                    }
+                }
+            break;
+        }
+    }
+    
+    void semantic_nextStructVariable()
+    {
+        if(checker(COMMA))
+        {
+            if(checker(IDENTIFIER))
+            {
+                value = "0";
+                identifier = getItem();
+                semantic_valueInitialize2();
+                semantic_nextStructVariable();
+            }
+        }
+    }
+    
+    void semantic_valueInitialize2()
+    {
+        if(checker(EQUAL))
+        {
+            semantic_value2();
+            memberName.add(identifier);
+            memberValue.add(value);
+            memberType.add(parentDataType);
+        }
+        else if(checker(OPENBRACKET))
+        {
+            semantic_const_arraySize();
+            array1D = arraySize;
+            if(checker(CLOSEBRACKET))
+            {
+                semantic_2dArray();
+            }
+            memberName.add(identifier);
+            memberValue.add(value);
+            memberType.add(parentDataType);
+        }
+        else
+        {
+            checkNotInitialized(); //if variable was not initialized a value, values will be set to default accordign to datatype
+            value = Default;
+            memberName.add(identifier);
+            memberValue.add(value);
+            memberType.add(parentDataType);
+        }
+    }
+    
     String functionDataType = "";
     void semantic_functiondef()
     {
@@ -12659,9 +12935,11 @@ public class OrchestraFrame extends javax.swing.JFrame {
     
     void checkAlreadyDefined(String identifier)
     {
+        System.out.println("\n\n");
         int identifierrow = tblIdentifier.getRowCount();
         for(int i = 0; i < identifierrow; i++)
         {
+            System.out.println(""+tblIdentifier.getValueAt(i, 0).toString());
             if(identifier.equals(tblIdentifier.getValueAt(i, 0).toString()))
             {
                 errorCode = 3;
@@ -13113,6 +13391,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel18;
     private javax.swing.JPanel jPanel19;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -13126,6 +13405,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane12;
     private javax.swing.JScrollPane jScrollPane13;
     private javax.swing.JScrollPane jScrollPane14;
+    private javax.swing.JScrollPane jScrollPane15;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -13154,6 +13434,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     private javax.swing.JTable tblIdentifier;
     private javax.swing.JTable tblLexeme;
     private javax.swing.JTable tblLocalDeclaration;
+    private javax.swing.JTable tblStructDeclaration;
     private javax.swing.JTable tblSyntax;
     private javax.swing.JTextArea txtareaCompiler;
     // End of variables declaration//GEN-END:variables
