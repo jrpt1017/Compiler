@@ -1558,22 +1558,22 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     //Starting Letter F
                     else if(sourcecode.charAt(i) == 'F'){
                         lexeme = "";
-                        lexeme = lexeme.concat("F");
+                        lexeme = lexeme.concat("f");
                         i++;
                         if(sourcecode.charAt(i) == 'A'){
-                            lexeme = lexeme.concat("A");
+                            lexeme = lexeme.concat("a");
                             i++;
                             if(sourcecode.charAt(i) == 'L'){
-                                lexeme = lexeme.concat("L");
+                                lexeme = lexeme.concat("l");
                                 i++;
                                 if(sourcecode.charAt(i) == 'S'){
-                                    lexeme = lexeme.concat("S");
+                                    lexeme = lexeme.concat("s");
                                     i++;
                                     if(sourcecode.charAt(i) == 'E'){
-                                        lexeme = lexeme.concat("E");
+                                        lexeme = lexeme.concat("e");
                                         if(i == (sourcecode.length()-1)) //Detects if the line has reached the end
                                         {   //Adds the Lexeme, Line # and Column # to the Lexical Table
-                                            model.addRow(new String[]{lexeme, "Boolean_Literal",""+(j+1),""+(i+2)});
+                                            model.addRow(new String[]{"false", "Boolean_Literal",""+(j+1),""+(i+2)});
                                             lexeme = "";    //Clears the value for the next Lexeme
                                             check = 1;  //Determines that the lexeme is a reserved word
                                         }
@@ -1585,7 +1585,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                             ||sourcecode.charAt(i) == ','||sourcecode.charAt(i) == '}')
                                             {
                                                 //Adds the Lexeme, Line # and Column # to the Lexical Table
-                                                model.addRow(new String[]{lexeme, "Boolean_Literal",""+(j+1),""+(i+1)});
+                                                model.addRow(new String[]{"false", "Boolean_Literal",""+(j+1),""+(i+1)});
                                                 lexeme = "";    //Clears the variable for the next Lexeme
                                                 i--;    //LookAhead
                                                 check = 1; //Determines that the lexeme is a reserved word
@@ -1593,7 +1593,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                             else
                                             {
                                                 //Adds the Lexeme, Line # and Column # to the Lexical Error Table
-                                                error.addRow(new String[]{lexeme, "FALSE has invalid Delimeter.", "Error At Line "+(j+1)+", Column : "+(i+1)});
+                                                error.addRow(new String[]{"false", "FALSE has invalid Delimeter.", "Error At Line "+(j+1)+", Column : "+(i+1)});
                                                 lexeme = ""; //Clears the value for the next Lexeme
                                                 i--;    //LookAhead
                                                 check = 1; //Determines that the lexeme is a reserved word
@@ -3151,19 +3151,19 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     //Starting Letter T
                     else if(sourcecode.charAt(i) == 'T'){
                         lexeme = "";
-                        lexeme = lexeme.concat("T");
+                        lexeme = lexeme.concat("t");
                         i++;
                         if(sourcecode.charAt(i) == 'R'){
-                            lexeme = lexeme.concat("R");
+                            lexeme = lexeme.concat("r");
                             i++;
                             if(sourcecode.charAt(i) == 'U'){
-                                lexeme = lexeme.concat("U");
+                                lexeme = lexeme.concat("u");
                                 i++;
                                 if(sourcecode.charAt(i) == 'E'){
-                                    lexeme = lexeme.concat("E");
+                                    lexeme = lexeme.concat("e");
                                     if(i == (sourcecode.length()-1)) //Detects if the line has reached the end
                                     {   //Adds the Lexeme, Line # and Column # to the Lexical Table
-                                        model.addRow(new String[]{lexeme, "Boolean_Literal",""+(j+1),""+(i+2)});
+                                        model.addRow(new String[]{"true", "Boolean_Literal",""+(j+1),""+(i+2)});
                                         lexeme = "";    //Clears the value for the next Lexeme
                                         check = 1;  //Determines that the lexeme is a reserved word
                                     }
@@ -3171,10 +3171,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                     {
                                         i++;
                                         //Delimiter for true
-                                        if(sourcecode.charAt(i) == ' '||sourcecode.charAt(i) == '\n'||sourcecode.charAt(i) == ';'||sourcecode.charAt(i) == ','||sourcecode.charAt(i) == '}')
+                                        if(sourcecode.charAt(i) == ' '||sourcecode.charAt(i) == '\n'||sourcecode.charAt(i) == ';'||sourcecode.charAt(i) == ','||sourcecode.charAt(i) == '}'||sourcecode.charAt(i+1)=='(')
                                         {
                                             //Adds the Lexeme, Line # and Column # to the Lexical Table
-                                            model.addRow(new String[]{lexeme, "Boolean_Literal",""+(j+1),""+(i+1)});
+                                            model.addRow(new String[]{"true", "Boolean_Literal",""+(j+1),""+(i+1)});
                                             lexeme = "";    //Clears the variable for the next Lexeme
                                             i--;    //LookAhead
                                             check = 1; //Determines that the lexeme is a reserved word
@@ -3182,7 +3182,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                         else
                                         {
                                             //Adds the Lexeme, Line # and Column # to the Lexical Error Table
-                                            error.addRow(new String[]{lexeme, "TRUE has invalid Delimeter.", "Error At Line "+(j+1)+", Column : "+(i+1)});
+                                            error.addRow(new String[]{"true", "TRUE has invalid Delimeter.", "Error At Line "+(j+1)+", Column : "+(i+1)});
                                             lexeme = ""; //Clears the value for the next Lexeme
                                             i--;    //LookAhead
                                             check = 1; //Determines that the lexeme is a reserved word
@@ -3644,7 +3644,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             }
                             else if(sourcecode.charAt(i) == '(' || sourcecode.charAt(i) == ' ')
                             {
-                                    model.addRow(new String[]{lexeme, "Mathematical Symnbol",""+(j+1),""+(i+2)});
+                                    model.addRow(new String[]{lexeme, "Mathematical Symbol",""+(j+1),""+(i+2)});
                                     lexeme = "";
                             }
                             else if(sourcecode.charAt(i) == '-')
@@ -4487,7 +4487,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             if(sourcecode.charAt(i+1) == ' '||sourcecode.charAt(i+1) == '\n' ||
                             Character.isAlphabetic(sourcecode.charAt(i+1)) || Character.isDigit(sourcecode.charAt(i+1))
                             || sourcecode.charAt(i+1) == ',' || sourcecode.charAt(i+1) == ';' || sourcecode.charAt(i+1) == '"'
-                            || sourcecode.charAt(i+1) == '\'')
+                            || sourcecode.charAt(i+1) == '\''|| sourcecode.charAt(i+1) == '('|| sourcecode.charAt(i+1) == ')')
                             {
                                 model.addRow(new String[]{lexeme, "Reserved Symbol",""+(j+1),""+(i+1)});
                                 lexeme = "";
@@ -4850,7 +4850,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             if(sourcecode.charAt(i+1) == ' '||sourcecode.charAt(i+1) == b
                             ||sourcecode.charAt(i+1) == '+'||sourcecode.charAt(i+1) == '-'||sourcecode.charAt(i+1) == '*'||sourcecode.charAt(i+1) == '/'
                             ||sourcecode.charAt(i+1) == '>'||sourcecode.charAt(i+1) == '<'||sourcecode.charAt(i+1) == ';'||sourcecode.charAt(i+1)=='[' 
-                            ||sourcecode.charAt(i+1)=='=')
+                            ||sourcecode.charAt(i+1)=='='||sourcecode.charAt(i+1)==','||sourcecode.charAt(i+1)==')'||sourcecode.charAt(i+1)=='(')
                             {
                                 model.addRow(new String[]{lexeme, "Reserved Symbol",""+(j+1),""+(i+2)});
                                 lexeme = "";
@@ -6057,7 +6057,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             
             case BOOL:
                 checker(BOOL);
-                code = code.concat(" boolean");
+                code = code.concat(" bool");
                 addToSyntaxTable("<const>","<boolconst>");
                 addToSyntaxTable("<boolconst>", "CONST"); 
                 addToSyntaxTable("<boolconst>","BOOL");
@@ -6503,7 +6503,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
                 case BOOL:
                     checker(BOOL);
-                    code = code.concat("\n boolean");
+                    code = code.concat("\n bool");
                     addToSyntaxTable("<functiondef>","<datatype>");
                     addToSyntaxTable("<datatype>","BOOL");
                     break;
@@ -8294,7 +8294,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case BOOL : 
                 checker(BOOL); 
-                code = code.concat("\n boolean");
+                code = code.concat("\n bool");
                 addToSyntaxTable("<datatype>", "BOOL"); 
                     if(checker(IDENTIFIER))
                     {
@@ -9124,7 +9124,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case BOOL : 
                 checker(BOOL); 
-                code = code.concat("\n boolean");
+                code = code.concat("\n bool");
                 //addToSyntaxTable("<datatype>", "BOOL"); 
                     if(checker(IDENTIFIER))
                     {
@@ -9519,7 +9519,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 
             case BOOL : 
                 checker(BOOL); 
-                code = code.concat("\n boolean");
+                code = code.concat("\n bool");
                 addToSyntaxTable("<datatype>", "BOOL"); 
                     if(checker(IDENTIFIER))
                     {
@@ -11042,7 +11042,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         else if(parentDataType.equals("BOOL"))
         {
-            Default = "FALSE";
+            Default = "false";
         }
         else
         {
@@ -12032,10 +12032,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         checkIfDefined(text);
                     }
                     
-//                    if(datatype.equals("STRINNG"))
-//                    {
-//                        check_change_cin_to_getline();
-//                    }
+                    if(datatype.equals("STRING"))
+                    {
+                        changeCinToGetline();
+                    }
                     
                     semantic_nextInput();
                     if(checker(SEMICOLON))
@@ -12075,6 +12075,15 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 }
                 break;
         }
+    }
+    
+    void changeCinToGetline()
+    {
+        code = code.replace("cin>> "+getItem()+" ;", 
+                "getline(cin, "+getItem()+");");
+        
+        code = code.replace("cin>> "+getItem()+";", 
+                "getline(cin, "+getItem()+");");
     }
     
     void semantic_assignmentOperator()
@@ -12356,7 +12365,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         if(checker(PERIOD))
         {
-            semantic_value2();
+            semantic_value4();
             semantic_nextOutput();
         }
     }
@@ -13122,6 +13131,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_LexicalMouseReleased
     String code="#include <iostream>\n #include <cstdlib>\n  #include <exception>\n #include <iomanip>\n using namespace std; int main ( ) { std::cout << std::setprecision(6) << std::fixed; cout<< \"HI JRPT\" ; system(\"pause\");\n" +
 " return 0;}";
+    
     private void LexicalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LexicalActionPerformed
         // TODO add your handling code hcoere:
     }//GEN-LAST:event_LexicalActionPerformed
@@ -13151,7 +13161,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         modelFunctionReturn.setRowCount(0);
         modelArray.setRowCount(0);
         //
-        //System.out.println("code: \n"+code);
+        System.out.println("code: \n"+code);
         tokenPos = 0;
         removeNotNeed();
         token = getToken();
