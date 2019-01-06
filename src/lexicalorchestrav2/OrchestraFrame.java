@@ -10888,30 +10888,30 @@ public class OrchestraFrame extends javax.swing.JFrame {
     
     void reInitialize()
     {
-            scope = null;
-            parentDataType = null;
-            identifier = null;
-            value = null;
-            datatype = null;
-            literalType = null;
-            functionName = null;
-            array1D = null;
-            array2d = null;
-            arraySize = null;
-            Default = "";
-            errorCode = 0;
-            isFunction = false; 
-            dataTypeCatcher = "";
-            ArrayValues.clear();
-            memberName.clear();
-            memberValue.clear();
-            memberType.clear();
-            countArray1D = 0;
-            countArray2D1 = 0;
-            countArraySeparator = 0;
-            IDArray = "";
-            countArray2D2 = 0;
-            isFromForLoop = false;
+        scope = null;
+        parentDataType = null;
+        identifier = null;
+        value = null;
+        datatype = null;
+        literalType = null;
+        functionName = null;
+        array1D = null;
+        array2d = null;
+        arraySize = null;
+        Default = "";
+        errorCode = 0;
+        isFunction = false; 
+        dataTypeCatcher = "";
+        ArrayValues.clear();
+        memberName.clear();
+        memberValue.clear();
+        memberType.clear();
+        countArray1D = 0;
+        countArray2D1 = 0;
+        countArraySeparator = 0;
+        IDArray = "";
+        countArray2D2 = 0;
+        isFromForLoop = false;
     }
     
     String getItem()
@@ -11167,12 +11167,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         identifier = text;
                         checkAlreadyDefined(text);  
                     }
+                    dataTypeCatcher = parentDataType;
                     identifier = text;
                     semantic_valueInitialize2();
                     semantic_nextStructVariable();
                     if(checker(SEMICOLON))
                     {
-
                         semantic_nextMember();
                         if(checker(CLOSECURLYBRACE))
                         {
@@ -11219,7 +11219,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         DefaultTableModel identifier = (DefaultTableModel)tblIdentifier.getModel();  
         int i =0;
         checkAlreadyDefined(objectName);
-        identifier.addRow(new Object[] {objectName, "", "STRUCT_ALIAS"});
+        identifier.addRow(new Object[] {objectName, "", "Struct Alias"});
         
         while(i < memberName.size())
         {
@@ -11653,14 +11653,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break;
         }
     }
-
+    
     void semantic_value2()
     {
         switch(token)
         {
             case IDENTIFIER:
                 checker(IDENTIFIER);
-                System.out.println("scope: "+scope);
                 if(scope == "function")
                 {                        
                     String text = getItem();
@@ -11679,13 +11678,16 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     identifier = text;
                     checkIfDefined(text);  
                 }
-                
+                semantic_extension();
+                System.out.println("catcher: "+dataTypeCatcher);
+                System.out.println("dtype: "+datatype);
                 if(isFunction == false)
                 {
                     checkSameDataType(dataTypeCatcher,datatype);
                 }
-                
-                semantic_extension();
+                //semantic_extension();
+                System.out.println("catcher1: "+dataTypeCatcher);
+                System.out.println("dtype1: "+datatype);
                 semantic_nextOperand();
                 break;
                 
@@ -11722,11 +11724,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         else
         {
+            System.out.println("1: "+datatype+"2: "+datatype1);
             semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+datatype1+" Cannot be converted to "+datatype, tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
         }
         datatype = null;
     }
-    
+    boolean isStruct = false;
     void semantic_extension()
     {
         switch(token)
@@ -11741,13 +11744,73 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break;
                 
             case TILDE: //struct member
-                checker(TILDE);
-                
+                isStruct = true;
+                semantic_structMemberCheck();
                 break;
                 
             case OPENPARENTHESIS: 
                 semantic_interlude();
                 break;
+        }
+    }
+    
+    void semantic_structMemberCheck()
+    {
+        String objName = getItem();
+        String objLine = tblLexeme.getModel().getValueAt(tokenPos-2, 2).toString();
+        
+        if(checker(TILDE))
+        {
+            checkIfObjectName(objName,datatype,objLine);
+            if(checker(IDENTIFIER))
+            {
+                checkIfStructMember(objName,getItem());
+                if(isFunction==true)
+                {
+                    argumentIdentifier.add(getItem());
+                    argumentDataType.add(datatype);
+                    isFunction=false;
+                }
+            }
+        }
+    }
+    
+    void checkIfStructMember(String objName, String structMember)
+    {
+        DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
+        int identifierrow1 = tblStructDeclaration.getRowCount();
+        int i;
+        for( i = 0; i < identifierrow1; i++)
+        {
+            if(objName.equals(tblStructDeclaration.getValueAt(i, 1).toString()) && structMember.equals(tblStructDeclaration.getValueAt(i, 2).toString()))
+            {
+                break;
+            }
+        }
+        
+        if(i == (identifierrow1))
+        {
+            semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), 
+                "Variable "+structMember+" is not a member of Records : "+objName, 
+                tblLexeme.getModel().getValueAt(tokenPos-2, 2)});
+        }else{
+            if(isStruct == true)
+            //dataTypeCatcher = tblStructDeclaration.getValueAt(i, 4).toString();
+            datatype = tblStructDeclaration.getValueAt(i, 4).toString();
+            else
+            {
+                dataTypeCatcher = tblStructDeclaration.getValueAt(i, 4).toString();
+                datatype = tblStructDeclaration.getValueAt(i, 4).toString();
+            }
+        }
+    }
+    
+    void checkIfObjectName(String id, String dtype, String line)
+    {
+        DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
+        if(!dtype.equals("Struct Alias"))
+        {
+            semanticerror.addRow(new Object[] {id, "Variable "+id+"Is Not An Object of Struct", line});   
         }
     }
     
@@ -12036,7 +12099,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     {
                         changeCinToGetline();
                     }
-                    
+                    semantic_extension();
                     semantic_nextInput();
                     if(checker(SEMICOLON))
                     {
@@ -12340,7 +12403,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             semantic_const_arraySize();
             array1D = arraySize;
-            System.out.println("array1D: "+array1D);
             if(checker(CLOSEBRACKET))
             {
                 semantic_2dArray();
@@ -12349,6 +12411,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 addToFunctionTable();
             else 
                 addToLocalDeclarationTable();
+        }
+        else if(checker(TILDE))
+        {
+            semantic_structMemberCheck();
         }
         else
         {
@@ -12817,7 +12883,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
     
     void concert_checkIfDefined(String identifier)
     {
-        System.out.println("ID: "+identifier);
         boolean isDefined = false, isDefined1 = false;
         int identifierrow = tblIdentifier.getRowCount();
         int i,k;
@@ -12842,29 +12907,23 @@ public class OrchestraFrame extends javax.swing.JFrame {
         
         if(isDefined == false && isDefined1 == false)
         {
-            System.out.println("pt0");
             errorCode = 4;
             addToSemanticErrorTable(errorCode);
         }
         else if(i < identifierrow)
         {
-            System.out.println("pt1");
             datatype = tblIdentifier.getValueAt(i,2).toString();
             value = tblIdentifier.getValueAt(i,1).toString();
             literalType = datatype;
         }
         else if(k < identifierrow1)
         {
-            System.out.println("pt2: "+k);
             datatype = tblLocalDeclaration.getValueAt(k,2).toString();
             value = tblLocalDeclaration.getValueAt(k,1).toString();
             literalType = datatype;
         }
-        arraySize = value;
-        System.out.println("data_type: "+datatype);
-        System.out.println("value: "+value);
-        System.out.println("literal_type: "+literalType);
-            
+        arraySize = value; 
+        System.out.println("dtype111: "+datatype);
      }
     
     void interlude_checkAlreadyDefined(String identifier)
@@ -12918,9 +12977,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
             }
         }
         
-        
-        System.out.println("i: "+i);
-        System.out.println("k:"+k);
         
         if(isDefined == false && isDefined1 == false)
         {
@@ -13009,10 +13065,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break;
             }
         }
-        System.out.println("flagLocal: "+flagLocal);
-        System.out.println("flagIdentifier: "+flagIdentifier);
-        System.out.println("i: "+i);
-        System.out.println("k: "+k);
         int errorCode = 0;
         if(i == (identifierrow) && k == identifierrow1) //undeclared variable
         {
@@ -13033,14 +13085,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         else
         {
-            System.out.println("AA3");
             if(!tblLocalDeclaration.getValueAt(i, 2).toString().equals("INT"))
             {
                 semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+tblLocalDeclaration.getValueAt(i, 2).toString()+" Cannot be converted to INT", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
             }
             else
             {
-               System.out.println("AA4");
                if(!tblLocalDeclaration.getValueAt(i, 2).toString().equals("INT"))
                {
                     semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+tblLocalDeclaration.getValueAt(i, 2).toString()+" Cannot be converted to INT", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
@@ -13051,9 +13101,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                }
                else if(flagLocal==true && flagIdentifier==false)
                {
-                    System.out.println("BB1");
                     arraySize = tblLocalDeclaration.getValueAt(i, 1).toString();    
-                    System.out.println("poopo: "+arraySize);
                }
             }
         }
@@ -13129,7 +13177,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     private void LexicalMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LexicalMouseReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_LexicalMouseReleased
-    String code="#include <iostream>\n #include <cstdlib>\n  #include <exception>\n #include <iomanip>\n using namespace std; int main ( ) { std::cout << std::setprecision(6) << std::fixed; cout<< \"HI JRPT\" ; system(\"pause\");\n" +
+    String code="#include <iostream>\n #include <cstdlib>\n  #include <exception>\n #include <iomanip>\n using namespace std; int main ( ) { std::cout << std::setprecision(6) << std::fixed; system(\"pause\");\n" +
 " return 0;}";
     
     private void LexicalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LexicalActionPerformed
