@@ -3902,11 +3902,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         }
                         else
                         {
-                            if(Character.isDigit(sourcecode.charAt(i+1)) == true || Character.isLetter(sourcecode.charAt(i+1)) == true
-                            || sourcecode.charAt(i+1) == ' '|| sourcecode.charAt(i+1) == '(') //Delims of >
+                            i++;
+                            if(Character.isDigit(sourcecode.charAt(i)) == true || Character.isLetter(sourcecode.charAt(i)) == true
+                            || sourcecode.charAt(i) == ' '|| sourcecode.charAt(i) == '(') //Delims of <
                             {
                                 model.addRow(new String[]{lexeme, "Relational Symbol",""+(j+1),""+(i+1)});
                                 lexeme = "";
+                                i--;
                             }
                             else if(sourcecode.charAt(i) == '=')
                             {
@@ -3918,11 +3920,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                 }
                                 else
                                 {
-                                    if(Character.isDigit(sourcecode.charAt(i+1)) == true || Character.isLetter(sourcecode.charAt(i+1)) == true
-                                        || sourcecode.charAt(i+1) == ' '|| sourcecode.charAt(i+1) == '(') //Delims of >=
+                                    i++;
+                                    if(Character.isDigit(sourcecode.charAt(i)) == true || Character.isLetter(sourcecode.charAt(i)) == true
+                                        || sourcecode.charAt(i) == ' '|| sourcecode.charAt(i) == '(') //Delims of <=
                                     {
                                         model.addRow(new String[]{lexeme, "Relational Symbol",""+(j+1),""+(i+1)});
                                         lexeme = "";
+                                        i--;
                                     }
                                     else
                                     {
@@ -6832,7 +6836,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         if(checker(IDENTIFIER) && hasError == false) //assignment stmnts
         {
             code = code.concat(" "+getItem());
-            if(checker1(OPENPARENTHESIS))
+            if(checker1(OPENPARENTHESIS)) //funccall statement
             {
                 addToSyntaxTable("<statements>","<funccall>");
                     production_funccall();
@@ -6848,7 +6852,33 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     hasError = true;
                 }
             }
-            if(checker1(INCREMENT) || checker1(DECREMENT))
+            else if(checker1(OPENBRACKET)) //arr index
+            {
+                addToSyntaxTable("<identifier>","<arrid>");
+                addToSyntaxTable("<arrid>","id");
+                    production_arrid();
+                    production_assignment();
+            }
+            else if(checker1(TILDE)) //struct id
+            {
+                checker(TILDE);
+                code = code.concat(".");
+                addToSyntaxTable("<identifier>","<structid>");
+                addToSyntaxTable("<structid>","identifier");
+                addToSyntaxTable("<structid>","~");
+                if(checker(IDENTIFIER))
+                {
+                    code = code.concat(""+getItem());
+                    addToSyntaxTable("<structid>","identifier");
+                    production_assignment();
+                }
+                else if(hasError == false)
+                {
+                    addToSyntaxErrorTable("<structid>","Expecting Identifier");
+                    hasError = true; 
+                }
+            }
+            else if(checker1(INCREMENT) || checker1(DECREMENT))
             {
                 addToSyntaxTable("<statements>","<incdec>");
                     production_incdec();
@@ -8158,6 +8188,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         addToSyntaxErrorTable("<vardec>", "Expecting IDENTIFIER");
                         hasError = true;
                     }
+                    System.out.println("Here's token: "+token);
                 break;
                 
             case CHAR : 
@@ -8365,7 +8396,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             production_vardec1();
         }
         else
-            return;
+            production_statements();
     }
     
     void production_assignment()
@@ -11794,14 +11825,14 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 "Variable "+structMember+" is not a member of Records : "+objName, 
                 tblLexeme.getModel().getValueAt(tokenPos-2, 2)});
         }else{
-            if(isStruct == true)
-            //dataTypeCatcher = tblStructDeclaration.getValueAt(i, 4).toString();
-            datatype = tblStructDeclaration.getValueAt(i, 4).toString();
-            else
-            {
+//            if(isStruct == true)
+//            //dataTypeCatcher = tblStructDeclaration.getValueAt(i, 4).toString();
+//            datatype = tblStructDeclaration.getValueAt(i, 4).toString();
+//            else
+//            {
                 dataTypeCatcher = tblStructDeclaration.getValueAt(i, 4).toString();
                 datatype = tblStructDeclaration.getValueAt(i, 4).toString();
-            }
+//            }
         }
     }
     
