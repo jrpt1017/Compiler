@@ -12169,6 +12169,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break;
                 
             case IF: case CHORDS:
+                System.out.println("pasok sa cond");
                 semantic_conditional();
                 break;
             
@@ -12184,13 +12185,14 @@ public class OrchestraFrame extends javax.swing.JFrame {
             if(checker(OPENPARENTHESIS))
             {
                 semantic_condexpr();
-                production_nextcondexpr();
+                semantic_nextcondexpr();
                 if(checker(CLOSEPARENTHESIS))
                 {
                     if(checker(OPENCURLYBRACE))
                     {
-                        production_statements();
-                        production_stopplay();
+                        System.out.println("NEXT TOKEN: "+token);
+                        semantic_declaration();
+                        semantic_stopplay();
                         if(checker(CLOSECURLYBRACE))
                         {
                             production_elseifstatement();
@@ -12237,27 +12239,226 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
     }
     
+    void semantic_stopplay()
+    {
+        switch(token)
+        {
+            case STOP:
+                checker(STOP);
+                if(checker(SEMICOLON))
+                {
+                }
+                break;
+                
+            case PLAY:
+                checker(PLAY);
+                if(checker(SEMICOLON))
+                {
+                }
+                break;
+                
+            default:
+                //addToSyntaxTable("<stop/play>","null");
+        }
+    }
+    
     void semantic_nextcondexpr()
     {
         switch(token)
         {          
             case GREATERTHAN: case LESSTHAN: case GREATERTHANEQUAL: case LESSTHANEQUAL: case NOTEQUAL: case EQUALEQUAL:
-                    production_relop();
+                    semantic_relop();
                     semantic_condexpr();
                     semantic_nextcondexpr();
                 break;
 
             case NOT: case AND: case OR:
-                    production_logicop();
+                    semantic_logicop();
                     semantic_condexpr();
                     semantic_nextcondexpr();
                 break;
 
             case PLUS: case MINUS: case MULTIPLY: case DIVIDE: case MODULUS:
-                    production_mathexprOperator();
+                    semantic_mathexprOperator();
                     semantic_condexpr(); 
                     semantic_nextcondexpr();
                 break;
+        }
+    }
+    
+    void semantic_mathexprOperator()
+    {
+        switch(token)
+        {
+            case PLUS:
+                checker(PLUS);
+                break;
+                
+            case MINUS:
+                checker(MINUS);
+                break;
+                
+            case MULTIPLY:
+                checker(MULTIPLY);
+                break;
+                
+            case DIVIDE:
+                checker(DIVIDE);
+                break;
+                
+            case MODULUS:
+                checker(MODULUS);
+                break;
+        }
+    }
+    
+    void semantic_logicop()
+    {
+        switch(token)
+        {
+            case AND:
+                checker(AND);
+                break;
+                
+            case OR:
+                checker(OR);
+                break;
+                
+            case NOT:
+                checker(NOT);
+                break;
+        }
+    }
+    
+    void semantic_relop()
+    {
+        switch(token)
+        {
+            case GREATERTHAN:
+                checker(GREATERTHAN);
+                break;
+                
+            case LESSTHAN:
+                checker(LESSTHAN);
+                break;
+                
+            case GREATERTHANEQUAL:
+                checker(GREATERTHANEQUAL);
+                break;
+                
+            case LESSTHANEQUAL:
+                checker(LESSTHANEQUAL);
+                break;
+                
+            case EQUALEQUAL:
+                checker(EQUALEQUAL);
+                break;
+                
+            case NOTEQUAL:
+                checker(NOTEQUAL);
+                break;
+        }
+    }
+    
+    void semantic_nextmathexpr()
+    {
+        switch(token)
+        {
+            case PLUS:
+                checker(PLUS);
+                semantic_mathexpr();
+                semantic_nextmathexpr();
+                break;
+                
+            case MINUS:
+                checker(MINUS);
+                semantic_mathexpr();
+                semantic_nextmathexpr();
+                break;
+                
+            case MULTIPLY:
+                checker(MULTIPLY);
+                semantic_mathexpr();
+                semantic_nextmathexpr();
+                break;
+                
+            case DIVIDE:
+                checker(DIVIDE);
+                semantic_mathexpr();
+                semantic_nextmathexpr();
+                break;
+                
+            case MODULUS:
+                checker(MODULUS);
+                semantic_mathexpr();
+                semantic_nextmathexpr();
+                break;
+        }
+    }
+    
+    void semantic_mathexpr()
+    {
+        switch(token)
+        {
+            case OPENPARENTHESIS:
+                checker(OPENPARENTHESIS);
+                    semantic_mathexpr();
+                    semantic_nextmathexpr();
+                if(checker(CLOSEPARENTHESIS))
+                {
+                    if(checker1(PLUS)||checker1(MINUS)||checker1(MULTIPLY)||checker1(DIVIDE)||checker1(MODULUS))
+                        semantic_nextmathexpr();
+                }
+                break;
+                
+            case INTEGERLITERAL: case FLOATLITERAL:
+                    semantic_literal();
+                    semantic_nextmathexpr();
+                break;
+
+            case IDENTIFIER:
+                checker(IDENTIFIER);
+                    //semantic_identifier();
+                    semantic_nextmathexpr();
+                break;
+        }
+    }
+   
+    
+    
+    void semantic_literal()
+    {
+        switch(token)
+        {
+            case INTEGERLITERAL:
+                checker(INTEGERLITERAL);
+                if(checker1(PLUS)||checker1(MINUS)||checker1(DIVIDE)||checker1(MODULUS)||checker1(MULTIPLY))
+                {
+                    semantic_nextmathexpr();
+                }
+                break;
+                
+            case FLOATLITERAL:
+                checker(FLOATLITERAL);
+                if(checker1(PLUS)||checker1(MINUS)||checker1(DIVIDE)||checker1(MODULUS)||checker1(MULTIPLY))
+                {
+                    semantic_nextmathexpr();
+                }
+                break;
+                
+            case CHARLITERAL:
+                checker(CHARLITERAL);
+                break;
+                
+            case STRINGLITERAL:
+                checker(STRINGLITERAL);
+                break;
+                
+            case BOOLLITERAL:
+                checker(BOOLLITERAL);
+                break;
+                
+            default: //addToSyntaxTable("<literal>","null"); return;
         }
     }
     
@@ -12268,21 +12469,21 @@ public class OrchestraFrame extends javax.swing.JFrame {
             case OPENPARENTHESIS:
                 checker(OPENPARENTHESIS);
                     semantic_condexpr();
-                    production_nextcondexpr();
+                    semantic_nextcondexpr();  
                 if(checker(CLOSEPARENTHESIS))
                 {
                 }
                 break;
                 
             case INTEGERLITERAL: case FLOATLITERAL: case CHARLITERAL: case STRINGLITERAL: case BOOLLITERAL:  
-                    production_literal();
-                    production_nextcondexpr();
+                    semantic_literal();
+                    semantic_nextcondexpr();
                 break;
 
             case IDENTIFIER:
                 checker(IDENTIFIER);
-                production_identifier();
-                production_nextcondexpr();
+                //semantic_identifier();
+                semantic_nextcondexpr();
                 break;           
             default: //addToSyntaxTable("<condexpr>","null");    
         }
