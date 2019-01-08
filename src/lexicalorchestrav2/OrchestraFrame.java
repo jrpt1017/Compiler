@@ -403,7 +403,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Identifier", "Value", "Type"
+                "Identifier", "Value", "Type", "Array Size"
             }
         ));
         jScrollPane9.setViewportView(tblLocalDeclaration);
@@ -10956,7 +10956,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         DefaultTableModel model = (DefaultTableModel)tblLocalDeclaration.getModel();
         
-        model.addRow(new Object[] {identifier, value, parentDataType});
+        model.addRow(new Object[] {identifier, value, parentDataType, arraySize});
+
     }
     void addToConstantDeclarationTable()
     {
@@ -11475,7 +11476,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             semantic_nextDeclaration();
                             if(checker(PRODUCE))
                             {
-                                semantic_operand();
+                                semantic_value3();
                                 checkReturnValue(functionDataType, datatype);
                                 if(checker(SEMICOLON))
                                 {
@@ -11499,7 +11500,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         if(datatype.equals(datatype1))
         {
 
-        }else if(datatype.equals("TAG") && datatype1.equals("HASHTAG"))
+        }else if(datatype.equals("INT") && datatype1.equals("FLOAT"))
         {
 
         }else if(datatype1 == null)
@@ -11710,15 +11711,11 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     checkIfDefined(text);  
                 }
                 semantic_extension();
-                System.out.println("catcher: "+dataTypeCatcher);
-                System.out.println("dtype: "+datatype);
                 if(isFunction == false)
                 {
                     checkSameDataType(dataTypeCatcher,datatype);
                 }
                 //semantic_extension();
-                System.out.println("catcher1: "+dataTypeCatcher);
-                System.out.println("dtype1: "+datatype);
                 semantic_nextOperand();
                 break;
                 
@@ -11767,6 +11764,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case OPENBRACKET: //array
                 checker(OPENBRACKET);
+                isFromAssignment=true;
                 semantic_const_arraySize();
                 if(checker(CLOSEBRACKET))
                 {
@@ -12054,7 +12052,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         return null;
     }
-
+    boolean isFromAssignment=false;
     void semantic_declaration()
     {
         switch(token)
@@ -12082,6 +12080,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         identifier = text;
                         checkAlreadyDefined(text);
                     }
+                    
                     dataTypeCatcher = parentDataType;
                     semantic_valueInitialize();
                     semantic_nextVariable();
@@ -12168,6 +12167,124 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     semantic_declaration();
                 }
                 break;
+                
+            case IF: case CHORDS:
+                semantic_conditional();
+                break;
+            
+        }
+    }
+    
+    void semantic_conditional()
+    {
+        switch(token)
+        {
+            case IF:
+            checker(IF); //determines that it is an IF statement
+            if(checker(OPENPARENTHESIS))
+            {
+                semantic_condexpr();
+                production_nextcondexpr();
+                if(checker(CLOSEPARENTHESIS))
+                {
+                    if(checker(OPENCURLYBRACE))
+                    {
+                        production_statements();
+                        production_stopplay();
+                        if(checker(CLOSECURLYBRACE))
+                        {
+                            production_elseifstatement();
+                            production_elsestatement();
+                        }
+                    }
+                }
+            }
+            break;
+            
+            case CHORDS:
+            checker(CHORDS);
+            code = code.concat("\n switch");
+            addToSyntaxTable("<condstatements>","<switchstatement>");
+            addToSyntaxTable("<switchstatement>","CHORDS");
+            if(checker(OPENPARENTHESIS))
+            {
+                code = code.concat("(");
+                addToSyntaxTable("<switchstatement>","(");
+                addToSyntaxTable("<switchstatement>","<identifier>");
+                    checker(IDENTIFIER);
+                    code = code.concat(" "+getItem());
+                    production_identifier();
+                if(checker(CLOSEPARENTHESIS))
+                {
+                    code = code.concat(" )");
+                    addToSyntaxTable("<switchstatement>",")");
+                    if(checker(OPENCURLYBRACE))
+                    {
+                        code = code.concat(" {");
+                        addToSyntaxTable("<switchstatement>","{");
+                        addToSyntaxTable("<switchstatement>","<case>");
+                            production_case();
+                        addToSyntaxTable("<switchstatement>","<default>");
+                            production_default();
+                        if(checker(CLOSECURLYBRACE))
+                        {
+                            code = code.concat("\n }");
+                            addToSyntaxTable("<switchstatement>","}");
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    void semantic_nextcondexpr()
+    {
+        switch(token)
+        {          
+            case GREATERTHAN: case LESSTHAN: case GREATERTHANEQUAL: case LESSTHANEQUAL: case NOTEQUAL: case EQUALEQUAL:
+                    production_relop();
+                    semantic_condexpr();
+                    semantic_nextcondexpr();
+                break;
+
+            case NOT: case AND: case OR:
+                    production_logicop();
+                    semantic_condexpr();
+                    semantic_nextcondexpr();
+                break;
+
+            case PLUS: case MINUS: case MULTIPLY: case DIVIDE: case MODULUS:
+                    production_mathexprOperator();
+                    semantic_condexpr(); 
+                    semantic_nextcondexpr();
+                break;
+        }
+    }
+    
+    void semantic_condexpr()
+    {
+        switch(token)
+        {
+            case OPENPARENTHESIS:
+                checker(OPENPARENTHESIS);
+                    semantic_condexpr();
+                    production_nextcondexpr();
+                if(checker(CLOSEPARENTHESIS))
+                {
+                }
+                break;
+                
+            case INTEGERLITERAL: case FLOATLITERAL: case CHARLITERAL: case STRINGLITERAL: case BOOLLITERAL:  
+                    production_literal();
+                    production_nextcondexpr();
+                break;
+
+            case IDENTIFIER:
+                checker(IDENTIFIER);
+                production_identifier();
+                production_nextcondexpr();
+                break;           
+            default: //addToSyntaxTable("<condexpr>","null");    
         }
     }
     
@@ -12433,6 +12550,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         else if(checker(OPENBRACKET))
         {
             semantic_const_arraySize();
+            System.out.println("toktok: "+token);
             array1D = arraySize;
             if(checker(CLOSEBRACKET))
             {
@@ -12456,6 +12574,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             else 
                 addToLocalDeclarationTable();
         }
+        //arraySize = null;
     }
     
     void semantic_nextOutput()
@@ -12783,11 +12902,35 @@ public class OrchestraFrame extends javax.swing.JFrame {
     
     void checkArraySize(int arraySizeValue)
     {
+        DefaultTableModel model = (DefaultTableModel)tblLocalDeclaration.getModel();
+        DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
+        int identifierrow = tblLocalDeclaration.getRowCount(),i=0,size=0; boolean flag = false;
         if(arraySizeValue > 1000 || arraySizeValue < 1)
         {
             errorCode = 2; //wrong array size;
             addToSemanticErrorTable(2);
         }
+        else if(isFromAssignment==true)
+        {
+            for(i = 0; i < identifierrow; i++)
+            {
+                if(identifier.equals(tblLocalDeclaration.getValueAt(i, 0).toString()) && tblLocalDeclaration.getValueAt(i, 1).toString() == "Array")
+                {
+                    flag = true; break;
+                }
+            }
+            System.out.println("Flag: "+flag);
+            System.out.println("i: "+i);
+            size = Integer.parseInt(tblLocalDeclaration.getValueAt(i, 3).toString());
+            System.out.println("Size: "+size);
+            if(flag == true)
+            {
+                if(arraySizeValue > size)
+                    semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Array Index Out of Bounds "+size+ " >= "+arraySizeValue, "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)}); 
+            }
+            isFromAssignment=false;
+        }
+        return;
     }
     
     void semantic_nextVariable()
@@ -13240,7 +13383,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         modelFunctionReturn.setRowCount(0);
         modelArray.setRowCount(0);
         //
-        System.out.println("code: \n"+code);
+        //System.out.println("code: \n"+code);
         tokenPos = 0;
         removeNotNeed();
         token = getToken();
