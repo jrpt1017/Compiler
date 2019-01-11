@@ -11116,7 +11116,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         switch(token)
         {
-            case INT: case FLOAT: case CHAR: case STRING: case BOOL: case OUTRO: case INTRO:
+            case INT: case FLOAT: case CHAR: case STRING: case BOOL: case OUTRO: case INTRO: case IDENTIFIER: case IF: case CHORDS:
                 semantic_declaration();
                 semantic_nextDeclaration();
                 break;
@@ -12169,7 +12169,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break;
                 
             case IF: case CHORDS:
-                System.out.println("pasok sa cond");
                 semantic_conditional();
                 break;
             
@@ -12190,12 +12189,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 {
                     if(checker(OPENCURLYBRACE))
                     {
-                        System.out.println("NEXT TOKEN: "+token);
                         semantic_declaration();
+                        semantic_nextDeclaration();
                         semantic_stopplay();
                         if(checker(CLOSECURLYBRACE))
                         {
-                            production_elseifstatement();
+                            semantic_elseifstatement();
                             production_elsestatement();
                         }
                     }
@@ -12234,6 +12233,49 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             addToSyntaxTable("<switchstatement>","}");
                         }
                     }
+                }
+            }
+        }
+    }
+    
+    void semantic_elseifstatement()
+    {
+        if(checker(ELSEIF))
+        {
+            if(checker(OPENPARENTHESIS))
+            {
+                semantic_condexpr();
+                semantic_nextcondexpr();
+                if(checker(CLOSEPARENTHESIS))
+                {
+                    if(checker(OPENCURLYBRACE))
+                    {
+                        semantic_declaration();
+                        semantic_nextDeclaration();
+                        semantic_stopplay();
+                        if(checker(CLOSECURLYBRACE))
+                        {
+                            semantic_elseifstatement();
+                            semantic_elsestatement();
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    void semantic_elsestatement()
+    {
+        if(checker(ELSE))
+        {
+            if(checker(OPENCURLYBRACE))
+            {
+                semantic_declaration();
+                semantic_nextDeclaration();
+                semantic_stopplay();
+                if(checker(CLOSECURLYBRACE))
+                {
+                    semantic_declaration();
                 }
             }
         }
@@ -12481,7 +12523,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break;
 
             case IDENTIFIER:
-                checker(IDENTIFIER);
+                semantic_value4();
                 //semantic_identifier();
                 semantic_nextcondexpr();
                 break;           
