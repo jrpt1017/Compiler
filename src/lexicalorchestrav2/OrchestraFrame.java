@@ -156,9 +156,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(51, 51, 51));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        txtareaCompiler.setBackground(new java.awt.Color(51, 51, 51));
         txtareaCompiler.setColumns(20);
-        txtareaCompiler.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
+        txtareaCompiler.setFont(new java.awt.Font("Fira Code", 0, 18)); // NOI18N
+        txtareaCompiler.setForeground(new java.awt.Color(255, 255, 255));
         txtareaCompiler.setRows(5);
+        txtareaCompiler.setCaretColor(new java.awt.Color(255, 255, 255));
         txtareaCompiler.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 txtareaCompilerCaretUpdate(evt);
@@ -212,7 +215,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Pristina", 3, 40)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(204, 204, 204));
-        jLabel1.setText("Orchestra Lexical Analyser");
+        jLabel1.setText("#Orchestra Compiler");
 
         btnRun.setBackground(new java.awt.Color(253, 189, 57));
         btnRun.setFont(new java.awt.Font("Lucida Sans Unicode", 1, 18)); // NOI18N
@@ -299,8 +302,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
         lblRowCol.setForeground(new java.awt.Color(255, 255, 255));
         jPanel1.add(lblRowCol, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, -1, -1));
 
-        tblLexeme.setBackground(new java.awt.Color(153, 255, 51));
-        tblLexeme.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        tblLexeme.setBackground(new java.awt.Color(51, 51, 51));
+        tblLexeme.setFont(new java.awt.Font("Fira Code", 0, 20)); // NOI18N
+        tblLexeme.setForeground(new java.awt.Color(255, 255, 255));
         tblLexeme.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -325,7 +329,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
         tabMainTables.addTab("Lexical", jPanel3);
 
-        tblSyntax.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        tblSyntax.setBackground(new java.awt.Color(51, 51, 51));
+        tblSyntax.setFont(new java.awt.Font("Fira Code", 0, 20)); // NOI18N
+        tblSyntax.setForeground(new java.awt.Color(255, 255, 255));
         tblSyntax.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -349,6 +355,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
         tabMainTables.addTab("Syntax", jPanel4);
 
+        tblConstantDeclaration.setBackground(new java.awt.Color(51, 51, 51));
+        tblConstantDeclaration.setFont(new java.awt.Font("Fira Code", 0, 16)); // NOI18N
+        tblConstantDeclaration.setForeground(new java.awt.Color(255, 255, 255));
         tblConstantDeclaration.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -367,11 +376,14 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Constant Declaration", jPanel5);
 
+        tblGlobalDeclaration.setBackground(new java.awt.Color(51, 51, 51));
+        tblGlobalDeclaration.setFont(new java.awt.Font("Fira Code", 0, 16)); // NOI18N
+        tblGlobalDeclaration.setForeground(new java.awt.Color(255, 255, 255));
         tblGlobalDeclaration.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -390,14 +402,14 @@ public class OrchestraFrame extends javax.swing.JFrame {
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Global Declaration", jPanel7);
 
+        tblLocalDeclaration.setBackground(new java.awt.Color(51, 51, 51));
+        tblLocalDeclaration.setFont(new java.awt.Font("Fira Code", 0, 16)); // NOI18N
+        tblLocalDeclaration.setForeground(new java.awt.Color(255, 255, 255));
         tblLocalDeclaration.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -421,6 +433,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Local Declaration", jPanel12);
 
+        tblIdentifier.setAutoCreateRowSorter(true);
+        tblIdentifier.setBackground(new java.awt.Color(51, 51, 51));
+        tblIdentifier.setFont(new java.awt.Font("Fira Code", 0, 16)); // NOI18N
+        tblIdentifier.setForeground(new java.awt.Color(255, 255, 255));
         tblIdentifier.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -444,6 +460,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Identifier", jPanel14);
 
+        tblFunctionParemeters.setBackground(new java.awt.Color(51, 51, 51));
+        tblFunctionParemeters.setFont(new java.awt.Font("Fira Code", 0, 16)); // NOI18N
+        tblFunctionParemeters.setForeground(new java.awt.Color(255, 255, 255));
         tblFunctionParemeters.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -467,6 +486,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Parameters", jPanel16);
 
+        tblFunctionDeclaration.setBackground(new java.awt.Color(51, 51, 51));
+        tblFunctionDeclaration.setFont(new java.awt.Font("Fira Code", 0, 16)); // NOI18N
+        tblFunctionDeclaration.setForeground(new java.awt.Color(255, 255, 255));
         tblFunctionDeclaration.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -490,6 +512,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Declaration", jPanel17);
 
+        tblFunctionReturn.setBackground(new java.awt.Color(51, 51, 51));
+        tblFunctionReturn.setFont(new java.awt.Font("Fira Code", 0, 16)); // NOI18N
+        tblFunctionReturn.setForeground(new java.awt.Color(255, 255, 255));
         tblFunctionReturn.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -526,6 +551,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Function", jPanel15);
 
+        tblArray.setBackground(new java.awt.Color(51, 51, 51));
+        tblArray.setFont(new java.awt.Font("Fira Code", 0, 16)); // NOI18N
+        tblArray.setForeground(new java.awt.Color(255, 255, 255));
         tblArray.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -549,6 +577,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Array", jPanel19);
 
+        tblStructDeclaration.setBackground(new java.awt.Color(51, 51, 51));
+        tblStructDeclaration.setFont(new java.awt.Font("Fira Code", 0, 16)); // NOI18N
+        tblStructDeclaration.setForeground(new java.awt.Color(255, 255, 255));
         tblStructDeclaration.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -607,7 +638,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
         });
         jPanel1.add(btnSyntax, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 240, 130, 40));
 
-        tblError.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        tblError.setBackground(new java.awt.Color(51, 51, 51));
+        tblError.setFont(new java.awt.Font("Fira Code", 0, 20)); // NOI18N
+        tblError.setForeground(new java.awt.Color(255, 255, 255));
         tblError.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -631,7 +664,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
         tabErrorTables.addTab("Lexical Error", jPanel6);
 
-        tblErrorSyntax.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        tblErrorSyntax.setBackground(new java.awt.Color(51, 51, 51));
+        tblErrorSyntax.setFont(new java.awt.Font("Fira Code", 0, 20)); // NOI18N
+        tblErrorSyntax.setForeground(new java.awt.Color(255, 255, 255));
         tblErrorSyntax.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -655,7 +690,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
         tabErrorTables.addTab("Syntax Error", jPanel8);
 
-        tblErrorSemantic.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        tblErrorSemantic.setBackground(new java.awt.Color(51, 51, 51));
+        tblErrorSemantic.setFont(new java.awt.Font("Fira Code", 0, 20)); // NOI18N
+        tblErrorSemantic.setForeground(new java.awt.Color(255, 255, 255));
         tblErrorSemantic.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -5747,10 +5784,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     }
     public boolean isConcert = false;
     void production_program() //first production accdg to cfg hihi
-    {
-        DefaultTableModel modelSyntax = (DefaultTableModel)tblSyntax.getModel();
-        DefaultTableModel modelErrorSyntax = (DefaultTableModel)tblErrorSyntax.getModel();
-        
+    {    
         if(checker(PRELUDE))
         {
             
@@ -6927,16 +6961,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             code = code.concat(")");
             addToSyntaxTable("<funccall>",")");
-//            if(checker(SEMICOLON))
-//            {
-//                code = code.concat(";");   
-//                addToSyntaxTable("<funccall>",";");
-//            }
-//            else if(hasError == false)
-//            {
-//                addToSyntaxErrorTable("<funccall>","Expecting ;");
-//                hasError = true;
-//            }
+
         }
         else if(hasError == false)
         {
@@ -8439,7 +8464,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 production_varassign();
             addToSyntaxTable("<assignment>","<moreassign>");
                 //production_moreassign();
-            System.out.println("CHECK"+token);
             if(checker(COMMA))
             {
                 code = code.concat(" ,");
@@ -10931,19 +10955,24 @@ public class OrchestraFrame extends javax.swing.JFrame {
     String array2d = null;
     String arraySize = null;
     String Default = "";
+    String structName = "";
+    String objectName = "";
+    String functionDataType = "";
+    String IDArray = "";
     int errorCode;
-    boolean isFunction = false; 
+    int countArray1D = 0;
+    int countArray2D1 = 0;
+    int countArraySeparator = 0;
+    int countArray2D2 = 0;
+    boolean isFunction = false;
+    boolean isFromAssignment=false;
     String dataTypeCatcher = "";
     ArrayList<String> ArrayValues = new ArrayList<>();
     ArrayList<String> memberName = new ArrayList<>();
     ArrayList<String> memberValue = new ArrayList<>();
     ArrayList<String> memberType = new ArrayList<>();
-    int countArray1D = 0;
-    int countArray2D1 = 0;
-    int countArraySeparator = 0;
-    String IDArray = "";
-    int countArray2D2 = 0;
-    
+    ArrayList<String> argumentIdentifier = new ArrayList<>();
+    ArrayList<String> argumentDataType = new ArrayList<>();
     
     void reInitialize()
     {
@@ -10958,24 +10987,29 @@ public class OrchestraFrame extends javax.swing.JFrame {
         array2d = null;
         arraySize = null;
         Default = "";
+        structName = "";
+        objectName = "";
+        functionDataType = "";
+        IDArray = "";
         errorCode = 0;
+        countArray1D = 0;
+        countArray2D1 = 0;
+        countArraySeparator = 0;
+        countArray2D2 = 0;
         isFunction = false; 
+        isFromAssignment = false;
         dataTypeCatcher = "";
         ArrayValues.clear();
         memberName.clear();
         memberValue.clear();
         memberType.clear();
-        countArray1D = 0;
-        countArray2D1 = 0;
-        countArraySeparator = 0;
-        IDArray = "";
-        countArray2D2 = 0;
+        argumentIdentifier.clear();
+        argumentDataType.clear();
         isFromForLoop = false;
     }
     
     String getItem()
     {
-        //System.out.println("TokenPos: "+tokenPos-2);
         String item = tblLexeme.getValueAt(tokenPos-2, 0).toString();
         return item;
     }
@@ -11164,7 +11198,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         else if(checker(WORLDTOUR))
         {
-            //semantic_varglobaldec();
             scope = "worldtour";
             semantic_worldtour();
         }
@@ -11175,10 +11208,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
     }
     
-    String structName = "";
     void semantic_struct()
     {
-        System.out.println("\n\n\nSTRUCT!\n\n\n\n");
         String text = "";
         parentDataType = "RECORDS";
         if(checker(IDENTIFIER))
@@ -11240,7 +11271,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             {
                                 objectName = getItem();
                                 checkStoreStructValues();
-                                //semantic_valueInitialize2();
                                 semantic_nextObject();
 
                                 memberName.clear();
@@ -11273,8 +11303,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
     
     void checkStoreStructValues()
     {
-        System.out.println("structName: "+structName);
-        System.out.println("obj: "+objectName);
         DefaultTableModel model = (DefaultTableModel)tblStructDeclaration.getModel();   
         DefaultTableModel identifier = (DefaultTableModel)tblIdentifier.getModel();  
         int i =0;
@@ -11302,7 +11330,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
             }
         }
         
-        System.out.println("flag1: "+flag1);
         
         if(flag1 == true)
             semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Variable "+tblLexeme.getModel().getValueAt(tokenPos-2, 0)+" is Already Defined", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
@@ -11321,8 +11348,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
         if(flag == true)
             semanticerror.addRow(new Object[] {memberName.get(member), "Variable "+memberName.get(member)+" is Already Defined", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
     }
-    
-    String objectName = "";
     
     void semantic_nextMember()
     {
@@ -11408,7 +11433,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
     }
     
-    String functionDataType = "";
     void semantic_functiondef()
     {
         DefaultTableModel identifierTable = (DefaultTableModel)tblIdentifier.getModel();
@@ -11744,7 +11768,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     checkSameDataType(dataTypeCatcher,datatype);
                 }
                 semantic_extension();
-                semantic_nextOperand();
+                semantic_nextOperand1();
                 break;
                 
             case INTEGERLITERAL: case FLOATLITERAL: case CHARLITERAL: case STRINGLITERAL: case BOOLLITERAL:
@@ -11753,14 +11777,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 {
                     checkSameDataType(dataTypeCatcher,datatype);
                 }
-                semantic_nextOperand();
+                semantic_nextOperand1();
                 break;
         }
-    }
-    
-    void semantic_nextOperand()
-    {
-        
     }
     
     void checkSameDataType(String datatype, String datatype1)
@@ -12046,7 +12065,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     //identifier = text;
                     checkInt(text);
                 }
-                System.out.println("id pagdating sa const_arraySize: "+identifier);
                 break;
             
             case INTEGERLITERAL:
@@ -12080,7 +12098,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         return null;
     }
-    boolean isFromAssignment=false;
+
     void semantic_declaration()
     {
         switch(token)
@@ -12693,14 +12711,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break;
                 
             case INTEGERLITERAL: case FLOATLITERAL:
-                    semantic_literal();
-                    semantic_nextmathexpr();
+                semantic_literal();
+                semantic_nextmathexpr();
                 break;
 
             case IDENTIFIER:
-                checker(IDENTIFIER);
-                    //semantic_identifier();
-                    semantic_nextmathexpr();
+                semantic_value4();
+                semantic_nextmathexpr();
                 break;
         }
     }
@@ -12809,7 +12826,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 checkTransferedParameters(funcName);
                 isFunction=false;
             }
-            System.out.println("hey JONNEL: "+argumentIdentifier);
+
     }
     
     void checkTransferedParameters(String functionName)
@@ -12830,8 +12847,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
             }
                 i++;
         }
-        System.out.println("argu id size: "+argumentIdentifier.size());
-        System.out.println("parameter num: "+parameter_num);
         if(parameter_num < argumentIdentifier.size())
         {
              semanticerror.addRow(new Object[] {argumentIdentifier.toString(), "Passed Arguments is Greater Than Required", tblLexeme.getModel().getValueAt(tokenPos-2, 2)});   
@@ -12920,8 +12935,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         if(var == false && var1 == false)
             semanticerror.addRow(new Object[] {functionName, "Function "+functionName+" was NOT Defined.", "Line: "+line+ "Colum: "+column});
     }
-    ArrayList<String> argumentIdentifier = new ArrayList<>();
-    ArrayList<String> argumentDataType = new ArrayList<>();
+
     void semantic_operand()
     {
         switch(token)
@@ -12938,6 +12952,10 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 }
                 semantic_unary();
                 semantic_nextOperand1();
+                break;
+                
+            case OPENPARENTHESIS:
+                semantic_mathexpr();
                 break;
         }
     }
@@ -13197,10 +13215,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
         DefaultTableModel identifier1 = (DefaultTableModel)tblIdentifier.getModel();
         DefaultTableModel array = (DefaultTableModel)tblArray.getModel();
         int ctr=0,ctr1=0,count=0;
-//        System.out.println("arr: "+ArrayValues.size());
-//        System.out.println("Array: "+ArrayValues);
-//        System.out.println("Count: "+countArraySeparator);
-//        System.out.println("Array 2D: "+array2d);
         checkNotInitialized();
         for(ctr = 0; ctr<Integer.parseInt(array1D); ctr++)
         {
@@ -13263,7 +13277,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             semantic_nextValue();
         }
     }
-        //int array2D = 0;
+    
     void check2D2Size()
     {
       if(countArray2D2 > Integer.parseInt(array2d))
@@ -13339,6 +13353,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break;
                 
             case OPENPARENTHESIS: //mathexpr
+                semantic_mathexpr();
                 break;
         }
     }
@@ -13353,7 +13368,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 {
                     String text = getItem();
                     identifier = text;
-                    System.out.println("text: "+text);
                     concert_checkIfDefined(text);
                 }
                 else if(scope == "function")
@@ -13400,10 +13414,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     flag = true; break;
                 }
             }
-            System.out.println("Flag: "+flag);
-            System.out.println("i: "+i);
             size = Integer.parseInt(tblLocalDeclaration.getValueAt(i, 3).toString());
-            System.out.println("Size: "+size);
             if(flag == true)
             {
                 if(arraySizeValue > size)
@@ -13864,7 +13875,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         modelFunctionReturn.setRowCount(0);
         modelArray.setRowCount(0);
         //
-        //System.out.println("code: \n"+code);
+        System.out.println("code: \n"+code);
         tokenPos = 0;
         removeNotNeed();
         token = getToken();
@@ -13898,7 +13909,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 out.newLine();
                 out.close();
                 JOptionPane.showMessageDialog(null, FileName+" Was Saved Successfully!");
-                lblFileName.setText("FILE NAME: "+FileName);
+                lblFileName.setText(" "+FileName);
             }
         }
         catch (IOException ex) 
