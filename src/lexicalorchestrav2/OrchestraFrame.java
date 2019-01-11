@@ -6891,17 +6891,17 @@ public class OrchestraFrame extends javax.swing.JFrame {
             addToSyntaxTable("<statements>","<condstatements>");
                 production_condstatements();
         }
-        else if(checker1(LOOP)||checker1(REPEAT)||checker1(DO) && hasError == false)
+        else if(checker1(LOOP)||checker1(REPEAT)||checker1(DO) && hasError == false) //looping stmnts
         {
             addToSyntaxTable("<statements>","<loopstatements>");
                 production_loopstatements();
         }
-        else if(checker1(OUTRO)||checker1(INTRO) && hasError == false)
+        else if(checker1(OUTRO)||checker1(INTRO) && hasError == false) //i/o statements
         {
             addToSyntaxTable("<statements>","<I/Ostatements>");
                 production_iostatements();
         }
-        else if(checker1(INCREMENT) || checker1(DECREMENT) && hasError == false)
+        else if(checker1(INCREMENT) || checker1(DECREMENT) && hasError == false) //incdec
         {
             addToSyntaxTable("<statements>","<incdec>");
                 production_incdec();
@@ -7089,61 +7089,68 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 code = code.concat("(");
                 addToSyntaxTable("<loop>","(");
                 addToSyntaxTable("<loop>","<identifier>");
-                checker(IDENTIFIER);
+                if(checker(IDENTIFIER))
+                {
                 code = code.concat(" "+getItem());
                     production_identifier();
-                if(checker(EQUAL))
-                {
-                    code = code.concat(" =");
-                    addToSyntaxTable("<loop>","=");
-                    addToSyntaxTable("<loop>","<loopinit>");
-                        production_loopinit();
-                    if(checker(SEMICOLON))
+                    if(checker(EQUAL))
                     {
-                        code = code.concat(";");
-                        addToSyntaxTable("<loop>",";");
-                        addToSyntaxTable("<loop>","<condexpr>");
-                            production_condexpr();
-                            production_nextcondexpr();
+                        code = code.concat(" =");
+                        addToSyntaxTable("<loop>","=");
+                        addToSyntaxTable("<loop>","<loopinit>");
+                            production_loopinit();
                         if(checker(SEMICOLON))
                         {
                             code = code.concat(";");
                             addToSyntaxTable("<loop>",";");
-                            addToSyntaxTable("<loop>","<incdec>");
-                                production_incdec();
-                            if(checker(CLOSEPARENTHESIS))
+                            addToSyntaxTable("<loop>","<condexpr>");
+                                production_condexpr();
+                                production_nextcondexpr();
+                            if(checker(SEMICOLON))
                             {
-                                code = code.concat(")");
-                                addToSyntaxTable("<loop>",")");
-                                if(checker(OPENCURLYBRACE))
+                                code = code.concat(";");
+                                addToSyntaxTable("<loop>",";");
+                                addToSyntaxTable("<loop>","<incdec>");
+                                    production_incdec();
+                                if(checker(CLOSEPARENTHESIS))
                                 {
-                                    code = code.concat(" {");
-                                    addToSyntaxTable("<loop>","{");
-                                    addToSyntaxTable("<loop>","<statements>");
-                                        production_statements();
-                                    addToSyntaxTable("<loop>","<stop/play>");
-                                        production_stopplay();
-                                    if(checker(CLOSECURLYBRACE))
+                                    code = code.concat(")");
+                                    addToSyntaxTable("<loop>",")");
+                                    if(checker(OPENCURLYBRACE))
                                     {
-                                        code = code.concat("\n }");
-                                        addToSyntaxTable("<loop>","}");
-                                       
+                                        code = code.concat(" {");
+                                        addToSyntaxTable("<loop>","{");
+                                        addToSyntaxTable("<loop>","<statements>");
+                                            production_statements();
+                                        addToSyntaxTable("<loop>","<stop/play>");
+                                            production_stopplay();
+                                        if(checker(CLOSECURLYBRACE))
+                                        {
+                                            code = code.concat("\n }");
+                                            addToSyntaxTable("<loop>","}");
+
+                                        }
+                                        else if(hasError == false)
+                                        {
+                                            addToSyntaxErrorTable("<loop>","Expecting }, PRODUCE, PLAY, STOP, NOTE");
+                                            hasError = true;
+                                        }
                                     }
                                     else if(hasError == false)
                                     {
-                                        addToSyntaxErrorTable("<loop>","Expecting }, PRODUCE, PLAY, STOP, NOTE");
+                                        addToSyntaxErrorTable("<loop>","Expecting {");
                                         hasError = true;
                                     }
                                 }
                                 else if(hasError == false)
                                 {
-                                    addToSyntaxErrorTable("<loop>","Expecting {");
+                                    addToSyntaxErrorTable("<loop>","Expecting )");
                                     hasError = true;
                                 }
                             }
                             else if(hasError == false)
                             {
-                                addToSyntaxErrorTable("<loop>","Expecting )");
+                                addToSyntaxErrorTable("<loop>","Expecting ;");
                                 hasError = true;
                             }
                         }
@@ -7155,13 +7162,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     }
                     else if(hasError == false)
                     {
-                        addToSyntaxErrorTable("<loop>","Expecting ;");
+                        addToSyntaxErrorTable("<loop>","Expecting =");
                         hasError = true;
                     }
                 }
                 else if(hasError == false)
                 {
-                    addToSyntaxErrorTable("<loop>","Expecting =");
+                    addToSyntaxErrorTable("<loop>","Expecting identifier");
                     hasError = true;
                 }
             }
@@ -7398,17 +7405,31 @@ public class OrchestraFrame extends javax.swing.JFrame {
     void production_preinc()
     {
         addToSyntaxTable("<preinc>","<identifier>");
-            checker(IDENTIFIER);
+        if(checker(IDENTIFIER))
+        {
             code = code.concat(" "+getItem());
             production_identifier();
+        }
+        else if(hasError == false)
+        {
+             addToSyntaxErrorTable("<preinc>","Expecting identifier");
+            hasError = true;
+        }
     }
     
     void production_predec()
     {
         addToSyntaxTable("<predec>","<identifier>");
-            checker(IDENTIFIER);
+        if(checker(IDENTIFIER))
+        {
             code = code.concat(" "+getItem());
             production_identifier();
+        }
+        else if(hasError == false)
+        {
+            addToSyntaxErrorTable("<predec>","Expecting identifier");
+            hasError = true;
+        }
     }
     
     void production_loopinit()
@@ -7503,41 +7524,48 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 code = code.concat("(");
                 addToSyntaxTable("<switchstatement>","(");
                 addToSyntaxTable("<switchstatement>","<identifier>");
-                    checker(IDENTIFIER);
+                if(checker(IDENTIFIER))
+                {    
                     code = code.concat(" "+getItem());
                     production_identifier();
-                if(checker(CLOSEPARENTHESIS))
-                {
-                    code = code.concat(" )");
-                    addToSyntaxTable("<switchstatement>",")");
-                    if(checker(OPENCURLYBRACE))
+                    if(checker(CLOSEPARENTHESIS))
                     {
-                        code = code.concat(" {");
-                        addToSyntaxTable("<switchstatement>","{");
-                        addToSyntaxTable("<switchstatement>","<case>");
-                            production_case();
-                        addToSyntaxTable("<switchstatement>","<default>");
-                            production_default();
-                        if(checker(CLOSECURLYBRACE))
+                        code = code.concat(" )");
+                        addToSyntaxTable("<switchstatement>",")");
+                        if(checker(OPENCURLYBRACE))
                         {
-                            code = code.concat("\n }");
-                            addToSyntaxTable("<switchstatement>","}");
+                            code = code.concat(" {");
+                            addToSyntaxTable("<switchstatement>","{");
+                            addToSyntaxTable("<switchstatement>","<case>");
+                                production_case();
+                            addToSyntaxTable("<switchstatement>","<default>");
+                                production_default();
+                            if(checker(CLOSECURLYBRACE))
+                            {
+                                code = code.concat("\n }");
+                                addToSyntaxTable("<switchstatement>","}");
+                            }
+                            else if(hasError == false)
+                            {
+                                addToSyntaxErrorTable("<switchstatement>","Expecting }, PRODUCE, PLAY, STOP, NOTE");
+                                hasError = true;
+                            }
                         }
                         else if(hasError == false)
                         {
-                            addToSyntaxErrorTable("<switchstatement>","Expecting }, PRODUCE, PLAY, STOP, NOTE");
+                            addToSyntaxErrorTable("<switchstatement>","Expecting {");
                             hasError = true;
                         }
                     }
                     else if(hasError == false)
                     {
-                        addToSyntaxErrorTable("<switchstatement>","Expecting {");
+                        addToSyntaxErrorTable("<switchstatement>","Expecting )");
                         hasError = true;
                     }
                 }
                 else if(hasError == false)
                 {
-                    addToSyntaxErrorTable("<switchstatement>","Expecting )");
+                    addToSyntaxErrorTable("<switchstatement>","Expecting Identifier");
                     hasError = true;
                 }
             }
@@ -11710,12 +11738,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     identifier = text;
                     checkIfDefined(text);  
                 }
-                semantic_extension();
+                //semantic_extension();
                 if(isFunction == false)
                 {
                     checkSameDataType(dataTypeCatcher,datatype);
                 }
-                //semantic_extension();
+                semantic_extension();
                 semantic_nextOperand();
                 break;
                 
@@ -12171,8 +12199,181 @@ public class OrchestraFrame extends javax.swing.JFrame {
             case IF: case CHORDS:
                 semantic_conditional();
                 break;
+                
+            case LOOP: case REPEAT: case DO:
+                semantic_loopstatements();
+                break;
             
+            case INCREMENT: case DECREMENT:
+                semantic_incdec();
+                break;
         }
+    }
+    
+    void semantic_loopinit()
+    {
+        switch(token)
+        {
+            case IDENTIFIER:
+                semantic_value4(); 
+                break;
+            
+            case INTEGERLITERAL:
+                checker(INTEGERLITERAL);
+                break;
+                
+//            default: addToSyntaxErrorTable("<loopinit>","Expecting Identifier or Integer Literal"); hasError = true;
+        }
+    }
+    
+    void semantic_preinc()
+    {
+        if(checker1(IDENTIFIER))
+        {
+            semantic_value4();
+        }
+    }
+    
+    void semantic_incdec()
+    {
+        switch(token)
+        {
+            case INCREMENT: case DECREMENT:
+                if(checker(INCREMENT))
+                {
+                    semantic_preinc();
+                    if(checker(SEMICOLON))
+                    {
+                        
+                    }
+                }
+                else if(checker(DECREMENT))
+                {
+                    semantic_preinc();
+                    if(checker(SEMICOLON))
+                    {
+
+                    }
+                }
+                break;
+            
+            case IDENTIFIER:
+                semantic_value4();
+                if(checker(INCREMENT))
+                {
+                    if(checker(SEMICOLON))
+                    {
+                        
+                    }
+                }
+                else if(checker(DECREMENT))
+                {
+                    if(checker(SEMICOLON))
+                    {
+
+                    }
+                }
+                break;   
+        }
+        semantic_declaration();
+    }
+    
+    void semantic_loopstatements()
+    {
+        switch(token)
+        {
+            case LOOP:
+            //isFromForLoop = true;
+            checker(LOOP);
+            if(checker(OPENPARENTHESIS))
+            {
+                if(checker1(IDENTIFIER))
+                {
+                    semantic_value4();
+                    if(checker(EQUAL))
+                    {
+                        semantic_loopinit();
+                        if(checker(SEMICOLON))
+                        {
+                            semantic_condexpr();
+                            semantic_nextcondexpr();
+                            if(checker(SEMICOLON))
+                            {
+                                semantic_incdec();
+                                if(checker(CLOSEPARENTHESIS))
+                                {
+                                    if(checker(OPENCURLYBRACE))
+                                    {
+                                        semantic_declaration();
+                                        semantic_nextDeclaration();
+                                        semantic_stopplay();
+                                        if(checker(CLOSECURLYBRACE))
+                                        {
+                                            
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            break;
+            
+            case REPEAT:
+            checker(REPEAT);
+            if(checker(OPENPARENTHESIS))
+            {
+                semantic_condexpr();
+                semantic_nextcondexpr();
+                if(checker(CLOSEPARENTHESIS))
+                {
+                    if(checker(OPENCURLYBRACE))
+                    {
+                        semantic_declaration();
+                        semantic_nextDeclaration();
+                        semantic_stopplay();
+                        if(checker(CLOSECURLYBRACE))
+                        {
+
+                        }
+                    }
+                }
+            }
+            break;
+            
+            case DO:
+            checker(DO);
+            if(checker(OPENCURLYBRACE))
+            {
+                semantic_declaration();
+                semantic_stopplay();
+                if(checker(CLOSECURLYBRACE))
+                {
+                    if(checker(REPEAT))
+                    {
+                        if(checker(OPENPARENTHESIS))
+                        {
+                            semantic_condexpr();
+                            semantic_nextcondexpr();
+                            if(checker(CLOSEPARENTHESIS))
+                            {
+                                if(checker(SEMICOLON))
+                                {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            break;
+            
+            default: 
+                //addToSyntaxTable("<loopstatements>","null");
+        }
+         semantic_declaration();
     }
     
     void semantic_conditional()
@@ -12204,37 +12405,75 @@ public class OrchestraFrame extends javax.swing.JFrame {
             
             case CHORDS:
             checker(CHORDS);
-            code = code.concat("\n switch");
-            addToSyntaxTable("<condstatements>","<switchstatement>");
-            addToSyntaxTable("<switchstatement>","CHORDS");
             if(checker(OPENPARENTHESIS))
             {
-                code = code.concat("(");
-                addToSyntaxTable("<switchstatement>","(");
-                addToSyntaxTable("<switchstatement>","<identifier>");
-                    checker(IDENTIFIER);
-                    code = code.concat(" "+getItem());
-                    production_identifier();
-                if(checker(CLOSEPARENTHESIS))
-                {
-                    code = code.concat(" )");
-                    addToSyntaxTable("<switchstatement>",")");
-                    if(checker(OPENCURLYBRACE))
+                if(checker1(IDENTIFIER))
+                {    
+                    semantic_value4();
+                    if(checker(CLOSEPARENTHESIS))
                     {
-                        code = code.concat(" {");
-                        addToSyntaxTable("<switchstatement>","{");
-                        addToSyntaxTable("<switchstatement>","<case>");
-                            production_case();
-                        addToSyntaxTable("<switchstatement>","<default>");
-                            production_default();
-                        if(checker(CLOSECURLYBRACE))
+                        if(checker(OPENCURLYBRACE))
                         {
-                            code = code.concat("\n }");
-                            addToSyntaxTable("<switchstatement>","}");
+                            semantic_case();
+                            semantic_stopplay();
+                            production_default();
+                            if(checker(CLOSECURLYBRACE))
+                            {
+                                
+                            }
                         }
                     }
                 }
             }
+        }
+    }
+    
+    void semantic_default()
+    {
+        if(checker(CADENCE))
+        {
+            if(checker(COLON))
+            {
+                semantic_declaration();
+                semantic_nextDeclaration();
+            }
+        }
+    }
+    
+    void semantic_case()
+    {
+        if(checker(NOTE))
+        {
+            semantic_switchconst();
+            if(checker(COLON))
+            {
+                semantic_declaration();
+                semantic_nextDeclaration();
+                semantic_nextcase();
+            }
+        }
+    }
+    
+    void semantic_nextcase()
+    {
+        if(checker1(NOTE))
+            semantic_case();
+    }
+    
+    void semantic_switchconst()
+    {
+        switch(token)
+        {
+            case INTEGERLITERAL:
+                checker(INTEGERLITERAL);
+                break;
+                
+            case CHARLITERAL:
+                checker(CHARLITERAL);
+                break;
+                
+//            default:
+//                addToSyntaxErrorTable("<switchconst>","Expecting Integer or Char Literal"); hasError = true;
         }
     }
     
@@ -12556,7 +12795,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
     
     void semantic_interlude()
     {
-        System.out.println("aspdapsd");
         String funcName = getItem();
         String line = tblLexeme.getModel().getValueAt(tokenPos-2, 2).toString();
         String column = tblLexeme.getModel().getValueAt(tokenPos-2, 3).toString();
