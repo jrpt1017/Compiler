@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package lexicalorchestrav2;
+import java.awt.Color;
 import java.util.List;
 import java.awt.event.*;
 import java.io.BufferedReader;
@@ -19,10 +20,19 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 import javax.swing.text.Utilities;
 import javax.swing.undo.UndoManager;
     
@@ -35,7 +45,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
    protected UndoManager undoManager = new UndoManager();
     int idcount = 1;
     int maxhiddenrow;
-    String[] idstring={"Nothing"};
+    String[] idstring={""};
     String syntax = "";
     List<String> fixedList = Arrays.asList(idstring);
     List<String> stringList = new ArrayList<String>( fixedList );
@@ -49,7 +59,97 @@ public class OrchestraFrame extends javax.swing.JFrame {
         initComponents();
         btnSyntax.setEnabled(false); 
         btnSemantic.setEnabled(false);
-    }
+        setDefaultText();
+        
+        txtareaCompiler.getDocument().addUndoableEditListener(
+        new UndoableEditListener() {
+          public void undoableEditHappened(UndoableEditEvent e) {
+            undoManager.addEdit(e.getEdit());
+          }
+        });
+        
+        //set Key Bindings
+        Action action = new AbstractAction() {
+                @Override
+        public void actionPerformed(ActionEvent e) {
+            if(undoManager.canUndo() == true)
+            {
+                undoManager.undo();
+                undoManager.undo();
+            }
+        }};
+        String keyStrokeAndKeyUndo = "control Z";
+        KeyStroke keyStroke = KeyStroke.getKeyStroke(keyStrokeAndKeyUndo);
+        txtareaCompiler.getInputMap().put(keyStroke, keyStrokeAndKeyUndo);
+        txtareaCompiler.getActionMap().put(keyStrokeAndKeyUndo, action);
+
+
+        Action action1 = new AbstractAction() {
+                @Override
+        public void actionPerformed(ActionEvent e) {
+            if(undoManager.canRedo() == true)
+            {
+               undoManager.redo();
+               undoManager.redo();
+            }
+        }};
+        String keyStrokeAndKeyRedo = "control Y";
+        KeyStroke keyStroke1 = KeyStroke.getKeyStroke(keyStrokeAndKeyRedo);
+        txtareaCompiler.getInputMap().put(keyStroke1, keyStrokeAndKeyRedo);
+        txtareaCompiler.getActionMap().put(keyStrokeAndKeyRedo, action1);
+        
+        
+        //Text Colors
+        txtareaCompiler.addKeyListener(new KeyListener(){
+            @Override
+            public void keyPressed(KeyEvent e){
+                KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_LEFT_PARENTHESIS, KeyEvent.VK_SHIFT);
+
+                if(!e.isShiftDown() && e.getKeyCode() == KeyEvent.VK_OPEN_BRACKET)
+                {
+                    txtareaCompiler.replaceSelection("");
+                   // txtareaCompiler.insert("]", txtareaCompiler.getCaretPosition());
+                }
+                else if (e.isShiftDown() && e.getKeyChar() != '9' && e.getKeyCode() == 57) { //openparenthesis
+                    txtareaCompiler.replaceSelection("");
+                    //txtareaCompiler.insert(")", txtareaCompiler.getCaretPosition());
+                }
+                else if (e.isShiftDown() && e.getKeyChar() != '[' && e.getKeyCode() == 91) { //open brace
+                    txtareaCompiler.replaceSelection("");
+                    //txtareaCompiler.insert("}", txtareaCompiler.getCaretPosition());
+                }
+            }   
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
+        
+        }
+    
+        private int findLastNonWordChar (String text, int index) {
+            while (--index >= 0) {
+                if (String.valueOf(text.charAt(index)).matches("\\W")) {
+                    break;
+                }
+            }
+            return index;
+        }
+
+         private int findFirstNonWordChar (String text, int index) {
+            while (index < text.length()) {
+                if (String.valueOf(text.charAt(index)).matches("\\W")) {
+                    break;
+                }
+                index++;
+            }
+            return index;
+        }
+         //textlinenumber
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -128,6 +228,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         btnSemantic = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jScrollPane16 = new javax.swing.JScrollPane();
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -415,7 +516,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Identifier", "Value", "Type", "Array Size"
+                "Identifier", "Value", "Type", "Array 1D Size", "Array 2D Size"
             }
         ));
         jScrollPane9.setViewportView(tblLocalDeclaration);
@@ -737,6 +838,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lexicalorchestrav2/top.png"))); // NOI18N
         jLabel3.setText("jLabel3");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -160, 1660, 492));
+        jPanel1.add(jScrollPane16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, 890, 530));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -765,7 +867,17 @@ public class OrchestraFrame extends javax.swing.JFrame {
         tblFunctionReturn.setRowHeight(25);
         tblErrorSemantic.setRowHeight(25);
         tblError.setRowHeight(25);
-        tblErrorSyntax.setRowHeight(25);     
+        tblErrorSyntax.setRowHeight(25);
+    }
+    
+    void setDefaultText()
+    {
+        txtareaCompiler.setText(""
+        + "PRELUDE \n\n"
+        + "CONCERT()\n"
+        + "{\n"
+        + "}\n"
+        + "ENCORE");
     }
     
     public int a=10;
@@ -5807,7 +5919,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         if(checker(OPENCURLYBRACE))
                         {
                             code = code.concat("{");
-                            code = code.concat(" std::cout << std::setprecision(6) << std::fixed;");
+                            code = code.concat(" std::cout << std::setprecision(4) << std::fixed;");
                             addToSyntaxTable("<program>","{");
                             if(checker1(INT)||checker1(FLOAT)||checker1(CHAR)||checker1(STRING)||checker1(BOOL) && hasError == false) //check if pupunta kay production vardec1 // localdec
                             {
@@ -7001,19 +7113,27 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 addToSyntaxTable("<I/Ostatements>","<intro>");
                 addToSyntaxTable("<intro>","INTRO");
                 addToSyntaxTable("<intro>","<identifier>");
-                checker(IDENTIFIER);
-                code = code.concat(" "+getItem());
-                    production_identifier();
-                addToSyntaxTable("<inttro>","<nextinput>");
-                    production_nextinput();
-                if(checker(SEMICOLON))
+                if(checker(IDENTIFIER))
                 {
-                    code = code.concat(";");
-                    addToSyntaxTable("<intro>",";");
+                    code = code.concat(" "+getItem());
+                        production_identifier();
+                    addToSyntaxTable("<inttro>","<nextinput>");
+                        production_nextinput();
+                    if(checker(SEMICOLON))
+                    {
+                        code = code.concat(";");
+                        code = code.concat("if(!cin)cout<<\"Mismatched Data Type from Input!\"<<endl<<endl;");
+                        addToSyntaxTable("<intro>",";");
+                    }
+                    else if(hasError == false)
+                    {
+                        addToSyntaxErrorTable("<intro>","Expecting Semicolon , Comma");
+                        hasError = true;
+                    }
                 }
                 else if(hasError == false)
                 {
-                    addToSyntaxErrorTable("<intro>","Expecting Semicolon , Comma");
+                    addToSyntaxErrorTable("<intro>","Expecting Identifier");
                     hasError = true;
                 }
         }
@@ -11018,7 +11138,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     {
         DefaultTableModel model = (DefaultTableModel)tblLocalDeclaration.getModel();
         
-        model.addRow(new Object[] {identifier, value, parentDataType, arraySize});
+        model.addRow(new Object[] {identifier, value, parentDataType, arraySize, array2dCopy});
 
     }
     void addToConstantDeclarationTable()
@@ -11793,13 +11913,16 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             
         }
+        else if(datatype.equals("FLOAT") && datatype1.equals("INT"))
+        {
+            
+        }
         else if(datatype1 == null)
         {
 
         }
         else
         {
-            System.out.println("1: "+datatype+"2: "+datatype1);
             semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0),"Incompatible Types: "+datatype1+" Cannot be converted to "+datatype, tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
         }
         datatype = null;
@@ -12049,22 +12172,19 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 if(scope == "concert")
                 {
                     String text = getItem();
-                    //identifier = text;
-                    //System.out.println("text: "+text);
                     concert_checkInt(text);
                 }
                 else if(scope == "function")
                 {
                     String text = getItem();
-                    //identifier = text;
                     interlude_checkInt(text);
                 }
                 else
                 {
                     String text = getItem();
-                    //identifier = text;
                     checkInt(text);
                 }
+                checkArraySize(Integer.parseInt(arraySize));
                 break;
             
             case INTEGERLITERAL:
@@ -12073,9 +12193,11 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 datatype = "INT";
                 literalType = "INT Literal";
                 arraySize = getItem();
+                System.out.println("array size hiy: "+arraySize);
                 checkArraySize(Integer.parseInt(arraySize));
-                break;
+                break; 
         }
+//        arraySize = "";
     }
     
     
@@ -13049,7 +13171,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
         else if(checker(OPENBRACKET))
         {
             semantic_const_arraySize();
-            System.out.println("toktok: "+token);
             array1D = arraySize;
             if(checker(CLOSEBRACKET))
             {
@@ -13084,7 +13205,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
             semantic_nextOutput();
         }
     }
-
+    boolean is2dArray = false;
+    int array2dCopy = 0;
     void semantic_2dArray()
     {
         switch(token)
@@ -13108,9 +13230,12 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break;
                 
             case OPENBRACKET: //2darray
+                System.out.println("pasok sa 2nd [");
                 checker(OPENBRACKET);
+                is2dArray = true;
                 semantic_const_arraySize();
                 array2d = arraySize;
+                array2dCopy = Integer.parseInt(arraySize);
                 if(checker(CLOSEBRACKET))
                 {
                     semantic_2dArrayValue();
@@ -13222,7 +13347,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
             {
                 do
                 {
-                    System.out.println("im here");
                     identifier1.addRow(new Object[] {identifier+"["+ctr+"]"+"["+ctr1+"]", ArrayValues.get(count), parentDataType});
                     array.addRow(new Object[] {identifier, ctr, ctr1, ArrayValues.get(count), parentDataType});
                     ctr1++;
@@ -13234,7 +13358,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 {
                     do
                     {
-                        System.out.println("Im here1");
                         identifier1.addRow(new Object[] {identifier+"["+ctr+"]"+"["+ctr1+"]", Default, parentDataType});     
                         array.addRow(new Object[] {identifier, ctr, ctr1-Integer.parseInt(array2d), Default, parentDataType});
                         ctr1++;
@@ -13245,7 +13368,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
             {
                 do
                 {
-                    System.out.println("Im here2");
                     identifier1.addRow(new Object[] {identifier+"["+ctr+"]"+"["+ctr1+"]", Default, parentDataType});     
                     array.addRow(new Object[] {identifier, ctr, ctr1-Integer.parseInt(array2d), Default, parentDataType});
                     ctr1++;
@@ -13397,9 +13519,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
     
     void checkArraySize(int arraySizeValue)
     {
-        DefaultTableModel model = (DefaultTableModel)tblLocalDeclaration.getModel();
         DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
-        int identifierrow = tblLocalDeclaration.getRowCount(),i=0,size=0; boolean flag = false;
+        int identifierrow = tblLocalDeclaration.getRowCount(),i=0,size=0,size1=0; boolean flag = false, flag1 = false;
         if(arraySizeValue > 1000 || arraySizeValue < 1)
         {
             errorCode = 2; //wrong array size;
@@ -13420,6 +13541,31 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 if(arraySizeValue > size)
                     semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Array Index Out of Bounds "+size+ " >= "+arraySizeValue, "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)}); 
             }
+            
+            if(is2dArray == true) //check 2darray size
+            {
+                System.out.println("pasok sa checking");
+                
+                System.out.println("isFromassign: "+isFromAssignment);
+                System.out.println("id: "+identifier);
+                System.out.println("array size value: "+arraySizeValue);
+                for(i = 0; i < identifierrow; i++)
+                {
+                    if(identifier.equals(tblLocalDeclaration.getValueAt(i, 0).toString()) && tblLocalDeclaration.getValueAt(i, 1).toString() == "Array")
+                    {
+                        flag1 = true; break;
+                    }
+                }
+                System.out.println("value of i: "+i);
+                size1 = Integer.parseInt(tblLocalDeclaration.getValueAt(i, 4).toString());
+                System.out.println("2d size: "+size1);
+                if(flag1 == true)
+                {
+                    if(arraySizeValue > size1)
+                        semanticerror.addRow(new Object[] {tblLexeme.getModel().getValueAt(tokenPos-2, 0), "Array Index Out of Bounds "+size1+ " >= "+arraySizeValue, "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)}); 
+                }
+            }
+            is2dArray = false;
             isFromAssignment=false;
         }
         return;
@@ -13589,7 +13735,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
             literalType = datatype;
         }
         arraySize = value; 
-        System.out.println("dtype111: "+datatype);
      }
     
     void interlude_checkAlreadyDefined(String identifier)
@@ -13843,7 +13988,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     private void LexicalMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LexicalMouseReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_LexicalMouseReleased
-    String code="#include <iostream>\n #include <cstdlib>\n  #include <exception>\n #include <iomanip>\n using namespace std; int main ( ) { std::cout << std::setprecision(6) << std::fixed; system(\"pause\");\n" +
+    String code="#include <iostream>\n #include <cstdlib>\n  #include <exception>\n #include <iomanip>\n using namespace std; int main ( ) { std::cout << std::setprecision(4) << std::fixed; system(\"pause\");\n" +
 " return 0;}";
     
     private void LexicalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LexicalActionPerformed
@@ -14130,6 +14275,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane13;
     private javax.swing.JScrollPane jScrollPane14;
     private javax.swing.JScrollPane jScrollPane15;
+    private javax.swing.JScrollPane jScrollPane16;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
