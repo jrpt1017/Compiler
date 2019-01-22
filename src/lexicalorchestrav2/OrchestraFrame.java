@@ -262,6 +262,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         txtareaCompiler.setFont(new java.awt.Font("Fira Code", 0, 18)); // NOI18N
         txtareaCompiler.setForeground(new java.awt.Color(255, 255, 255));
         txtareaCompiler.setRows(5);
+        txtareaCompiler.setTabSize(4);
         txtareaCompiler.setCaretColor(new java.awt.Color(255, 255, 255));
         txtareaCompiler.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
@@ -1731,7 +1732,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                             i++;
                                             //Delimiter for false
                                             if(sourcecode.charAt(i) == ' '||sourcecode.charAt(i) == '\n'||sourcecode.charAt(i) == ';'
-                                            ||sourcecode.charAt(i) == ','||sourcecode.charAt(i) == '}')
+                                            ||sourcecode.charAt(i) == ','||sourcecode.charAt(i) == '}'||sourcecode.charAt(i+1)=='('
+                                            ||sourcecode.charAt(i+1)==')')
                                             {
                                                 //Adds the Lexeme, Line # and Column # to the Lexical Table
                                                 model.addRow(new String[]{"false", "Boolean_Literal",""+(j+1),""+(i+1)});
@@ -2872,7 +2874,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                         lexeme += sourcecode.charAt(i);
                                         i++;
                                         if((i == sourcecode.length()) || sourcecode.charAt(i) == '<' || sourcecode.charAt(i) == ' '
-                                        || sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>'
+                                        || sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>' || sourcecode.charAt(i) == '('
                                         || sourcecode.charAt(i) == '-' || sourcecode.charAt(i) == '+'
                                         || sourcecode.charAt(i) == '/' || sourcecode.charAt(i) == '%'
                                         || sourcecode.charAt(i) == '|' || sourcecode.charAt(i) == '&'
@@ -3027,7 +3029,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             int sample = 0;
                             int k = 1;
                                 if((i == sourcecode.length()) || sourcecode.charAt(i) == '<' || sourcecode.charAt(i) == ' '|| sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>'|| sourcecode.charAt(i) == '-' || sourcecode.charAt(i) == '+'
-                                || sourcecode.charAt(i) == '/' || sourcecode.charAt(i) == '%'
+                                || sourcecode.charAt(i) == '/' || sourcecode.charAt(i) == '%' || sourcecode.charAt(i) == '('
                                 || sourcecode.charAt(i) == '|' || sourcecode.charAt(i) == '&'
                                 || sourcecode.charAt(i) == ')' || sourcecode.charAt(i) == ';'
                                 || sourcecode.charAt(i) == '[' || sourcecode.charAt(i) == ']'
@@ -3064,7 +3066,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                         lexeme += sourcecode.charAt(i);
                                         i++;
                                         if((i == sourcecode.length()) || sourcecode.charAt(i) == '<' || sourcecode.charAt(i) == ' '
-                                        || sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>'
+                                        || sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>' || sourcecode.charAt(i) == '('
                                         || sourcecode.charAt(i) == '-' || sourcecode.charAt(i) == '+'
                                         || sourcecode.charAt(i) == '/' || sourcecode.charAt(i) == '%'
                                         || sourcecode.charAt(i) == '|' || sourcecode.charAt(i) == '&'
@@ -3207,8 +3209,8 @@ public class OrchestraFrame extends javax.swing.JFrame {
                             int sample = 0;
                             int k = 1;
                                 if((i == sourcecode.length()) || sourcecode.charAt(i) == '<' || sourcecode.charAt(i) == ' '|| sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>'|| sourcecode.charAt(i) == '-' || sourcecode.charAt(i) == '+'
-                                || sourcecode.charAt(i) == '/' || sourcecode.charAt(i) == '%'
-                                || sourcecode.charAt(i) == '|' || sourcecode.charAt(i) == '&'
+                                || sourcecode.charAt(i) == '/' || sourcecode.charAt(i) == '%' || sourcecode.charAt(i) == '('
+                                || sourcecode.charAt(i) == '|' || sourcecode.charAt(i) == '&' 
                                 || sourcecode.charAt(i) == ')' || sourcecode.charAt(i) == ';'
                                 || sourcecode.charAt(i) == '[' || sourcecode.charAt(i) == ']'
                                 || sourcecode.charAt(i) == ',' || sourcecode.charAt(i) == '\t'
@@ -3244,7 +3246,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                         lexeme += sourcecode.charAt(i);
                                         i++;
                                         if((i == sourcecode.length()) || sourcecode.charAt(i) == '<' || sourcecode.charAt(i) == ' '
-                                        || sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>'
+                                        || sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>' || sourcecode.charAt(i) == '('
                                         || sourcecode.charAt(i) == '-' || sourcecode.charAt(i) == '+'
                                         || sourcecode.charAt(i) == '/' || sourcecode.charAt(i) == '%'
                                         || sourcecode.charAt(i) == '|' || sourcecode.charAt(i) == '&'
@@ -3320,7 +3322,9 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                     {
                                         i++;
                                         //Delimiter for true
-                                        if(sourcecode.charAt(i) == ' '||sourcecode.charAt(i) == '\n'||sourcecode.charAt(i) == ';'||sourcecode.charAt(i) == ','||sourcecode.charAt(i) == '}'||sourcecode.charAt(i+1)=='(')
+                                        if(sourcecode.charAt(i) == ' '||sourcecode.charAt(i) == '\n'||sourcecode.charAt(i) == ';'
+                                        ||sourcecode.charAt(i) == ','||sourcecode.charAt(i) == '}'||sourcecode.charAt(i+1)=='('
+                                        ||sourcecode.charAt(i+1)==')')
                                         {
                                             //Adds the Lexeme, Line # and Column # to the Lexical Table
                                             model.addRow(new String[]{"true", "Boolean_Literal",""+(j+1),""+(i+1)});
@@ -3350,7 +3354,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                 || sourcecode.charAt(i) == ')' || sourcecode.charAt(i) == ';'
                                 || sourcecode.charAt(i) == '[' || sourcecode.charAt(i) == ']'
                                 || sourcecode.charAt(i) == ',' || sourcecode.charAt(i) == '\t'
-                                || sourcecode.charAt(i) == '{' )
+                                || sourcecode.charAt(i) == '{' || sourcecode.charAt(i) == '(' )
                                 {
                                     if(stringList.contains(lexeme))
                                     {
@@ -3389,7 +3393,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                         || sourcecode.charAt(i) == ')' || sourcecode.charAt(i) == ';'
                                         || sourcecode.charAt(i) == '[' || sourcecode.charAt(i) == ']'
                                         || sourcecode.charAt(i) == ',' || sourcecode.charAt(i) == '\t'
-                                        || sourcecode.charAt(i) == '{')
+                                        || sourcecode.charAt(i) == '{' || sourcecode.charAt(i) == '(')
                                         {
                                     if(stringList.contains(lexeme))
                                     {
@@ -3507,7 +3511,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                 || sourcecode.charAt(i) == ')' || sourcecode.charAt(i) == ';'
                                 || sourcecode.charAt(i) == '[' || sourcecode.charAt(i) == ']'
                                 || sourcecode.charAt(i) == ',' || sourcecode.charAt(i) == '\t'
-                                || sourcecode.charAt(i) == '{' )
+                                || sourcecode.charAt(i) == '{'  || sourcecode.charAt(i) == '(')
                                 {
                                     if(stringList.contains(lexeme))
                                     {
@@ -3539,7 +3543,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                         lexeme += sourcecode.charAt(i);
                                         i++;
                                         if((i == sourcecode.length()) || sourcecode.charAt(i) == '<' || sourcecode.charAt(i) == ' '
-                                        || sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>'
+                                        || sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>' || sourcecode.charAt(i) == '('
                                         || sourcecode.charAt(i) == '-' || sourcecode.charAt(i) == '+'
                                         || sourcecode.charAt(i) == '/' || sourcecode.charAt(i) == '%'
                                         || sourcecode.charAt(i) == '|' || sourcecode.charAt(i) == '&'
@@ -5446,7 +5450,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         int sample = 0;
                         int k = 1; // Storage for Length of Variable
                         if((i == sourcecode.length()) || sourcecode.charAt(i) == '<' || sourcecode.charAt(i) == ' '
-                        || sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>'
+                        || sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>' || sourcecode.charAt(i) == '('
                         || sourcecode.charAt(i) == '-' || sourcecode.charAt(i) == '+'
                         || sourcecode.charAt(i) == '*' || sourcecode.charAt(i) == '}'
                         || sourcecode.charAt(i) == '/' || sourcecode.charAt(i) == '%'
@@ -5464,7 +5468,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                         idstring = stringList.toArray(new String[] {});
                                         for(idcount=1;idcount<idstring.length;idcount++)
                                         {
-                                            System.out.println(idstring[idcount]);
                                             if(idstring[idcount].equals(lexeme))
                                             {
                                             //System.out.println("nangyayari ba ako");
@@ -5488,7 +5491,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                 lexeme += sourcecode.charAt(i);
                                 i++;
                                 if(((i == sourcecode.length()) || sourcecode.charAt(i) == '<' || sourcecode.charAt(i) == ' '
-                                || sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>'
+                                || sourcecode.charAt(i) == '=' || sourcecode.charAt(i) == '>' || sourcecode.charAt(i) == '!'
                                 || sourcecode.charAt(i) == '-' || sourcecode.charAt(i) == '+'
                                 || sourcecode.charAt(i) == '*' || sourcecode.charAt(i) == '}'
                                 || sourcecode.charAt(i) == '/' || sourcecode.charAt(i) == '%'
@@ -5505,7 +5508,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                                         idstring = stringList.toArray(new String[] {});
                                         for(idcount=1;idcount<idstring.length;idcount++)
                                         {
-                                            System.out.println(idstring[idcount]);
+//                                            System.out.println(idstring[idcount]);
                                             if(idstring[idcount].equals(lexeme))
                                             {
                                             //System.out.println("nangyayari ba ako");
@@ -6986,7 +6989,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
             {
                 addToSyntaxTable("<statements>","<funccall>");
                     production_funccall();
-                    System.out.println("token hey: "+token);
                 if(checker(SEMICOLON))
                 {
                     code = code.concat(";");
@@ -7514,7 +7516,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     addToSyntaxTable("<postinc>","++");
                     if(checker(SEMICOLON))
                     {
-                        System.out.println("isFromForLoop"+isFromForLoop);
                         if(isFromForLoop == false)
                             code = code.concat(";");
                         addToSyntaxTable("<incdec>",";");
@@ -7932,7 +7933,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 {
                     code = code.concat("\n }");
                     addToSyntaxTable("<elsestatement>","}");
-                    System.out.println("HOY"+token);
                         production_statements();
                 }
                 else if(hasError == false)
@@ -8361,7 +8361,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         addToSyntaxErrorTable("<vardec>", "Expecting IDENTIFIER");
                         hasError = true;
                     }
-                    System.out.println("Here's token: "+token);
                 break;
                 
             case CHAR : 
@@ -9409,7 +9408,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
             {
                 addToSyntaxErrorTable("<struct>","Expecting }");
                 hasError = true;
-                System.out.println("may error");
             }
         }
     }
@@ -9799,7 +9797,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }        
         if(isFromWorldtour)
         {
-            System.out.println(isFromWorldtour);
                 production_global();
         }
 //            
@@ -11463,7 +11460,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
             }
         }
         
-        System.out.println("flag: "+flag);
         
         if(flag == true)
             semanticerror.addRow(new Object[] {memberName.get(member), "Variable "+memberName.get(member)+" is Already Defined", tblLexeme.getModel().getValueAt(tokenPos-2, 2)}); 
@@ -11663,6 +11659,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 }
                 break;
         }
+        System.out.println("Token after } of function: "+token);
         semantic_global();
     }
     
@@ -11837,7 +11834,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 }
                 else if(scope == "concert")
                 {
-                    System.out.println("check");
                     String text = getItem();
                     identifier = text;
                     concert_checkIfDefined(text);
@@ -12193,7 +12189,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 datatype = "INT";
                 literalType = "INT Literal";
                 arraySize = getItem();
-                System.out.println("array size hiy: "+arraySize);
                 checkArraySize(Integer.parseInt(arraySize));
                 break; 
         }
@@ -12233,7 +12228,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                     {
                         String text = getItem();
                         identifier = text;
-                        //System.out.println("text: "+text);
                         concert_checkAlreadyDefined(text);
                     }
                     else if(scope == "function")
@@ -12589,6 +12583,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             {
                 semantic_declaration();
                 semantic_nextDeclaration();
+                semantic_stopplay();
                 semantic_nextcase();
             }
         }
@@ -12707,12 +12702,49 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
     }
     
+    void checkOperands()
+    {
+        DefaultTableModel semanticerror = (DefaultTableModel)tblErrorSemantic.getModel();
+        String before = tblLexeme.getValueAt(tokenPos-3, 0).toString();
+        String after = tblLexeme.getValueAt(tokenPos-1, 0).toString();
+        String datatype;
+        boolean flag = false,flag1 = false;
+        int identifierrow = tblLocalDeclaration.getRowCount();
+        for(int i = 0; i < identifierrow; i++)
+        {
+            datatype = tblLocalDeclaration.getValueAt(i, 2).toString();
+            if(before.equals(tblLocalDeclaration.getValueAt(i, 0).toString()) && (!"INT".equals(datatype) || !"FLOAT".equals(datatype)))
+            {
+                System.out.println("pst: "+tblLocalDeclaration.getValueAt(i, 2).toString()+" i: "+i);
+                flag = true;
+                break;
+            }
+        }
+        
+        for(int i = 0; i < identifierrow; i++)
+        {
+            datatype = tblLocalDeclaration.getValueAt(i, 2).toString();
+            if(after.equals(tblLocalDeclaration.getValueAt(i, 0).toString()) && ("INT".equals(datatype) || !"FLOAT".equals(datatype)))
+            {
+                System.out.println("pst1: "+tblLocalDeclaration.getValueAt(i, 2).toString()+" i: "+i);
+                flag1 = true;
+                break;
+            }
+        }
+        if(flag && flag1)
+        {
+            semanticerror.addRow(new Object[] {"", "Error", "Line: "+ tblLexeme.getModel().getValueAt(tokenPos-2, 2)+" Column "+tblLexeme.getModel().getValueAt(tokenPos-2, 3)}); 
+        }
+            
+    }
+    
     void semantic_mathexprOperator()
     {
         switch(token)
         {
             case PLUS:
                 checker(PLUS);
+                //checkOperands();
                 break;
                 
             case MINUS:
@@ -13055,7 +13087,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         }
         
         if(var == false && var1 == false)
-            semanticerror.addRow(new Object[] {functionName, "Function "+functionName+" was NOT Defined.", "Line: "+line+ "Colum: "+column});
+            semanticerror.addRow(new Object[] {functionName, "Function "+functionName+" was NOT Defined.", "Line: "+line+ " Column: "+column});
     }
 
     void semantic_operand()
@@ -13100,6 +13132,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
         {
             case PLUS: 
                 checker(PLUS);
+                //checkOperands();
                 break;
             case MINUS:
                 checker(MINUS);
@@ -13230,7 +13263,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
                 break;
                 
             case OPENBRACKET: //2darray
-                System.out.println("pasok sa 2nd [");
                 checker(OPENBRACKET);
                 is2dArray = true;
                 semantic_const_arraySize();
@@ -13544,11 +13576,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
             
             if(is2dArray == true) //check 2darray size
             {
-                System.out.println("pasok sa checking");
                 
-                System.out.println("isFromassign: "+isFromAssignment);
-                System.out.println("id: "+identifier);
-                System.out.println("array size value: "+arraySizeValue);
                 for(i = 0; i < identifierrow; i++)
                 {
                     if(identifier.equals(tblLocalDeclaration.getValueAt(i, 0).toString()) && tblLocalDeclaration.getValueAt(i, 1).toString() == "Array")
@@ -13556,9 +13584,7 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         flag1 = true; break;
                     }
                 }
-                System.out.println("value of i: "+i);
                 size1 = Integer.parseInt(tblLocalDeclaration.getValueAt(i, 4).toString());
-                System.out.println("2d size: "+size1);
                 if(flag1 == true)
                 {
                     if(arraySizeValue > size1)
@@ -13584,6 +13610,18 @@ public class OrchestraFrame extends javax.swing.JFrame {
                         String text = getItem();
                         identifier = text;
                         concert_checkAlreadyDefined(text);
+                    }
+                    else if(scope == "function")
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        interlude_checkAlreadyDefined(text);
+                    }
+                    else
+                    {
+                        String text = getItem();
+                        identifier = text;
+                        checkAlreadyDefined(text);
                     }
                     semantic_valueInitialize();
                     semantic_nextVariable();
@@ -13767,7 +13805,6 @@ public class OrchestraFrame extends javax.swing.JFrame {
         int i,k;
         int identifierrow = tblIdentifier.getRowCount();
         
-        System.out.println("identifier mo: "+identifier);
         for(i = 0; i < identifierrow; i++)
         {
             if(identifier.equals(tblIdentifier.getValueAt(i, 0).toString()))
@@ -13806,16 +13843,13 @@ public class OrchestraFrame extends javax.swing.JFrame {
             value = tblFunctionDeclaration.getValueAt(k, 2).toString();
             literalType = datatype;
         }
-        System.out.println("dtype: "+datatype);
     }
     
     void checkAlreadyDefined(String identifier)
     {
-        System.out.println("\n\n");
         int identifierrow = tblIdentifier.getRowCount();
         for(int i = 0; i < identifierrow; i++)
         {
-            System.out.println(""+tblIdentifier.getValueAt(i, 0).toString());
             if(identifier.equals(tblIdentifier.getValueAt(i, 0).toString()))
             {
                 errorCode = 3;
